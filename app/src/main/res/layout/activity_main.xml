@@ -77,4 +77,8 @@
         android:text="@string/connection" />
 
 
+
+    <include
+        layout="@layout/bottom_menu" />
+
 </LinearLayout>
