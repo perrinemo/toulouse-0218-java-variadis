@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="fr.wildcodeschool.variadis.HerbariumActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/ic_variadis" />
+
+    <TextView
+        android:id="@+id/my_herbarium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/philosopher"
+        android:singleLine="false"
+        android:text="@string/my_herbarium"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000000" />
+
+    <CheckBox
+        android:id="@+id/check_if_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="128dp"
+        android:checked="true"
+        android:fontFamily="@font/philosopher"
+        android:gravity="start"
+        android:text="@string/empty_herbarium"
+        android:textAllCaps="false" />
+
+    <TextView
+        android:id="@+id/empty_herbarium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="philosopher"
+        android:text="@string/empty"
+        android:textAlignment="center"
+        android:textColor="@android:color/black" />
+
+    <GridView
+        android:id="@+id/herbview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
+
+
+</LinearLayout>
