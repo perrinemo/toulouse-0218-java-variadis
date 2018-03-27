@@ -9,4 +9,7 @@
     <string name="my_herbarium">Mon Herbier</string>
     <string name="empty_herbarium">Herbier vide</string>
     <string name="title_activity_maps">Map</string>
+    <string name="profil">Profil</string>
+    <string name="herbier">Herbier</string>
+    <string name="defis">Défis</string>
 </resources>

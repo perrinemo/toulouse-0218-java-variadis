@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageview_profile"
+            android:id="@+id/img_profile"
             android:layout_width="44dp"
             android:layout_height="45dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +25,10 @@
             android:src="@drawable/ic_action_profile" />
 
         <TextView
-            android:id="@+id/textView_profile"
+            android:id="@+id/txt_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profil"
+            android:text="@string/profil"
             android:textAlignment="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageview_profile" />
@@ -43,7 +43,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageView_herbier"
+            android:id="@+id/img_herbier"
             android:layout_width="47dp"
             android:layout_height="45dp"
             app:layout_constraintEnd_toStartOf="@+id/imageView_defi"
@@ -52,10 +52,10 @@
             android:src="@drawable/ic_action_herbier" />
 
         <TextView
-            android:id="@+id/textView_herbier"
+            android:id="@+id/txt_herbier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Herbier"
+            android:text="@string/herbier"
             app:layout_constraintEnd_toStartOf="@+id/textView_defi"
             app:layout_constraintStart_toEndOf="@+id/textView_profile"
             app:layout_constraintTop_toBottomOf="@+id/imageView_herbier" />
@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/imageView_defi"
+            android:id="@+id/img_defi"
             android:layout_width="44dp"
             android:layout_height="45dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -78,10 +78,10 @@
             android:src="@drawable/ic_action_defi" />
 
         <TextView
-            android:id="@+id/textView_defi"
+            android:id="@+id/txt_defi"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Défis"
+            android:text="@string/defis"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView_herbier"
