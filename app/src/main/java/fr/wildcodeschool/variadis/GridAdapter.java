@@ -18,7 +18,7 @@ public class GridAdapter extends ArrayAdapter<VegetalModel> {
 
 
 
-        GridAdapter(Context context, ArrayList<VegetalModel> vegetals) {
+        public GridAdapter(Context context, ArrayList<VegetalModel> vegetals) {
             super(context, 0, vegetals);
         }
 

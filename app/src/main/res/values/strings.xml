@@ -8,4 +8,5 @@
     <string name="empty">Ton herbier est encore vide ! Reviens quand tu auras trouvé ton premier végétal.</string>
     <string name="my_herbarium">Mon Herbier</string>
     <string name="empty_herbarium">Herbier vide</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
