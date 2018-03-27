@@ -23,20 +23,16 @@ import com.google.android.gms.maps.model.LatLng;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean mLocationPermissionGranted;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
-
-
-    private GoogleMap mMap;
     private static final float DEFAULT_ZOOM = 17;
-    Location mLastLocation;
 
+    private boolean mLocationPermissionGranted;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -108,8 +104,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                mLastLocation = location;
-
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
             }
@@ -157,7 +151,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastLocation = null;
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
