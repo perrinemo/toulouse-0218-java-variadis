@@ -8,15 +8,15 @@ import android.graphics.drawable.Drawable;
 
 public class VegetalModel {
 
-    private Drawable picture;
+    private int picture;
     private String name;
 
-    public VegetalModel(Drawable picture, String name) {
+    public VegetalModel(int picture, String name) {
         this.picture = picture;
         this.name = name;
     }
 
-    public Drawable getPicture() {
+    public int getPicture() {
         return picture;
     }
 

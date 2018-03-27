@@ -30,15 +30,15 @@ public class HerbariumActivity extends AppCompatActivity {
                     vegetalList.clear();
                 }
                 else {
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.tilleul_arbre_300x300), "Tilleul"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.erable_sucre_fr_500_0006237), "Erable"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.img_ulmus_americana_2209), "Orme"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.micocoulier_300x300), "Micocoulier"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.pinus_pinea_pin_parasol_ou_pin_pignon), "Pin Parasol"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.c_dre_liban_ch_teau_de_hautefort_23), "Cèdre"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.charme_commun_fastigiata_), "Charme"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.murier_platane_sterile), "Platane"));
-                    vegetalList.add(new VegetalModel(getResources().getDrawable(R.drawable.betula_papyrifera), "Bouleau"));
+                    vegetalList.add(new VegetalModel(R.drawable.tilleul_arbre_300x300, "Tilleul"));
+                    vegetalList.add(new VegetalModel(R.drawable.erable_sucre_fr_500_0006237, "Erable"));
+                    vegetalList.add(new VegetalModel(R.drawable.img_ulmus_americana_2209, "Orme"));
+                    vegetalList.add(new VegetalModel(R.drawable.micocoulier_300x300, "Micocoulier"));
+                    vegetalList.add(new VegetalModel(R.drawable.pinus_pinea_pin_parasol_ou_pin_pignon, "Pin Parasol"));
+                    vegetalList.add(new VegetalModel(R.drawable.c_dre_liban_ch_teau_de_hautefort_23, "Cèdre"));
+                    vegetalList.add(new VegetalModel(R.drawable.charme_commun_fastigiata_, "Charme"));
+                    vegetalList.add(new VegetalModel(R.drawable.murier_platane_sterile, "Platane"));
+                    vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
 
                 }
                 herbView.setAdapter(adapter);

@@ -34,7 +34,7 @@ public class GridAdapter extends ArrayAdapter<VegetalModel> {
             TextView vegetalName = convertView.findViewById(R.id.item_name);
 
 
-            vegetalImage.setImageDrawable(vegetal.getPicture());
+            vegetalImage.setImageResource(vegetal.getPicture());
             vegetalName.setText(vegetal.getName());
 
 

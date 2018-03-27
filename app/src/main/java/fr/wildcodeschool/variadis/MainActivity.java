@@ -14,5 +14,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button connection = findViewById(R.id.btn_connect);
+        connection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, HerbariumActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
+
     }
 }
