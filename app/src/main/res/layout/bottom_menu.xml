@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/colorAccent"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/img_profile"
+            android:layout_width="44dp"
+            android:layout_height="45dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_action_profile" />
+
+        <TextView
+            android:id="@+id/txt_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profil"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageview_profile" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/img_herbier"
+            android:layout_width="47dp"
+            android:layout_height="45dp"
+            app:layout_constraintEnd_toStartOf="@+id/imageView_defi"
+            app:layout_constraintStart_toEndOf="@+id/imageview_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_action_herbier" />
+
+        <TextView
+            android:id="@+id/txt_herbier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/herbier"
+            app:layout_constraintEnd_toStartOf="@+id/textView_defi"
+            app:layout_constraintStart_toEndOf="@+id/textView_profile"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_herbier" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/img_defi"
+            android:layout_width="44dp"
+            android:layout_height="45dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_action_defi" />
+
+        <TextView
+            android:id="@+id/txt_defi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/defis"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt_herbier"
+            app:layout_constraintTop_toBottomOf="@+id/img_defi" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
