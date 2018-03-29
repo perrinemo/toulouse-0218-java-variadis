@@ -25,8 +25,8 @@ public class HerbariumActivity extends AppCompatActivity {
         final ArrayList<VegetalModel> vegetalList = new ArrayList<>();
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
 
-        ImageView mImgProfil = findViewById(R.id.img_profile);
-        mImgProfil.setOnClickListener(new View.OnClickListener() {
+        ImageView ivProfil = findViewById(R.id.img_profile);
+        ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);

@@ -44,8 +44,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        ImageView mImgHerbier = findViewById(R.id.img_herbier);
-        mImgHerbier.setOnClickListener(new View.OnClickListener() {
+        ImageView ivHerbier = findViewById(R.id.img_herbier);
+        ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, HerbariumActivity.class);
@@ -53,8 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageView mImgProfil = findViewById(R.id.img_profile);
-        mImgProfil.setOnClickListener(new View.OnClickListener() {
+        ImageView ivProfil = findViewById(R.id.img_profile);
+        ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, ProfilActivity.class);

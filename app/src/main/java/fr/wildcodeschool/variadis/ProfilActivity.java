@@ -17,8 +17,8 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        ImageView mImgHerbier = findViewById(R.id.img_herbier);
-        mImgHerbier.setOnClickListener(new View.OnClickListener() {
+        ImageView ivHerbier = findViewById(R.id.img_herbier);
+        ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
