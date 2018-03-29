@@ -14,8 +14,7 @@
         android:layout_marginLeft="24dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:visibility="invisible">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/img_profile"
