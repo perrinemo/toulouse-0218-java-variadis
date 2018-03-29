@@ -1,11 +1,13 @@
 package fr.wildcodeschool.variadis;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +24,15 @@ public class HerbariumActivity extends AppCompatActivity {
         final CheckBox checkIfEmpty = findViewById(R.id.check_if_empty);
         final ArrayList<VegetalModel> vegetalList = new ArrayList<>();
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
+
+        ImageView mImgProfil = findViewById(R.id.img_profile);
+        mImgProfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);
+                startActivity(intent);
+            }
+        });
 
         checkIfEmpty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
