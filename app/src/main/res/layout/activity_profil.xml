@@ -11,6 +11,7 @@
         layout="@layout/bottom_menu" />
 
     <TextView
+        android:id="@+id/monProfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -32,6 +33,7 @@
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monProfil"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
@@ -41,12 +43,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        tools:text="Pseudo"
-        android:textSize="18sp"
         android:fontFamily="@font/philosopher"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/avatar"
+        tools:text="Pseudo" />
 
     <TextView
         android:id="@+id/text_points"
