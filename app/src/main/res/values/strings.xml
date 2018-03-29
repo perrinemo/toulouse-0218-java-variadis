@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">toulouse-0218-java-variadis</string>
+    <string name="variadis">Variadís</string>
+    <string name="app_slogan">Mets toi au vert dans la ville rose !</string>
+    <string name="login">Login :</string>
+    <string name="password">Password :</string>
+    <string name="connection">Connection</string>
+    <string name="empty">Ton herbier est encore vide ! Reviens quand tu auras trouvé ton premier végétal.</string>
+    <string name="my_herbarium">Mon Herbier</string>
+    <string name="empty_herbarium">Herbier vide</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="profil">Profil</string>
+    <string name="herbier">Herbier</string>
+    <string name="defis">Défis</string>
+
 </resources>
