@@ -12,6 +12,10 @@
     <string name="profil">Profil</string>
     <string name="herbier">Herbier</string>
     <string name="defis">Défis</string>
+    <string name="vegetal">Végétal</string>
+    <string name="nom_vegetal">Nom végétal</string>
+    <string name="last_find">Dernière découverte</string>
+    <string name="infos">Infos</string>
     <string name="mon_profil">Mon profil</string>
     <string name="nom_pseudo">Pseudo</string>
     <string name="points">Points : Mes points</string>

@@ -46,6 +46,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <activity android:name=".VegetalActivity"></activity>
         <activity android:name=".ProfilActivity"></activity>
     </application>
 

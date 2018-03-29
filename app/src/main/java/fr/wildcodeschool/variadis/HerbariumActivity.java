@@ -1,6 +1,7 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -55,6 +56,15 @@ public class HerbariumActivity extends AppCompatActivity {
                 herbView.setAdapter(adapter);
                 herbView.setEmptyView(emptyHerbarium);
 
+            }
+        });
+
+        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+        returnToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent (HerbariumActivity.this, MapsActivity.class);
+                HerbariumActivity.this.startActivity(intent);
             }
         });
 
