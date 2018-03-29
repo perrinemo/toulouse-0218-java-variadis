@@ -2,9 +2,13 @@ package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
 
+import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
@@ -59,7 +63,7 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+        final FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
         returnToMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +72,15 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
+        herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Parcelable vegetalFile = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
+                Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
+                intent.putExtra("EXTRA_PARCEL_VEGETAL", vegetalFile);
+                HerbariumActivity.this.startActivity(intent);
+            }
+        });
 
     }
 }

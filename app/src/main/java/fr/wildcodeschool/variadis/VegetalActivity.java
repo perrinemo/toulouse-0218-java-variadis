@@ -5,6 +5,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class VegetalActivity extends AppCompatActivity {
 
@@ -21,5 +23,11 @@ public class VegetalActivity extends AppCompatActivity {
                 VegetalActivity.this.startActivity(intent);
             }
         });
+
+        VegetalModel vegetal = getIntent().getParcelableExtra("EXTRA_PARCEL_VEGETAL");
+        ImageView ivVegetal = findViewById(R.id.img_vegetal);
+        TextView nomVegetal = findViewById(R.id.nom_vegetal);
+        ivVegetal.setImageResource(vegetal.getPicture());
+        nomVegetal.setText(vegetal.getName());
     }
 }
