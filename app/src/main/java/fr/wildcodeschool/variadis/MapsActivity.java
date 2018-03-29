@@ -53,6 +53,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        ImageView ivProfil = findViewById(R.id.img_profile);
+        ivProfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapsActivity.this, ProfilActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 

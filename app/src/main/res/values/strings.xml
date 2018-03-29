@@ -17,4 +17,6 @@
     <string name="last_find">Dernière découverte</string>
     <string name="infos">Infos</string>
     <string name="mon_profil">Mon profil</string>
+    <string name="nom_pseudo">Pseudo</string>
+    <string name="points">Points : Mes points</string>
 </resources>

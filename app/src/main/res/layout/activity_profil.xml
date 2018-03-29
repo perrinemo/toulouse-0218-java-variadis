@@ -36,19 +36,21 @@
         app:layout_constraintTop_toBottomOf="@+id/mon_profil"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <TextView
+    <EditText
         android:id="@+id/nom_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:fontFamily="@font/philosopher"
+        android:hint="@string/nom_pseudo"
         android:textSize="18sp"
+        android:fontFamily="@font/philosopher"
+        android:background="@android:color/transparent"
+        android:cursorVisible="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar"
-        tools:text="Pseudo" />
+        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <TextView
         android:id="@+id/text_points"
@@ -62,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nom_pseudo"
-        tools:text="Points : Mes points" />
+        android:text="@string/points" />
 
 
 </android.support.constraint.ConstraintLayout>
