@@ -77,6 +77,7 @@ public class HerbariumActivity extends AppCompatActivity {
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
                 Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
                 Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
                 intent.putExtra("EXTRA_PARCEL_VEGETAL", vegetal);
@@ -98,6 +99,7 @@ public class HerbariumActivity extends AppCompatActivity {
                 }else{
                     returnToMap.hide();
                 }
+
 
             }
         });

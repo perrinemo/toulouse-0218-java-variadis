@@ -6,9 +6,6 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by wilder on 23/03/18.
- */
 
 public class VegetalModel implements Parcelable {
 

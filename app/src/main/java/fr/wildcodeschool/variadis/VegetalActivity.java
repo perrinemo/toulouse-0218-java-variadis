@@ -30,6 +30,7 @@ public class VegetalActivity extends AppCompatActivity {
             }
         });
 
+
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,5 +48,6 @@ public class VegetalActivity extends AppCompatActivity {
                 VegetalActivity.this.startActivity(intent);
             }
         });
+
     }
 }
