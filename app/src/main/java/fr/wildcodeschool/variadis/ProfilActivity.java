@@ -2,6 +2,7 @@ package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,6 +24,15 @@ public class ProfilActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+        returnToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ProfilActivity.this, MapsActivity.class);
+                ProfilActivity.this.startActivity(intent);
             }
         });
     }
