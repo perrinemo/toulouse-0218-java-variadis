@@ -66,6 +66,7 @@ public class HerbariumActivity extends AppCompatActivity {
         });
 
         final FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+
         returnToMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,23 +86,26 @@ public class HerbariumActivity extends AppCompatActivity {
 
             }
         });
+
         herbView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView absListView, int i) {
-
+                if(herbView.canScrollVertically(herbView.SCROLL_INDICATOR_BOTTOM)) {
+                    returnToMap.show();
+                } else {
+                    returnToMap.hide();
+                }
             }
 
             @Override
-            public void onScroll(AbsListView absListView, int firstVisible, int visibleItem, int totalVisible) {
-
-                if(absListView.canScrollVertically(View.SCROLL_INDICATOR_BOTTOM)) {
-                    returnToMap.show();
-                }else{
-                    returnToMap.hide();
-                }
-
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
 
             }
         });
+
+
+
+
+
     }
 }
