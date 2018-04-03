@@ -6,11 +6,8 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-/**
- * Created by wilder on 23/03/18.
- */
 
-public class VegetalModel {
+public class VegetalModel implements Parcelable {
 
     private int picture;
     private String name;
@@ -30,6 +27,24 @@ public class VegetalModel {
     }
 
 
+    protected VegetalModel(Parcel in) {
+        picture = in.readInt();
+        name = in.readString();
+        idDatabase = in.readInt();
+        coordonates = in.readParcelable(LatLng.class.getClassLoader());
+    }
+
+    public static final Creator<VegetalModel> CREATOR = new Creator<VegetalModel>() {
+        @Override
+        public VegetalModel createFromParcel(Parcel in) {
+            return new VegetalModel(in);
+        }
+
+        @Override
+        public VegetalModel[] newArray(int size) {
+            return new VegetalModel[size];
+        }
+    };
 
     public int getPicture() {
         return picture;
@@ -45,4 +60,16 @@ public class VegetalModel {
         return coordonates;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(picture);
+        parcel.writeString(name);
+        parcel.writeInt(idDatabase);
+        parcel.writeParcelable(coordonates, i);
+    }
 }

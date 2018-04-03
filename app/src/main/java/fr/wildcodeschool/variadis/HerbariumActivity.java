@@ -2,10 +2,15 @@ package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
 
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
@@ -15,6 +20,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class HerbariumActivity extends AppCompatActivity {
+
+    public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +60,25 @@ public class HerbariumActivity extends AppCompatActivity {
                     vegetalList.add(new VegetalModel(R.drawable.murier_platane_sterile, "Platane"));
                     vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
 
+                    vegetalList.add(new VegetalModel(R.drawable.tilleul_arbre_300x300, "Tilleul"));
+                    vegetalList.add(new VegetalModel(R.drawable.erable_sucre_fr_500_0006237, "Erable"));
+                    vegetalList.add(new VegetalModel(R.drawable.img_ulmus_americana_2209, "Orme"));
+                    vegetalList.add(new VegetalModel(R.drawable.micocoulier_300x300, "Micocoulier"));
+                    vegetalList.add(new VegetalModel(R.drawable.pinus_pinea_pin_parasol_ou_pin_pignon, "Pin Parasol"));
+                    vegetalList.add(new VegetalModel(R.drawable.c_dre_liban_ch_teau_de_hautefort_23, "Cèdre"));
+                    vegetalList.add(new VegetalModel(R.drawable.charme_commun_fastigiata_, "Charme"));
+                    vegetalList.add(new VegetalModel(R.drawable.murier_platane_sterile, "Platane"));
+                    vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
                 }
+
                 herbView.setAdapter(adapter);
                 herbView.setEmptyView(emptyHerbarium);
 
             }
         });
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+        final FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+
         returnToMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +86,23 @@ public class HerbariumActivity extends AppCompatActivity {
                 HerbariumActivity.this.startActivity(intent);
             }
         });
+
+        herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
+                Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
+                intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
+                HerbariumActivity.this.startActivity(intent);
+
+            }
+        });
+
+
+
+
+
 
 
     }
