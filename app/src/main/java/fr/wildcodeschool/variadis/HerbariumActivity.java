@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class HerbariumActivity extends AppCompatActivity {
 
-    public static String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
+    public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
