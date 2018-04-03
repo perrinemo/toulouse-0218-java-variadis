@@ -21,6 +21,8 @@ import java.util.ArrayList;
 
 public class HerbariumActivity extends AppCompatActivity {
 
+    public static String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,16 @@ public class HerbariumActivity extends AppCompatActivity {
                     vegetalList.add(new VegetalModel(R.drawable.charme_commun_fastigiata_, "Charme"));
                     vegetalList.add(new VegetalModel(R.drawable.murier_platane_sterile, "Platane"));
                     vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
+
+                    vegetalList.add(new VegetalModel(R.drawable.tilleul_arbre_300x300, "Tilleul"));
+                    vegetalList.add(new VegetalModel(R.drawable.erable_sucre_fr_500_0006237, "Erable"));
+                    vegetalList.add(new VegetalModel(R.drawable.img_ulmus_americana_2209, "Orme"));
+                    vegetalList.add(new VegetalModel(R.drawable.micocoulier_300x300, "Micocoulier"));
+                    vegetalList.add(new VegetalModel(R.drawable.pinus_pinea_pin_parasol_ou_pin_pignon, "Pin Parasol"));
+                    vegetalList.add(new VegetalModel(R.drawable.c_dre_liban_ch_teau_de_hautefort_23, "Cèdre"));
+                    vegetalList.add(new VegetalModel(R.drawable.charme_commun_fastigiata_, "Charme"));
+                    vegetalList.add(new VegetalModel(R.drawable.murier_platane_sterile, "Platane"));
+                    vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
                 }
 
                 herbView.setAdapter(adapter);
@@ -81,27 +93,13 @@ public class HerbariumActivity extends AppCompatActivity {
 
                 Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
                 Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
-                intent.putExtra("EXTRA_PARCEL_VEGETAL", vegetal);
+                intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
                 HerbariumActivity.this.startActivity(intent);
 
             }
         });
 
-        herbView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-                if(herbView.canScrollVertically(herbView.SCROLL_INDICATOR_BOTTOM)) {
-                    returnToMap.show();
-                } else {
-                    returnToMap.hide();
-                }
-            }
 
-            @Override
-            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-
-            }
-        });
 
 
 

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
+
 public class VegetalActivity extends AppCompatActivity {
 
     @Override
@@ -15,7 +17,7 @@ public class VegetalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vegetal);
 
-        VegetalModel vegetal = getIntent().getParcelableExtra("EXTRA_PARCEL_VEGETAL");
+        VegetalModel vegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_VEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
         TextView txtVegetal = findViewById(R.id.nom_vegetal);
         imgVegetal.setImageResource(vegetal.getPicture());
