@@ -33,7 +33,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 17;
 
     private boolean mLocationPermissionGranted;
-    private boolean mGpsEnabled;
     private GoogleMap mMap;
 
     @Override
@@ -206,13 +205,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Méthode qui vérifie si le GPS est actif
     protected boolean isLocationEnabled() {
-        String le = Context.LOCATION_SERVICE;
-        LocationManager locationManager = (LocationManager) getSystemService(le);
-        if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-            return false;
-        } else {
-            return true;
-        }
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
 
