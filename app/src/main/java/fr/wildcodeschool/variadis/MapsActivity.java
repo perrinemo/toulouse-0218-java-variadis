@@ -32,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -77,6 +78,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Intent intent = getIntent();
+        final String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
+
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +95,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, ProfilActivity.class);
+                intent.putExtra(EXTRA_PSEUDO, pseudo);
                 startActivity(intent);
             }
         });
