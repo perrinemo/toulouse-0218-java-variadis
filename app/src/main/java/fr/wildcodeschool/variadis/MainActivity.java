@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                     msgErrorPseudo.setVisibility(View.INVISIBLE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("pseudo", newPseudo);
-                    editor.commit();
+                    editor.apply();
 
                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                     intent.putExtra(EXTRA_PSEUDO, newPseudo);
@@ -47,5 +47,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        if (sharedPreferences.getBoolean("OK", false)) {
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("OK", true);
+            editor.apply();
+        }
     }
 }
