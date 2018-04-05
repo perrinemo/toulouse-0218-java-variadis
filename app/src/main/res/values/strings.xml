@@ -19,4 +19,7 @@
     <string name="mon_profil">Mon profil</string>
     <string name="nom_pseudo">Pseudo</string>
     <string name="points">Points : Mes points</string>
+    <string name="entre_un_pseudo">Entre un pseudo</string>
+    <string name="msg_error_pseudo">Ton pseudo doit contenir au moins 3 caractères</string>
+    <string name="go">GO</string>
 </resources>
