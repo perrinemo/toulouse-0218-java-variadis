@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
+
 public class ProfilActivity extends AppCompatActivity {
 
     ImageView avatar;
@@ -22,6 +24,13 @@ public class ProfilActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
+
+        TextView changementPseudo = findViewById(R.id.nom_pseudo);
+
+        Intent intent = getIntent();
+        String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
+
+        changementPseudo.setText(pseudo);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {

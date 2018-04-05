@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/mon_profil"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <EditText
+    <TextView
         android:id="@+id/nom_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,8 +46,6 @@
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
         android:fontFamily="@font/philosopher"
-        android:background="@android:color/transparent"
-        android:cursorVisible="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
