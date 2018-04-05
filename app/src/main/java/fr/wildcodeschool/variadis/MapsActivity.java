@@ -62,6 +62,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        ImageView ivDefi = findViewById(R.id.img_defi);
+        ivDefi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MapsActivity.this, PopupFragment.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 

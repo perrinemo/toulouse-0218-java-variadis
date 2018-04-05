@@ -19,4 +19,9 @@
     <string name="mon_profil">Mon profil</string>
     <string name="nom_pseudo">Pseudo</string>
     <string name="points">Points : Mes points</string>
+    <string name="find_vegetal">Tu viens de trouver un nouveau végétal !</string>
+    <string name="name_vegetal">Nom du végétal</string>
+    <string name="acces">Voir la fiche</string>
+    <string name="thanks_no">Non merci</string>
+    <string name="congrats">Félicitations !</string>
 </resources>
