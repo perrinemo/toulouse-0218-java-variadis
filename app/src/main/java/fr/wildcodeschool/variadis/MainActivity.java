@@ -14,6 +14,8 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     public static String EXTRA_PSEUDO = "EXTRA_PSEUDO";
+    public static final String CACHE_PSEUDO = "CACHE_PSEUDO";
+    public static final String PREF_OK = "PREF_OK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView msgErrorPseudo = findViewById(R.id.msg_error_pseudo);
         final SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
 
-        String pseudoCache = sharedPreferences.getString("pseudo", "");
+        String pseudoCache = sharedPreferences.getString(CACHE_PSEUDO, "");
         enterPseudo.setText(pseudoCache);
 
         btnGo.setOnClickListener(new View.OnClickListener() {
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (sharedPreferences.getBoolean("OK", false)) {
+        if (sharedPreferences.getBoolean(PREF_OK, false)) {
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
             finish();
