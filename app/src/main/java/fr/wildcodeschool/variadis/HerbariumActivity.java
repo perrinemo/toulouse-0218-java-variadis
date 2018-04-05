@@ -1,11 +1,13 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
-
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class HerbariumActivity extends AppCompatActivity {
+
+    public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +30,9 @@ public class HerbariumActivity extends AppCompatActivity {
         final CheckBox checkIfEmpty = findViewById(R.id.check_if_empty);
         final ArrayList<VegetalModel> vegetalList = new ArrayList<>();
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
-
+        final FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
         ImageView ivProfil = findViewById(R.id.img_profile);
+
         ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,13 +41,13 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
+        //Checkbox temporaire jusqu'à l'implémentation de l'API
         checkIfEmpty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     vegetalList.clear();
-                }
-                else {
+                } else {
                     vegetalList.add(new VegetalModel(R.drawable.tilleul_arbre_300x300, "Tilleul"));
                     vegetalList.add(new VegetalModel(R.drawable.erable_sucre_fr_500_0006237, "Erable"));
                     vegetalList.add(new VegetalModel(R.drawable.img_ulmus_americana_2209, "Orme"));
@@ -54,18 +59,48 @@ public class HerbariumActivity extends AppCompatActivity {
                     vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
 
                 }
+
                 herbView.setAdapter(adapter);
                 herbView.setEmptyView(emptyHerbarium);
 
             }
         });
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+
         returnToMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent (HerbariumActivity.this, MapsActivity.class);
+                Intent intent = new Intent(HerbariumActivity.this, MapsActivity.class);
                 HerbariumActivity.this.startActivity(intent);
+            }
+        });
+
+        herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
+                Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
+                intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
+                HerbariumActivity.this.startActivity(intent);
+
+            }
+        });
+
+        herbView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+
+
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstItem, int visibleItem, int totalItem) {
+                if ((totalItem < 9) || (herbView.canScrollVertically(View.SCROLL_INDICATOR_TOP))) {
+                    returnToMap.show();
+                } else {
+                    returnToMap.hide();
+                }
             }
         });
 
