@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">toulouse-0218-java-variadis</string>
+    <string name="app_name">Variadís</string>
     <string name="variadis">Variadís</string>
     <string name="app_slogan">Mets toi au vert dans la ville rose !</string>
     <string name="login">Login :</string>
@@ -16,5 +16,17 @@
     <string name="nom_vegetal">Nom végétal</string>
     <string name="last_find">Dernière découverte</string>
     <string name="infos">Infos</string>
+    <string name="mon_profil">Mon profil</string>
+    <string name="nom_pseudo">Pseudo</string>
+    <string name="points">Points : Mes points</string>
+
+    <string name="entre_un_pseudo">Entre un pseudo</string>
+    <string name="msg_error_pseudo">Ton pseudo doit contenir au moins 3 caractères</string>
+    <string name="go">GO</string>
+
+    <string name="gps_disabled_title">Le service de localisation est désactivé</string>
+    <string name="gps_disabled_message">Voulez-vous l\'activer maintenant ?</string>
+    <string name="oui">Oui</string>
+    <string name="non">Non</string>
 
 </resources>
