@@ -17,6 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+
 import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 
 public class ProfilActivity extends AppCompatActivity {
@@ -67,12 +70,9 @@ public class ProfilActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-
-        RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(
-                ProfilActivity.this.getResources(), bitmap);
-
-        roundedBitmapDrawable.setCircular(true);
-        avatar.setImageDrawable(roundedBitmapDrawable);
+        Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(avatar);
     }
 }
