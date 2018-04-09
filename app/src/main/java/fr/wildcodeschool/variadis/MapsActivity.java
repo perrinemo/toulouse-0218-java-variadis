@@ -274,7 +274,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onLocationChanged(Location location) {
                 myPosition = new LatLng(location.getLatitude(), location.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
-                 // TODO : parcourir la liste des marqueurs et changer visibility
                 for (Marker marker : markers) {
                     Location loc1 = new Location("");
                     loc1.setLatitude(myPosition.latitude);
