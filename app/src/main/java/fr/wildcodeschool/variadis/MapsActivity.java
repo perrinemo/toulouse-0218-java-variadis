@@ -175,10 +175,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapStyleOptions mapFilter = MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.map_style);
         googleMap.setMapStyle(mapFilter);
 
-        api();
+        apiReady();
     }
 
-    private void api() {
+    private void apiReady() {
         if (loadApi) {
             return;
         }
