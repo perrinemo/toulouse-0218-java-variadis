@@ -32,12 +32,20 @@ public class HerbariumActivity extends AppCompatActivity {
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
         final FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
         ImageView ivProfil = findViewById(R.id.img_profile);
+        ImageView ivDefi = findViewById(R.id.img_defi);
 
         ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        ivDefi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DefiHelper.openDialogDefi(HerbariumActivity.this);
             }
         });
 

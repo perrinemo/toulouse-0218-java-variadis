@@ -29,13 +29,16 @@ public class ProfilActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profil);
 
         TextView changementPseudo = findViewById(R.id.nom_pseudo);
+        ImageView ivHerbier = findViewById(R.id.img_herbier);
+        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
+        ImageView ivDefi = findViewById(R.id.img_defi);
+        avatar = findViewById(R.id.avatar);
 
         Intent intent = getIntent();
         String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
 
         changementPseudo.setText(pseudo);
 
-        ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,7 +47,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
         returnToMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,12 +55,18 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        avatar = findViewById(R.id.avatar);
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent, 0);
+            }
+        });
+
+        ivDefi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DefiHelper.openDialogDefi(ProfilActivity.this);
             }
         });
     }
