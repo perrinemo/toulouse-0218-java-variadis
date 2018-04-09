@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -32,7 +34,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
@@ -163,6 +168,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         updateLocationUI();
 
+        //Style de la map, fichier json créé depuis mapstyle
+        MapStyleOptions mapFilter = MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.map_style);
+        googleMap.setMapStyle(mapFilter);
+
         //Fil d'attente API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -194,9 +203,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les gegetaux trouver
                                 //
+                                Marker marker =
                                 mMap.addMarker(new MarkerOptions()
                                         .position(new LatLng(lat, lng))
-                                        .title(patrimoine));
+                                        .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
 
 
 
