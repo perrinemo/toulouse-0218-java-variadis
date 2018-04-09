@@ -61,6 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        DefiHelper.openDialogDefi(MapsActivity.this);
 
 
  // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
