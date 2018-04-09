@@ -18,6 +18,7 @@
         android:allowBackup="true"
         android:label="@string/variadis"
         android:supportsRtl="true"
+        android:icon="@drawable/ic_launcher_variadis"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
