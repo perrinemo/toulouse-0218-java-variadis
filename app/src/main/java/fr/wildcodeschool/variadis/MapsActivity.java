@@ -16,7 +16,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -103,11 +105,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-
-
+        ImageView ivDefi = findViewById(R.id.img_defi);
+        ivDefi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DefiHelper.openDialogDefi(MapsActivity.this);
+            }
+        });
     }
-
 
     /**
      * Méthode qui demande la permission d'accéder au GPS du téléphone
