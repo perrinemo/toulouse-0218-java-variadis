@@ -18,14 +18,25 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -36,6 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +103,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
+
+
     }
 
 
@@ -141,6 +157,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getLocationPermission();
 
         updateLocationUI();
+
+        //Fil d'attente API
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=551&sort=id";
+
+        // Création de la requête vers l'API, ajout des écouteurs pour les réponses et erreurs possibles
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            JSONArray records = response.getJSONArray("records");
+                            for(int j = 0; j< records.length(); j++) {
+                                JSONObject recordsInfo = (JSONObject) records.get(j);
+
+                                JSONObject fields = recordsInfo.getJSONObject("fields");
+                                String patrimoine = fields.getString("patrimoine");
+                                String adresse = fields.getString("adresse");
+                                String vegetalId = fields.getString("id");
+                                JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
+                                String latitude = coordonates.get(0).toString();
+                                String longitude = coordonates.get(1).toString();
+                                double lat = Double.parseDouble(latitude);
+                                double lng = Double.parseDouble(longitude);
+
+                                //Ajout des points de tous les végétaux sur la carte
+                                //TODO: Afficher que les gegetaux trouver
+                                //
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(new LatLng(lat, lng))
+                                        .title(patrimoine));
+
+
+
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("VOLLEY_ERROR", "onErrorResponse: " + error.getMessage());
+                    }
+                }
+        );
+
+        // On ajoute la requête à la file d'attente
+        requestQueue.add(jsonObjectRequest);
+
+
+
 
     }
 
