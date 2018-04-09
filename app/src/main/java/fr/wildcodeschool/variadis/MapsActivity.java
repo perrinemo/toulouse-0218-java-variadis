@@ -45,6 +45,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -54,8 +56,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
-
-
+    private LatLng myPosition;
+    private boolean loadApi = false;
+    private ArrayList<Marker> markers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +175,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapStyleOptions mapFilter = MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.map_style);
         googleMap.setMapStyle(mapFilter);
 
+        api();
+    }
+
+    private void api() {
+        if (loadApi) {
+            return;
+        }
+        loadApi = true;
         //Fil d'attente API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -203,13 +214,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les gegetaux trouver
                                 //
+
                                 Marker marker =
-                                mMap.addMarker(new MarkerOptions()
-                                        .position(new LatLng(lat, lng))
-                                        .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(lat, lng))
+                                                .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
 
+                                marker.setVisible(false);
 
-
+                                markers.add(marker);
 
                             }
                         } catch (JSONException e) {
@@ -226,15 +239,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
         );
-
         // On ajoute la requête à la file d'attente
         requestQueue.add(jsonObjectRequest);
-
-
-
-
     }
-
 
     /**
      * Localisation du GPS, et par défaut se met sur Toulouse
@@ -247,8 +254,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
+                 // TODO : parcourir la liste des marqueurs et changer visibility
+                for (Marker marker : markers) {
+                    Location loc1 = new Location("");
+                    loc1.setLatitude(myPosition.latitude);
+                    loc1.setLongitude(myPosition.longitude);
+
+                    Location loc2 = new Location("");
+                    loc2.setLatitude(marker.getPosition().latitude);
+                    loc2.setLongitude(marker.getPosition().longitude);
+
+                    float distance = loc1.distanceTo(loc2);
+
+                    marker.setVisible(distance < 500);
+                }
             }
 
             @Override
@@ -270,7 +291,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0,
-                5,
+                25,
                 locationListener);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TOULOUSE, DEFAULT_ZOOM));
 
