@@ -146,8 +146,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ivVegetal.setImageBitmap(bitmap);
             TextView addPicture = inflater.findViewById(R.id.add_picture);
-            addPicture.setVisibility(inflater.GONE
-            );
+            addPicture.setVisibility(inflater.GONE);
     }
 
     /**
