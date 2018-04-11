@@ -71,40 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Clic temporaire
         ImageView ivDefi = findViewById(R.id.img_defi);
-        ivDefi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-                final View inflater = getLayoutInflater().inflate(R.layout.layout_popup, null);
-                builder.setView(inflater)
-                        .setPositiveButton(R.string.acces, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //TODO Remplacer attributs vegetalModel par données API
-                                Parcelable foundVegetal = new VegetalModel(R.drawable.dessiner_un_arbre_020, "Nom du végétal");
-                                Intent intent = new Intent(MapsActivity.this, VegetalActivity.class);
-                                intent.putExtra(EXTRA_PARCEL_VEGETAL, foundVegetal);
-                                startActivity(intent);
-                            }
-                        })
-                        .setNegativeButton(R.string.thanks_no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                ivVegetal = inflater.findViewById(R.id.img_found_vegetal);
-                ivVegetal.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 0);
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
 
-
-            }
-        });
 
     }
 
