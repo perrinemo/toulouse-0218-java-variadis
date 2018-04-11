@@ -28,5 +28,8 @@
     <string name="gps_disabled_message">Voulez-vous l\'activer maintenant ?</string>
     <string name="oui">Oui</string>
     <string name="non">Non</string>
+    <string name="visualiser_sur_la_carte">Visualiser sur la carte</string>
+    <string name="nom_de_la_plante_trouver">Nom de la plante à trouver</string>
+    <string name="nouveau_d_fi">Nouveau défi</string>
 
 </resources>

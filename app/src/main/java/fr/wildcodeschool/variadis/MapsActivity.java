@@ -6,17 +6,21 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -26,16 +30,25 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -46,11 +59,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
+    private LatLng myPosition;
+    private boolean loadApi = false;
+    private ArrayList<Marker> markers = new ArrayList<>();
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Location lastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        DefiHelper.openDialogDefi(MapsActivity.this);
 
 
  // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -78,6 +98,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         Intent intent = getIntent();
         final String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
 
@@ -100,55 +122,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-
-        //Fil d'attente API
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=551&sort=id";
-
-        // Création de la requête vers l'API, ajout des écouteurs pour les réponses et erreurs possibles
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            JSONArray records = response.getJSONArray("records");
-                            for(int j = 0; j< 10; j++) {
-                                JSONObject recordsInfo = (JSONObject) records.get(j);
-
-                                JSONObject fields = recordsInfo.getJSONObject("fields");
-                                String patrimoine = fields.getString("patrimoine");
-                                String adresse = fields.getString("adresse");
-                                String vegetalId = fields.getString("id");
-                                JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
-                                String latitude = coordonates.get(0).toString();
-                                String longitude = coordonates.get(1).toString();
-                                Toast.makeText(MapsActivity.this, patrimoine + adresse + vegetalId + latitude +longitude, Toast.LENGTH_SHORT).show();
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                },
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_ERROR", "onErrorResponse: " + error.getMessage());
-                    }
-                }
-        );
-
-        // On ajoute la requête à la file d'attente
-        requestQueue.add(jsonObjectRequest);
-
+        ImageView ivDefi = findViewById(R.id.img_defi);
+        ivDefi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DefiHelper.openDialogDefi(MapsActivity.this);
+            }
+        });
     }
-
 
     /**
      * Méthode qui demande la permission d'accéder au GPS du téléphone
@@ -199,12 +180,111 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         updateLocationUI();
 
+        //Style de la map, fichier json créé depuis mapstyle
+        MapStyleOptions mapFilter = MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.map_style);
+        googleMap.setMapStyle(mapFilter);
+
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    lastLocation = location;
+                    updateMarker(location);
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                }
+            }
+        });
+
+        apiReady();
     }
 
+    private void apiReady() {
+        if (loadApi) {
+            return;
+        }
+        loadApi = true;
+        //Fil d'attente API
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=551&sort=id";
+
+        // Création de la requête vers l'API, ajout des écouteurs pour les réponses et erreurs possibles
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            JSONArray records = response.getJSONArray("records");
+                            for(int j = 0; j< records.length(); j++) {
+                                JSONObject recordsInfo = (JSONObject) records.get(j);
+
+                                JSONObject fields = recordsInfo.getJSONObject("fields");
+                                String patrimoine = fields.getString("patrimoine");
+                                String adresse = fields.getString("adresse");
+                                String vegetalId = fields.getString("id");
+                                JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
+                                String latitude = coordonates.get(0).toString();
+                                String longitude = coordonates.get(1).toString();
+                                double lat = Double.parseDouble(latitude);
+                                double lng = Double.parseDouble(longitude);
+
+                                //Ajout des points de tous les végétaux sur la carte
+                                //TODO: Afficher que les gegetaux trouver
+                                //
+
+                                Marker marker =
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(new LatLng(lat, lng))
+                                                .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+
+                                marker.setVisible(false);
+
+                                markers.add(marker);
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("VOLLEY_ERROR", "onErrorResponse: " + error.getMessage());
+                    }
+                }
+        );
+        // On ajoute la requête à la file d'attente
+        requestQueue.add(jsonObjectRequest);
+    }
 
     /**
      * Localisation du GPS, et par défaut se met sur Toulouse
      */
+
+    public void updateMarker(Location location) {
+        myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
+        for (Marker marker : markers) {
+            Location loc1 = new Location("");
+            loc1.setLatitude(myPosition.latitude);
+            loc1.setLongitude(myPosition.longitude);
+
+            Location loc2 = new Location("");
+            loc2.setLatitude(marker.getPosition().latitude);
+            loc2.setLongitude(marker.getPosition().longitude);
+
+            float distance = loc1.distanceTo(loc2);
+
+            marker.setVisible(distance < 500);
+        }
+    }
 
     @SuppressLint("MissingPermission")
     private void setDeviceLocation() {
@@ -213,8 +293,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+               updateMarker(location);
             }
 
             @Override
@@ -235,8 +314,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0,
-                5,
+                10,
+                25,
                 locationListener);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TOULOUSE, DEFAULT_ZOOM));
 

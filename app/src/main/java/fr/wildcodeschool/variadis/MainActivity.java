@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("OK", true);
+            editor.putBoolean(PREF_OK, true);
             editor.apply();
         }
     }
