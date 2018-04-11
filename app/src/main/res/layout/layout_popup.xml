@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_message" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/vegetal_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -74,7 +74,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:fontFamily="@font/philosopher"
-        android:text="Ajoute ta photo ici !"
+        android:text="@string/ajoute_ta_photo_ici"
         android:textColor="@android:color/black"
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@+id/img_found_vegetal"
