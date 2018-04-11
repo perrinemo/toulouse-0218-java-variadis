@@ -1,23 +1,26 @@
 package fr.wildcodeschool.variadis;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,15 +28,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-  
+    ImageView ivVegetal;
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +69,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        // Clic temporaire
         ImageView ivDefi = findViewById(R.id.img_defi);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapsActivity.this, PopupFragment.class);
-                startActivity(intent);
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                final View inflater = getLayoutInflater().inflate(R.layout.layout_popup, null);
+                builder.setView(inflater)
+                        .setPositiveButton(R.string.acces, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //TODO Remplacer attributs vegetalModel par données API
+                                Parcelable foundVegetal = new VegetalModel(R.drawable.dessiner_un_arbre_020, "Nom du végétal");
+                                Intent intent = new Intent(MapsActivity.this, VegetalActivity.class);
+                                intent.putExtra(EXTRA_PARCEL_VEGETAL, foundVegetal);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton(R.string.thanks_no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                ivVegetal = inflater.findViewById(R.id.img_found_vegetal);
+                ivVegetal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, 0);
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+
             }
         });
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        final View inflater = getLayoutInflater().inflate(R.layout.layout_popup, null);
+
+        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+        ivVegetal.setImageBitmap(bitmap);
+        TextView addPicture = inflater.findViewById(R.id.add_picture);
+        addPicture.setVisibility(inflater.GONE
+        );
     }
 
 
