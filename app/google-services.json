@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "795837259141",
+    "firebase_url": "https://variadis-74a1f.firebaseio.com",
+    "project_id": "variadis-74a1f",
+    "storage_bucket": "variadis-74a1f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795837259141:android:899cc07eaa797688",
+        "android_client_info": {
+          "package_name": "fr.wildcodeschool.variadis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795837259141-46qt3nd8ur3c1lm2762o2ddl5jl4uuuu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC34WcKPmsaqeYwjkBw0ZheTjACjjbRiA0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
