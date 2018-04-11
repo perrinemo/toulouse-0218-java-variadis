@@ -188,6 +188,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSuccess(Location location) {
                 if (location != null) {
                     lastLocation = location;
+                    updateMarker(location);
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                 }
@@ -266,6 +267,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Localisation du GPS, et par défaut se met sur Toulouse
      */
 
+    public void updateMarker(Location location) {
+        myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
+        for (Marker marker : markers) {
+            Location loc1 = new Location("");
+            loc1.setLatitude(myPosition.latitude);
+            loc1.setLongitude(myPosition.longitude);
+
+            Location loc2 = new Location("");
+            loc2.setLatitude(marker.getPosition().latitude);
+            loc2.setLongitude(marker.getPosition().longitude);
+
+            float distance = loc1.distanceTo(loc2);
+
+            marker.setVisible(distance < 500);
+        }
+    }
+
     @SuppressLint("MissingPermission")
     private void setDeviceLocation() {
         final LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -273,21 +292,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
-                for (Marker marker : markers) {
-                    Location loc1 = new Location("");
-                    loc1.setLatitude(myPosition.latitude);
-                    loc1.setLongitude(myPosition.longitude);
-
-                    Location loc2 = new Location("");
-                    loc2.setLatitude(marker.getPosition().latitude);
-                    loc2.setLongitude(marker.getPosition().longitude);
-
-                    float distance = loc1.distanceTo(loc2);
-
-                    marker.setVisible(distance < 500);
-                }
+               updateMarker(location);
             }
 
             @Override
