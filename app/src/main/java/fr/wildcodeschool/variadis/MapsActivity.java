@@ -243,7 +243,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 double lng = Double.parseDouble(longitude);
 
                                 //Ajout des points de tous les végétaux sur la carte
-                                //TODO: Afficher que les gegetaux trouver
+                                //TODO: Afficher que les vegetaux trouver
                                 //
 
                                 Marker marker =
