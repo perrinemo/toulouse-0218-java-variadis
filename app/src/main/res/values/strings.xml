@@ -19,11 +19,15 @@
     <string name="mon_profil">Mon profil</string>
     <string name="nom_pseudo">Pseudo</string>
     <string name="points">Points : Mes points</string>
-
+    <string name="find_vegetal">Tu viens de trouver un nouveau végétal !</string>
+    <string name="name_vegetal">Nom du végétal</string>
+    <string name="acces">Voir la fiche</string>
+    <string name="thanks_no">Non merci</string>
+    <string name="congrats">Félicitations !</string>
+    <string name="ajoute_ta_photo_ici">Ajoute ta photo ici !</string>
     <string name="entre_un_pseudo">Entre un pseudo</string>
     <string name="msg_error_pseudo">Ton pseudo doit contenir au moins 3 caractères</string>
     <string name="go">GO</string>
-
     <string name="gps_disabled_title">Le service de localisation est désactivé</string>
     <string name="gps_disabled_message">Voulez-vous l\'activer maintenant ?</string>
     <string name="oui">Oui</string>
@@ -31,5 +35,4 @@
     <string name="visualiser_sur_la_carte">Visualiser sur la carte</string>
     <string name="nom_de_la_plante_trouver">Nom de la plante à trouver</string>
     <string name="nouveau_d_fi">Nouveau défi</string>
-
 </resources>
