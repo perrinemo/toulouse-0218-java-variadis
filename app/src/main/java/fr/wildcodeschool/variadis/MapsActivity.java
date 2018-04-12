@@ -7,22 +7,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.TextView;
+ 
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,12 +43,14 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+
+import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -72,9 +74,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DefiHelper.openDialogDefi(MapsActivity.this);
 
 
- // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
+        // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
-        isLocationEnabled();
         if (!isLocationEnabled()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.gps_disabled_title)
@@ -218,7 +219,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         try {
                             JSONArray records = response.getJSONArray("records");
-                            for(int j = 0; j< records.length(); j++) {
+                            for (int j = 0; j < records.length(); j++) {
                                 JSONObject recordsInfo = (JSONObject) records.get(j);
 
                                 JSONObject fields = recordsInfo.getJSONObject("fields");
@@ -292,7 +293,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final LocationListener locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-               updateMarker(location);
+                updateMarker(location);
             }
 
             @Override
@@ -313,7 +314,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                10,
+                0,
                 25,
                 locationListener);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TOULOUSE, DEFAULT_ZOOM));
@@ -347,7 +348,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Méthode qui vérifie si le GPS est actif
     protected boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
 
