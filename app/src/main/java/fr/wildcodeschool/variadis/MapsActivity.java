@@ -6,14 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -25,8 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -55,15 +50,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
-
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-    ImageView ivVegetal;
+
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng myPosition;
@@ -72,13 +65,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastLocation;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         DefiHelper.openDialogDefi(MapsActivity.this);
 
 
@@ -130,23 +120,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(intent);
             }
         });
-      
+
         ImageView ivDefi = findViewById(R.id.img_defi);
-        @Override
+        ivDefi.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
                 DefiHelper.openDialogDefi(MapsActivity.this);
             }
         });
-
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            final View inflater = getLayoutInflater().inflate(R.layout.layout_popup, null);
-
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-            ivVegetal.setImageBitmap(bitmap);
-            TextView addPicture = inflater.findViewById(R.id.add_picture);
-            addPicture.setVisibility(inflater.GONE);
     }
 
     /**
