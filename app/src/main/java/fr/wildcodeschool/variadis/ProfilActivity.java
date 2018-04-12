@@ -1,19 +1,12 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-
-import android.support.design.widget.FloatingActionButton;
-
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -77,8 +70,6 @@ public class ProfilActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
 
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
         Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(avatar);

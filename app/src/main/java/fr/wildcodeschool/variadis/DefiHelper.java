@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 
 /**
  * Created by perrine on 09/04/18.

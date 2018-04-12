@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -123,23 +121,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageView ivDefi = findViewById(R.id.img_defi);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v){
+            public void onClick(View v) {
                 DefiHelper.openDialogDefi(MapsActivity.this);
             }
         });
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        final View inflater = getLayoutInflater().inflate(R.layout.layout_popup, null);
-
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        ivVegetal.setImageBitmap(bitmap);
-        TextView addPicture = inflater.findViewById(R.id.add_picture);
-        addPicture.setVisibility(inflater.GONE);
-    }
 
     /**
      * Méthode qui demande la permission d'accéder au GPS du téléphone
