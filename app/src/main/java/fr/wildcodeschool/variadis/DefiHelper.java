@@ -20,10 +20,12 @@ import java.util.Map;
 
 public class DefiHelper {
 
-
     public static Dialog openDialogDefi(final Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View subView = inflater.inflate(R.layout.dialog_defi, null);
+
+        TextView textView = subView.findViewById(R.id.vegetal_defi);
+        textView.setText(vegetal);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(subView);

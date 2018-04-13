@@ -1,19 +1,12 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-
-import android.support.design.widget.FloatingActionButton;
-
 import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,8 +25,8 @@ public class ProfilActivity extends AppCompatActivity {
 
         TextView changementPseudo = findViewById(R.id.nom_pseudo);
         ImageView ivHerbier = findViewById(R.id.img_herbier);
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
-        ImageView ivDefi = findViewById(R.id.img_defi);
+
+        ImageView ivMap = findViewById(R.id.img_map);
         avatar = findViewById(R.id.avatar);
 
 
@@ -46,14 +39,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        returnToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProfilActivity.this, MapsActivity.class);
-                ProfilActivity.this.startActivity(intent);
-            }
-        });
-
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,10 +47,10 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        ivDefi.setOnClickListener(new View.OnClickListener() {
+        ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(ProfilActivity.this);
+                ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
             }
         });
     }
@@ -73,8 +58,6 @@ public class ProfilActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
 
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
         Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(avatar);
