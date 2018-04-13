@@ -36,4 +36,5 @@
     <string name="oublie_pass">Mot de passe oublié ?</string>
     <string name="entrer_email">Entrer une adresse email</string>
     <string name="entrer_mot_de_passe">Entrer un mot de passe</string>
+    <string name="mauvaise_authentification">Mauvaise authentification</string>
 </resources>

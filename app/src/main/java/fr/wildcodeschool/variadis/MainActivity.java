@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
                 String pass = mPassword.getText().toString();
 
                 if (TextUtils.isEmpty(mail)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.entrer_email, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(pass)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.entrer_mot_de_passe, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(MainActivity.this, "Mauvaise authentification" + task.getException(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, getString(R.string.mauvaise_authentification) + task.getException(), Toast.LENGTH_LONG).show();
                                 } else {
                                     Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                                     startActivity(intent);
