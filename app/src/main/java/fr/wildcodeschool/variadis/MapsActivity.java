@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
@@ -20,9 +21,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.TextView;
- 
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -50,9 +48,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 
-import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
-
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -67,12 +62,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastLocation;
 
+    public static final String DEFI_OK = "DEFI_OK";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        DefiHelper.openDialogDefi(MapsActivity.this);
-
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -100,9 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        Intent intent = getIntent();
-        final String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
-
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, ProfilActivity.class);
-                intent.putExtra(EXTRA_PSEUDO, pseudo);
                 startActivity(intent);
             }
         });
