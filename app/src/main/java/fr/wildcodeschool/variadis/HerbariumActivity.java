@@ -73,6 +73,22 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
+        returnToMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HerbariumActivity.this, MapsActivity.class);
+                HerbariumActivity.this.startActivity(intent);
+            }
+        });
+
+        //Bouton test
+        FloatingActionButton btnTest = findViewById(R.id.btn_test);
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, VegetalHelperActivity.class));
+            }
+        });
 
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -35,5 +35,6 @@
     <string name="visualiser_sur_la_carte">Visualiser sur la carte</string>
     <string name="nom_de_la_plante_trouver">Nom de la plante à trouver</string>
     <string name="nouveau_d_fi">Nouveau défi</string>
-    <string name="carte">Carte</string>
+    <string name="quitter">Quitter</string>
+    <string name="voir_la_fiche">Voir la fiche</string>
 </resources>

@@ -18,8 +18,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="@string/mon_profil"
         android:fontFamily="@font/philosopher"
+        android:text="@string/mon_profil"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,9 +44,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
+        android:fontFamily="@font/philosopher"
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
-        android:fontFamily="@font/philosopher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
@@ -58,12 +58,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:textSize="18sp"
         android:fontFamily="@font/philosopher"
+        android:text="@string/points"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nom_pseudo"
-        android:text="@string/points" />
+        app:layout_constraintTop_toBottomOf="@+id/nom_pseudo" />
 
 
 </android.support.constraint.ConstraintLayout>
