@@ -23,22 +23,11 @@ public class VegetalActivity extends AppCompatActivity {
         imgVegetal.setImageResource(vegetal.getPicture());
         txtVegetal.setText(vegetal.getName());
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
-        returnToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent (VegetalActivity.this, MapsActivity.class);
-                VegetalActivity.this.startActivity(intent);
-            }
-        });
-
-
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(VegetalActivity.this, HerbariumActivity.class);
-                VegetalActivity.this.startActivity(intent);
+                startActivity(new Intent(VegetalActivity.this, HerbariumActivity.class));
             }
         });
 
@@ -46,8 +35,15 @@ public class VegetalActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(VegetalActivity.this, ProfilActivity.class);
-                VegetalActivity.this.startActivity(intent);
+               startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+            }
+        });
+
+        ImageView ivMap = findViewById(R.id.img_map);
+        ivMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(VegetalActivity.this, MapsActivity.class));
             }
         });
 

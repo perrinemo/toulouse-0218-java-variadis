@@ -20,6 +20,7 @@
         android:supportsRtl="true"
         android:icon="@drawable/ic_launcher_variadis"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -59,6 +60,7 @@
 
         <activity android:name=".ProfilActivity"
             android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

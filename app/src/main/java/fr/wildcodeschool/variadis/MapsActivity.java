@@ -2,16 +2,19 @@ package fr.wildcodeschool.variadis;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -28,6 +31,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,14 +69,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastLocation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
         DefiHelper.openDialogDefi(MapsActivity.this);
-
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -120,13 +124,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageView ivDefi = findViewById(R.id.img_defi);
+        ImageView ivDefi = findViewById(R.id.img_map);
+        TextView txtDefi = findViewById(R.id.txt_map);
+        ivDefi.setImageResource(R.drawable.defi);
+        txtDefi.setText(R.string.defis);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View v){
                 DefiHelper.openDialogDefi(MapsActivity.this);
             }
         });
+
+
 
     }
 
@@ -295,6 +304,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             marker.setVisible(distance < 500);
         }
     }
+
 
     @SuppressLint("MissingPermission")
     private void setDeviceLocation() {
