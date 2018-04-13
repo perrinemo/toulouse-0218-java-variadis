@@ -26,8 +26,8 @@ public class ProfilActivity extends AppCompatActivity {
 
         TextView changementPseudo = findViewById(R.id.nom_pseudo);
         ImageView ivHerbier = findViewById(R.id.img_herbier);
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
-        ImageView ivDefi = findViewById(R.id.img_defi);
+
+        ImageView ivMap = findViewById(R.id.img_map);
         avatar = findViewById(R.id.avatar);
 
         Intent intent = getIntent();
@@ -43,14 +43,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        returnToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ProfilActivity.this, MapsActivity.class);
-                ProfilActivity.this.startActivity(intent);
-            }
-        });
-
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,10 +51,10 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        ivDefi.setOnClickListener(new View.OnClickListener() {
+        ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(ProfilActivity.this);
+                ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
             }
         });
     }

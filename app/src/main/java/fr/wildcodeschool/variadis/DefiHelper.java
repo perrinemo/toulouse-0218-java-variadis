@@ -13,9 +13,12 @@ import android.view.View;
 
 public class DefiHelper {
 
-    public static Dialog openDialogDefi(Context context) {
+    public static Dialog openDialogDefi(Context context, String vegetal) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View subView = inflater.inflate(R.layout.dialog_defi, null);
+
+        TextView textView = subView.findViewById(R.id.vegetal_defi);
+        textView.setText(vegetal);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(subView);

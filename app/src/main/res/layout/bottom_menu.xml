@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/herbier"
-            app:layout_constraintEnd_toStartOf="@+id/txt_defi"
+            app:layout_constraintEnd_toStartOf="@+id/txt_map"
             app:layout_constraintStart_toEndOf="@+id/txt_profile"
             app:layout_constraintTop_toBottomOf="@+id/img_herbier" />
     </LinearLayout>
@@ -69,23 +69,23 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
-            android:id="@+id/img_defi"
+            android:id="@+id/img_map"
             android:layout_width="44dp"
             android:layout_height="40dp"
             android:alpha="0.8"
-            android:src="@drawable/defi"
+            android:src="@android:drawable/ic_dialog_map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/txt_defi"
+            android:id="@+id/txt_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/defis"
+            android:text="@string/carte"
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/txt_herbier"
-            app:layout_constraintTop_toBottomOf="@+id/img_defi" />
+            app:layout_constraintTop_toBottomOf="@+id/img_map" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

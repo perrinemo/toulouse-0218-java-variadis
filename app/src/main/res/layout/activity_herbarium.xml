@@ -96,6 +96,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/betula_papyrifera" />
 
-
 </android.support.constraint.ConstraintLayout>
 

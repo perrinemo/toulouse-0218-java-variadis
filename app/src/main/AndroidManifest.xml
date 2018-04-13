@@ -58,9 +58,10 @@
         <activity
             android:name=".ProfilActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".VegetalHelperActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+        <activity 
+            android:name=".VegetalHelperActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>
