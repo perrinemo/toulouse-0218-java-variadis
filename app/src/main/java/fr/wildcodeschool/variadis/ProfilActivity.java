@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 
 public class ProfilActivity extends AppCompatActivity {
 
@@ -30,10 +29,7 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivMap = findViewById(R.id.img_map);
         avatar = findViewById(R.id.avatar);
 
-        Intent intent = getIntent();
-        String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
 
-        changementPseudo.setText(pseudo);
 
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override

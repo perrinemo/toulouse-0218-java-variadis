@@ -2,9 +2,6 @@
     <string name="app_name">Variadís</string>
     <string name="variadis">Variadís</string>
     <string name="app_slogan">Mets toi au vert dans la ville rose !</string>
-    <string name="login">Login :</string>
-    <string name="password">Password :</string>
-    <string name="connection">Connection</string>
     <string name="empty">Ton herbier est encore vide ! Reviens quand tu auras trouvé ton premier végétal.</string>
     <string name="my_herbarium">Mon Herbier</string>
     <string name="empty_herbarium">Herbier vide</string>
@@ -25,8 +22,7 @@
     <string name="thanks_no">Non merci</string>
     <string name="congrats">Félicitations !</string>
     <string name="ajoute_ta_photo_ici">Ajoute ta photo ici !</string>
-    <string name="entre_un_pseudo">Entre un pseudo</string>
-    <string name="msg_error_pseudo">Ton pseudo doit contenir au moins 3 caractères</string>
+    <string name="email">Email</string>
     <string name="go">GO</string>
     <string name="gps_disabled_title">Le service de localisation est désactivé</string>
     <string name="gps_disabled_message">Voulez-vous l\'activer maintenant ?</string>
@@ -35,6 +31,12 @@
     <string name="visualiser_sur_la_carte">Visualiser sur la carte</string>
     <string name="nom_de_la_plante_trouver">Nom de la plante à trouver</string>
     <string name="nouveau_d_fi">Nouveau défi</string>
+    <string name="minimum_mot_de_passe">Le mot de passe doit contenir au moins 6 caractères</string>
+    <string name="mot_de_passe">Mot de passe</string>
+    <string name="oublie_pass">Mot de passe oublié ?</string>
+    <string name="entrer_email">Entrer une adresse email</string>
+    <string name="entrer_mot_de_passe">Entrer un mot de passe</string>
+    <string name="mauvaise_authentification">Mauvaise authentification</string>
     <string name="quitter">Quitter</string>
     <string name="voir_la_fiche">Voir la fiche</string>
 </resources>
