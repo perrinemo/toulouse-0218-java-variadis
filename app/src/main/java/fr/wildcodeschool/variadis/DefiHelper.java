@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 /**
  * Created by perrine on 09/04/18.
@@ -14,9 +15,12 @@ import android.widget.ImageButton;
 
 public class DefiHelper {
 
-    public static Dialog openDialogDefi(Context context) {
+    public static Dialog openDialogDefi(Context context, String vegetal) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View subView = inflater.inflate(R.layout.dialog_defi, null);
+
+        TextView textView = subView.findViewById(R.id.vegetal_defi);
+        textView.setText(vegetal);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(subView);
