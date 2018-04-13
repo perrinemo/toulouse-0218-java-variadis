@@ -58,16 +58,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
-    private LatLng myPosition;
-    private boolean loadApi = false;
+    private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
-    private String vegetalDefi;
+    private String mVegetalDefi;
     private Random r2 = new Random();
-    private int random;
+    private int mRandom;
     private ArrayList<Integer> defiDone = new ArrayList<>();
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private Location lastLocation;
-    private boolean isWaitingAPILoaded = false;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Location mLastLocation;
+    private boolean mIsWaitingAPILoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         Intent intent = getIntent();
         final String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
@@ -128,7 +127,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, vegetalDefi);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi);
             }
         });
     }
@@ -186,11 +185,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapStyleOptions mapFilter = MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.map_style);
         googleMap.setMapStyle(mapFilter);
 
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
-                    lastLocation = location;
+                    mLastLocation = location;
                     updateMarker(location);
 
                 }
@@ -216,8 +215,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         try {
                             JSONArray records = response.getJSONArray("records");
-                            random = r2.nextInt(records.length());
-                            defiDone.add(random);
+                            mRandom = r2.nextInt(records.length());
+                            defiDone.add(mRandom);
                             for (int j = 0; j < records.length(); j++) {
                                 JSONObject recordsInfo = (JSONObject) records.get(j);
 
@@ -237,8 +236,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 Marker marker;
                                 Marker markerDefi;
-                                if (j == random) {
-                                    vegetalDefi = patrimoine;
+                                if (j == mRandom) {
+                                    mVegetalDefi = patrimoine;
                                     DefiHelper.openDialogDefi(MapsActivity.this, patrimoine);
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
@@ -254,16 +253,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 }
                             }
-                            if (isWaitingAPILoaded) {
-                                updateMarker(lastLocation);
-                                isWaitingAPILoaded = false;
+                            if (mIsWaitingAPILoaded) {
+                                updateMarker(mLastLocation);
+                                mIsWaitingAPILoaded = false;
                             }
 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        isWaitingAPILoaded = true;
+                        mIsWaitingAPILoaded = true;
 
                     }
                 },
@@ -284,19 +283,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
     public void updateMarker(Location location) {
-        myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        lastLocation = location;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
+        mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        mLastLocation = location;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
         if (markers.size() == 0) {
-            isWaitingAPILoaded = true;
+            mIsWaitingAPILoaded = true;
         }
         for (Marker marker : markers) {
-            if (marker == markers.get(random)) {
+            if (marker == markers.get(mRandom)) {
                 marker.setVisible(true);
             } else {
                 Location loc1 = new Location("");
-                loc1.setLatitude(myPosition.latitude);
-                loc1.setLongitude(myPosition.longitude);
+                loc1.setLatitude(mMyPosition.latitude);
+                loc1.setLongitude(mMyPosition.longitude);
 
                 Location loc2 = new Location("");
                 loc2.setLatitude(marker.getPosition().latitude);
