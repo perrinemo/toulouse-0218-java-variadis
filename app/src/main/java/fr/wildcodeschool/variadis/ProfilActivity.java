@@ -69,7 +69,7 @@ public class ProfilActivity extends AppCompatActivity {
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(ProfilActivity.this);
+
             }
         });
     }

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,9 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.TextView;
- 
+
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -48,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
@@ -64,14 +61,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng myPosition;
     private boolean loadApi = false;
     private ArrayList<Marker> markers = new ArrayList<>();
+    private String vegetalDefi;
+    private Random r2 = new Random();
+    private int random;
+    private ArrayList<Integer> defiDone = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastLocation;
+    private boolean isWaitingAPILoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        DefiHelper.openDialogDefi(MapsActivity.this);
+        apiReady();
 
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -126,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this);
+                DefiHelper.openDialogDefi(MapsActivity.this, vegetalDefi);
             }
         });
     }
@@ -190,20 +192,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (location != null) {
                     lastLocation = location;
                     updateMarker(location);
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+
                 }
             }
         });
 
-        apiReady();
     }
 
     private void apiReady() {
-        if (loadApi) {
-            return;
-        }
-        loadApi = true;
+
         //Fil d'attente API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -219,6 +216,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         try {
                             JSONArray records = response.getJSONArray("records");
+                            random = r2.nextInt(records.length());
+                            defiDone.add(random);
                             for (int j = 0; j < records.length(); j++) {
                                 JSONObject recordsInfo = (JSONObject) records.get(j);
 
@@ -236,19 +235,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //TODO: Afficher que les vegetaux trouver
                                 //
 
-                                Marker marker =
-                                        mMap.addMarker(new MarkerOptions()
-                                                .position(new LatLng(lat, lng))
-                                                .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                Marker marker;
+                                Marker markerDefi;
+                                if (j == random) {
+                                    vegetalDefi = patrimoine;
+                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine);
+                                    markerDefi = mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(lat, lng))
+                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                    markers.add(markerDefi);
+                                } else {
 
-                                marker.setVisible(false);
+                                    marker = mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(lat, lng))
+                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                    marker.setVisible(false);
+                                    markers.add(marker);
 
-                                markers.add(marker);
-
+                                }
                             }
+                            if (isWaitingAPILoaded) {
+                                updateMarker(lastLocation);
+                                isWaitingAPILoaded = false;
+                            }
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        isWaitingAPILoaded = true;
 
                     }
                 },
@@ -270,19 +285,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void updateMarker(Location location) {
         myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        lastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
+        if (markers.size() == 0) {
+            isWaitingAPILoaded = true;
+        }
         for (Marker marker : markers) {
-            Location loc1 = new Location("");
-            loc1.setLatitude(myPosition.latitude);
-            loc1.setLongitude(myPosition.longitude);
+            if (marker == markers.get(random)) {
+                marker.setVisible(true);
+            } else {
+                Location loc1 = new Location("");
+                loc1.setLatitude(myPosition.latitude);
+                loc1.setLongitude(myPosition.longitude);
 
-            Location loc2 = new Location("");
-            loc2.setLatitude(marker.getPosition().latitude);
-            loc2.setLongitude(marker.getPosition().longitude);
+                Location loc2 = new Location("");
+                loc2.setLatitude(marker.getPosition().latitude);
+                loc2.setLongitude(marker.getPosition().longitude);
 
-            float distance = loc1.distanceTo(loc2);
+                float distance = loc1.distanceTo(loc2);
 
-            marker.setVisible(distance < 500);
+                marker.setVisible(distance < 500);
+            }
         }
     }
 

@@ -45,7 +45,7 @@ public class HerbariumActivity extends AppCompatActivity {
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(HerbariumActivity.this);
+
             }
         });
 
