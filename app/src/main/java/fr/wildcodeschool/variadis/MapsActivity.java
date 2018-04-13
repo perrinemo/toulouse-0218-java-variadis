@@ -23,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.android.volley.Request;
@@ -148,7 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final View inflater = getLayoutInflater().inflate(R.layout.layout_popup, null);
 
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        ivVegetal.setImageBitmap(bitmap);
+       // ivVegetal.setImageBitmap(bitmap);
         TextView addPicture = inflater.findViewById(R.id.add_picture);
         addPicture.setVisibility(inflater.GONE);
     }
