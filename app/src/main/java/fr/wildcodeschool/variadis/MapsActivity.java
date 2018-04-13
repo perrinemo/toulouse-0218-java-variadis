@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -22,7 +23,9 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.TextView;
+ 
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,6 +55,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+
 import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
 
 
@@ -60,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-    ImageView ivVegetal;
+
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng myPosition;
@@ -73,7 +77,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
         DefiHelper.openDialogDefi(MapsActivity.this);
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -130,13 +133,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         txtDefi.setText(R.string.defis);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick (View v){
+            public void onClick(View v) {
                 DefiHelper.openDialogDefi(MapsActivity.this);
             }
         });
-
-
-
     }
 
     @Override
@@ -334,7 +334,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                10,
+                0,
                 25,
                 locationListener);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TOULOUSE, DEFAULT_ZOOM));
