@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,7 +21,7 @@ import java.util.Map;
 
 public class DefiHelper {
 
-    public static Dialog openDialogDefi(final Context context) {
+    public static Dialog openDialogDefi(Context context, String vegetal) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View subView = inflater.inflate(R.layout.dialog_defi, null);
 
