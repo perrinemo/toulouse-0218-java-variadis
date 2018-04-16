@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,10 +28,9 @@ public class ProfilActivity extends AppCompatActivity {
 
     private ImageView mAvatar;
     private EditText mEditPseudo;
-    private DatabaseReference databaseReference;
-    private StorageReference storageReference;
+    private DatabaseReference mDatabaseReference;
+    private StorageReference mStorageReference;
     private String uid;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +49,11 @@ public class ProfilActivity extends AppCompatActivity {
         mAvatar = findViewById(R.id.avatar);
 
         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        storageReference = firebaseStorage.getReference();
+        mStorageReference = firebaseStorage.getReference();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("users").child(uid).child("pseudo");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference = firebaseDatabase.getReference("users").child(uid).child("pseudo");
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEditPseudo.setText(dataSnapshot.getValue(String.class));
@@ -126,13 +124,13 @@ public class ProfilActivity extends AppCompatActivity {
     private void createUser(String pseudo) {
         if (!TextUtils.isEmpty(uid)) {
             ProfilModel profilModel = new ProfilModel(pseudo);
-            databaseReference.child(uid).setValue(profilModel);
+            mDatabaseReference.child(uid).setValue(profilModel);
             addUserChangeListener();
         }
     }
 
     private void addUserChangeListener() {
-        databaseReference.child(uid).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
