@@ -39,6 +39,7 @@ public class HerbariumActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -46,6 +47,7 @@ public class HerbariumActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, MapsActivity.class));
+                finish();
             }
         });
 
@@ -80,6 +82,7 @@ public class HerbariumActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, VegetalHelperActivity.class));
+                finish();
             }
         });
 
@@ -91,6 +94,7 @@ public class HerbariumActivity extends AppCompatActivity {
                 intent.putExtra(CLASS_FROM, "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
                 startActivity(intent);
+                finish();
 
             }
         });

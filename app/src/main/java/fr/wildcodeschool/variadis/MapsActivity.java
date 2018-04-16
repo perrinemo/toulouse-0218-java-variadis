@@ -105,6 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, HerbariumActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -114,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, ProfilActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

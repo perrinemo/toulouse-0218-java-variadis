@@ -37,6 +37,7 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(VegetalActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
@@ -44,7 +45,9 @@ public class VegetalActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+               startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+               finish();
+
             }
         });
 
@@ -53,6 +56,7 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(VegetalActivity.this, MapsActivity.class));
+                finish();
             }
         });
 
