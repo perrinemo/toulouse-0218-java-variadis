@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
 import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
@@ -22,11 +23,11 @@ public class VegetalActivity extends AppCompatActivity {
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
         TextView txtVegetal = findViewById(R.id.nom_vegetal);
 
-        if (getIntent().getStringExtra("classFrom").equals("helper")) {
+        if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
             imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
             txtVegetal.setText(foundVegetal.getName());
         }
-        if (getIntent().getStringExtra("classFrom").equals("herbarium")) {
+        if (getIntent().getStringExtra(CLASS_FROM).equals("herbarium")) {
             imgVegetal.setImageResource(vegetal.getPicture());
             txtVegetal.setText(vegetal.getName());
         }
