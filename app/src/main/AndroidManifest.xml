@@ -37,7 +37,7 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ConnexionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -61,6 +61,9 @@
         <activity 
             android:name=".VegetalHelperActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InscriptionActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

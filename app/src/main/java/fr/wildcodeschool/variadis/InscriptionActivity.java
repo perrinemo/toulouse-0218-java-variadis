@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity {
+public class InscriptionActivity extends AppCompatActivity {
 
     private EditText mEmail, mPassword;
     private TextView mError;
@@ -25,16 +25,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_auth);
 
         mEmail = findViewById(R.id.edit_email);
         mPassword = findViewById(R.id.edit_password);
         mError = findViewById(R.id.msg_error);
-        Button go = findViewById(R.id.btn_go);
+        Button incription = findViewById(R.id.btn_auth);
+        Button dejaInscrit = findViewById(R.id.btn_deja_inscrit);
 
         mAuth = FirebaseAuth.getInstance();
 
-        go.setOnClickListener(new View.OnClickListener() {
+        dejaInscrit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(InscriptionActivity.this, ConnexionActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        incription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String mail = mEmail.getText().toString();
@@ -55,13 +65,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 mAuth.createUserWithEmailAndPassword(mail, pass)
-                        .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(InscriptionActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(MainActivity.this, getString(R.string.mauvaise_authentification) + task.getException(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(InscriptionActivity.this, getString(R.string.mauvaise_authentification) + task.getException(), Toast.LENGTH_LONG).show();
                                 } else {
-                                    Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                    Intent intent = new Intent(InscriptionActivity.this, MapsActivity.class);
                                     startActivity(intent);
                                     finish();
                                 }
