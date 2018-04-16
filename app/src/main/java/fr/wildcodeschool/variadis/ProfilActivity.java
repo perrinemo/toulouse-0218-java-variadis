@@ -30,7 +30,7 @@ public class ProfilActivity extends AppCompatActivity {
     private EditText mEditPseudo;
     private DatabaseReference mDatabaseReference;
     private StorageReference mStorageReference;
-    private String uid;
+    private String mUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +48,11 @@ public class ProfilActivity extends AppCompatActivity {
 
         mAvatar = findViewById(R.id.avatar);
 
-        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mStorageReference = firebaseStorage.getReference();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = firebaseDatabase.getReference("users").child(uid).child("pseudo");
+        mDatabaseReference = firebaseDatabase.getReference("users").child(mUid).child("pseudo");
         mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,7 +69,7 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String pseudo = mEditPseudo.getText().toString();
-                if (TextUtils.isEmpty(uid)) {
+                if (TextUtils.isEmpty(mUid)) {
                     createUser(pseudo);
                 } else {
                     updateUser(pseudo);
@@ -122,15 +122,15 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void createUser(String pseudo) {
-        if (!TextUtils.isEmpty(uid)) {
+        if (!TextUtils.isEmpty(mUid)) {
             ProfilModel profilModel = new ProfilModel(pseudo);
-            mDatabaseReference.child(uid).setValue(profilModel);
+            mDatabaseReference.child(mUid).setValue(profilModel);
             addUserChangeListener();
         }
     }
 
     private void addUserChangeListener() {
-        mDatabaseReference.child(uid).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(mUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
@@ -148,6 +148,6 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void updateUser(String pseudo) {
-        FirebaseDatabase.getInstance().getReference("users").child(uid).child("pseudo").setValue(pseudo);
+        FirebaseDatabase.getInstance().getReference("users").child(mUid).child("pseudo").setValue(pseudo);
     }
 }
