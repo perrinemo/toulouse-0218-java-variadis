@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by perrine on 16/04/18.
@@ -56,6 +55,14 @@ public class ConnexionActivity extends AppCompatActivity {
                 Intent intent = new Intent(ConnexionActivity.this, InscriptionActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        oublieMdp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConnexionActivity.this, OublieMdp.class);
+                startActivity(intent);
             }
         });
 
