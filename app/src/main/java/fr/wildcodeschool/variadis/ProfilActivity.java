@@ -7,11 +7,13 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class ProfilActivity extends AppCompatActivity {
@@ -25,11 +27,22 @@ public class ProfilActivity extends AppCompatActivity {
 
         TextView changementPseudo = findViewById(R.id.nom_pseudo);
         ImageView ivHerbier = findViewById(R.id.img_herbier);
-
         ImageView ivMap = findViewById(R.id.img_map);
+
+        Button deco = findViewById(R.id.btn_deco);
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
+
         avatar = findViewById(R.id.avatar);
 
-
+        deco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+                startActivity(intent);
+                auth.signOut();
+                finish();
+            }
+        });
 
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
