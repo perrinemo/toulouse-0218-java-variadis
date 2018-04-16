@@ -37,17 +37,17 @@
         app:layout_constraintTop_toBottomOf="@+id/my_profil"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <TextView
-        android:id="@+id/name_pseudo"
+    <EditText
+        android:id="@+id/edit_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
+        android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
@@ -55,27 +55,36 @@
         android:id="@+id/text_points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/philosopher"
         android:text="@string/points"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_pseudo" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo" />
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/deconnexion"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@null"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_points" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_lock_power_off" />
+
+    <Button
+        android:id="@+id/btn_ok_pseudo"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_width="49dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@null"
+        android:text="@string/ok"
+        app:layout_constraintStart_toEndOf="@+id/edit_pseudo"
+        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
 
 </android.support.constraint.ConstraintLayout>
