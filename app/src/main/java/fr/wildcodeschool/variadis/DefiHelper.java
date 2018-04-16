@@ -30,14 +30,14 @@ public class DefiHelper {
 
 
         builder.setCancelable(false)
-                .setPositiveButton("Visualiser sur la carte", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.visualiser_vegetal, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         map.moveCamera(CameraUpdateFactory.newLatLng(location));
 
                     }
                 })
-                .setNegativeButton("Fermer", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.fermer_popup, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
