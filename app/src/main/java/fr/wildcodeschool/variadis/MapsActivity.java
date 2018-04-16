@@ -50,6 +50,7 @@ import java.util.Random;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String DEFI_OK = "DEFI_OK";
+    public static final String NAME = "NAME";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
@@ -307,7 +308,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (distance < 20) {
                     Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    intent.putExtra("name", foundVegetals.get(i));
+                    intent.putExtra(NAME, foundVegetals.get(i));
                     startActivity(intent);
                 }
             }

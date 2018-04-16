@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
+import static fr.wildcodeschool.variadis.MapsActivity.NAME;
 
 public class VegetalHelperActivity extends AppCompatActivity {
 
@@ -36,7 +37,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
         });
 
         TextView txtVegetal = findViewById(R.id.vegetal_name);
-        txtVegetal.setText(getIntent().getStringExtra("name"));
+        txtVegetal.setText(getIntent().getStringExtra(NAME));
 
         Button goToVegetal = findViewById(R.id.btn_goto_vegetal);
         goToVegetal.setOnClickListener(new View.OnClickListener() {
