@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,8 +28,7 @@ public class ProfilActivity extends AppCompatActivity {
         TextView changePseudo = findViewById(R.id.name_pseudo);
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
-
-        Button deco = findViewById(R.id.btn_logout);
+        ImageButton deco = findViewById(R.id.btn_logout);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
         avatar = findViewById(R.id.avatar);
