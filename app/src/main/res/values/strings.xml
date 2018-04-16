@@ -40,4 +40,12 @@
     <string name="quitter">Quitter</string>
     <string name="voir_la_fiche">Voir la fiche</string>
     <string name="carte">Carte</string>
+    <string name="mauvais_mdp">Mauvais mot de passe</string>
+    <string name="mail_envoye">Mail envoyé</string>
+    <string name="mail_inconnu">Mail inconnu</string>
+    <string name="envoie_mdp">Envoyer nouveau mot de passe</string>
+    <string name="retour">Retour</string>
+    <string name="inscription">Inscription</string>
+    <string name="deja_inscrit">Déjà inscrit ?</string>
+    <string name="connexion">Connexion</string>
 </resources>

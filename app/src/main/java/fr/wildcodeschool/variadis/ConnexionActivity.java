@@ -38,8 +38,8 @@ public class ConnexionActivity extends AppCompatActivity {
         Button inscription = findViewById(R.id.btn_deja_inscrit);
         Button oublieMdp = findViewById(R.id.oublie_mdp);
 
-        connexion.setText("Connexion");
-        inscription.setText("Inscription");
+        connexion.setText(R.string.connexion);
+        inscription.setText(R.string.inscription);
         oublieMdp.setVisibility(View.VISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
@@ -66,12 +66,12 @@ public class ConnexionActivity extends AppCompatActivity {
                 final String password = mPassword.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(ConnexionActivity.this, "Entre un email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConnexionActivity.this, R.string.entrer_email, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(ConnexionActivity.this, "Entre un mot de passe", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ConnexionActivity.this, R.string.entrer_mot_de_passe, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -80,7 +80,7 @@ public class ConnexionActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(ConnexionActivity.this, "Mauvais mot de passe", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ConnexionActivity.this, R.string.mauvais_mdp, Toast.LENGTH_SHORT).show();
                                 } else {
                                     Intent intent = new Intent(ConnexionActivity.this, MapsActivity.class);
                                     startActivity(intent);
