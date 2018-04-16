@@ -8,13 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by perrine on 09/04/18.
  */
 
 public class DefiHelper {
 
-    public static Dialog openDialogDefi(Context context, String vegetal) {
+    public static Dialog openDialogDefi(Context context, String vegetal, final LatLng location, final GoogleMap map) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View subView = inflater.inflate(R.layout.dialog_defi, null);
 
@@ -26,7 +30,14 @@ public class DefiHelper {
 
 
         builder.setCancelable(false)
-                .setNegativeButton("Fermer", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.visualiser_vegetal, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        map.moveCamera(CameraUpdateFactory.newLatLng(location));
+
+                    }
+                })
+                .setNegativeButton(R.string.fermer_popup, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -37,4 +48,6 @@ public class DefiHelper {
         alertDialog.show();
         return alertDialog;
     }
+
+
 }

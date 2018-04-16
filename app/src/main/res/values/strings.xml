@@ -49,5 +49,7 @@
     <string name="deja_inscrit">Déjà inscrit ?</string>
     <string name="connexion">Connexion</string>
     <string name="deconnexion">Déconnexion</string>
+    <string name="visualiser_vegetal">Visualiser sur la carte</string>
+    <string name="fermer_popup">Fermer</string>
     <string name="ok">OK</string>
 </resources>

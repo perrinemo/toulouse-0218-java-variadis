@@ -66,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
+    private LatLng mLocationDefi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
             }
         });
     }
@@ -239,10 +240,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
-                                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi);
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                    mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
+
+
+                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
                                     markers.add(markerDefi);
                                 } else {
                                     marker = mMap.addMarker(new MarkerOptions()
