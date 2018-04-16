@@ -49,10 +49,11 @@ import java.util.Random;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String DEFI_OK = "DEFI_OK";
+    public static final String NAME = "NAME";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng mMyPosition;
@@ -61,12 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Random r2 = new Random();
     private int mRandom;
     private ArrayList<Integer> defiDone = new ArrayList<>();
+    private ArrayList<String> foundVegetals = new ArrayList<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
     private LatLng mLocationDefi;
-
-    public static final String DEFI_OK = "DEFI_OK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,12 +235,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les vegetaux trouver
                                 //
-
+                                foundVegetals.add(patrimoine);
                                 Marker marker;
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
-
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
@@ -250,7 +249,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
                                     markers.add(markerDefi);
                                 } else {
-
                                     marker = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
@@ -295,6 +293,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markers.size() == 0) {
             mIsWaitingAPILoaded = true;
         }
+        int i = 0;
         for (Marker marker : markers) {
             if (marker == markers.get(mRandom)) {
                 marker.setVisible(true);
@@ -310,7 +309,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 float distance = loc1.distanceTo(loc2);
 
                 marker.setVisible(distance < 500);
+
+                if (distance < 20) {
+                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                    intent.putExtra(NAME, foundVegetals.get(i));
+                    startActivity(intent);
+                }
             }
+            i++;
         }
     }
 

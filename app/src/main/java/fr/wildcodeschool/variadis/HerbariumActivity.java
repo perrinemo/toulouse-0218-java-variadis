@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class HerbariumActivity extends AppCompatActivity {
 
     public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
+    public static final String CLASS_FROM = "CLASS_FROM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class HerbariumActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
                 Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
+                intent.putExtra(CLASS_FROM, "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
                 startActivity(intent);
                 finish();

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
 import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
@@ -17,13 +18,19 @@ public class VegetalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vegetal);
 
-
         VegetalModel vegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_VEGETAL);
         VegetalModel foundVegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_FOUNDVEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
         TextView txtVegetal = findViewById(R.id.nom_vegetal);
-        imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
-        txtVegetal.setText(foundVegetal.getName());
+
+        if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
+            imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
+            txtVegetal.setText(foundVegetal.getName());
+        }
+        if (getIntent().getStringExtra(CLASS_FROM).equals("herbarium")) {
+            imgVegetal.setImageResource(vegetal.getPicture());
+            txtVegetal.setText(vegetal.getName());
+        }
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +47,7 @@ public class VegetalActivity extends AppCompatActivity {
             public void onClick(View view) {
                startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
                finish();
+
             }
         });
 
