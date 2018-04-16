@@ -51,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
-    private static final float DEFAULT_ZOOM = 17;
+    public static final float DEFAULT_ZOOM = 17;
 
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
@@ -64,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
+    private LatLng mLocationDefi;
 
     public static final String DEFI_OK = "DEFI_OK";
 
@@ -127,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi);
+               DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi,mMap);
             }
         });
     }
@@ -239,10 +240,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
-                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine);
+
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                    mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
+
+
+                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi,mMap);
                                     markers.add(markerDefi);
                                 } else {
 
