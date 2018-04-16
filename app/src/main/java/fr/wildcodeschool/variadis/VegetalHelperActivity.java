@@ -41,6 +41,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
                 Intent intent = new Intent(VegetalHelperActivity.this, VegetalActivity.class);
                 intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
                 startActivity(intent);
+                finish();
             }
         });
 
