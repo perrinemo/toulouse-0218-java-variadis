@@ -87,6 +87,7 @@ public class HerbariumActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
                 Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
+                intent.putExtra("classFrom", "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
                 startActivity(intent);
 

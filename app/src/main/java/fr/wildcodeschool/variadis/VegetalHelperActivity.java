@@ -40,6 +40,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
                 Parcelable foundVegetal = new VegetalModel(mBitmap, "Testname");
                 Intent intent = new Intent(VegetalHelperActivity.this, VegetalActivity.class);
                 intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
+                intent.putExtra("classFrom", "helper");
                 startActivity(intent);
             }
         });
