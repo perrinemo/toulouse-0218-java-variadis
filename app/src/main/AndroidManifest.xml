@@ -65,7 +65,7 @@
             android:name=".InscriptionActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".OublieMdp"
+            android:name=".ForgotPassword"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

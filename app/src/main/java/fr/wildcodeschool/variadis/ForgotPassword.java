@@ -18,12 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
  * Created by perrine on 16/04/18.
  */
 
-public class OublieMdp extends AppCompatActivity {
+public class ForgotPassword extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.oublie_mdp);
+        setContentView(R.layout.forgot_password);
 
         final EditText etEmail = findViewById(R.id.edit_email);
         Button reset = findViewById(R.id.btn_reset);
@@ -33,7 +33,7 @@ public class OublieMdp extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(OublieMdp.this, ConnexionActivity.class);
+                Intent intent = new Intent(ForgotPassword.this, ConnexionActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -45,7 +45,7 @@ public class OublieMdp extends AppCompatActivity {
                 String email = etEmail.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(OublieMdp.this, R.string.entrer_email, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ForgotPassword.this, R.string.entrer_email, Toast.LENGTH_SHORT).show();
                 }
 
                 auth.sendPasswordResetEmail(email)
@@ -53,9 +53,9 @@ public class OublieMdp extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(OublieMdp.this, R.string.mail_envoye, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ForgotPassword.this, R.string.mail_envoye, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(OublieMdp.this, R.string.mail_inconnu, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ForgotPassword.this, R.string.mail_inconnu, Toast.LENGTH_SHORT).show();
 
                                 }
                             }

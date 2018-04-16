@@ -24,11 +24,11 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        TextView changementPseudo = findViewById(R.id.nom_pseudo);
+        TextView changePseudo = findViewById(R.id.name_pseudo);
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
 
-        Button deco = findViewById(R.id.btn_deco);
+        Button deco = findViewById(R.id.btn_logout);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
 
         avatar = findViewById(R.id.avatar);

@@ -30,12 +30,12 @@ public class InscriptionActivity extends AppCompatActivity {
         mEmail = findViewById(R.id.edit_email);
         mPassword = findViewById(R.id.edit_password);
         mError = findViewById(R.id.msg_error);
-        Button incription = findViewById(R.id.btn_auth);
-        Button dejaInscrit = findViewById(R.id.btn_deja_inscrit);
+        Button incription = findViewById(R.id.btn_log);
+        Button alreadyRegistered = findViewById(R.id.btn_already_registered);
 
         mAuth = FirebaseAuth.getInstance();
 
-        dejaInscrit.setOnClickListener(new View.OnClickListener() {
+        alreadyRegistered.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(InscriptionActivity.this, ConnexionActivity.class);

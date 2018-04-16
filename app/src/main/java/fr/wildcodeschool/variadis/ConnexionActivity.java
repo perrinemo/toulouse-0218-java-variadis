@@ -33,13 +33,13 @@ public class ConnexionActivity extends AppCompatActivity {
         mEmail = findViewById(R.id.edit_email);
         mPassword = findViewById(R.id.edit_password);
         mError = findViewById(R.id.msg_error);
-        Button connexion = findViewById(R.id.btn_auth);
-        Button inscription = findViewById(R.id.btn_deja_inscrit);
-        Button oublieMdp = findViewById(R.id.oublie_mdp);
+        Button connexion = findViewById(R.id.btn_log);
+        Button inscription = findViewById(R.id.btn_already_registered);
+        Button forgotPassword = findViewById(R.id.forgot_password);
 
         connexion.setText(R.string.connexion);
         inscription.setText(R.string.inscription);
-        oublieMdp.setVisibility(View.VISIBLE);
+        forgotPassword.setVisibility(View.VISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -58,10 +58,10 @@ public class ConnexionActivity extends AppCompatActivity {
             }
         });
 
-        oublieMdp.setOnClickListener(new View.OnClickListener() {
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConnexionActivity.this, OublieMdp.class);
+                Intent intent = new Intent(ConnexionActivity.this, ForgotPassword.class);
                 startActivity(intent);
             }
         });
