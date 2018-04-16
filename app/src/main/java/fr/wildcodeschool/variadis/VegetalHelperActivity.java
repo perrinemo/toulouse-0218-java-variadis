@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.maps.model.LatLng;
 
 public class VegetalHelperActivity extends AppCompatActivity {
 
@@ -23,7 +24,6 @@ public class VegetalHelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_popup);
 
-
         ImageView ivVegetal = findViewById(R.id.img_found_vegetal);
         ivVegetal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +32,9 @@ public class VegetalHelperActivity extends AppCompatActivity {
 
             }
         });
+
+        TextView txtVegetal = findViewById(R.id.vegetal_name);
+        txtVegetal.setText(getIntent().getStringExtra("name"));
 
         Button goToVegetal = findViewById(R.id.btn_goto_vegetal);
         goToVegetal.setOnClickListener(new View.OnClickListener() {

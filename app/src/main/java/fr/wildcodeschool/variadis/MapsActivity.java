@@ -2,18 +2,15 @@ package fr.wildcodeschool.variadis;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -30,9 +27,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,10 +49,10 @@ import java.util.Random;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String DEFI_OK = "DEFI_OK";
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng mMyPosition;
@@ -67,11 +61,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Random r2 = new Random();
     private int mRandom;
     private ArrayList<Integer> defiDone = new ArrayList<>();
+    private ArrayList<String> foundVegetals = new ArrayList<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
-
-    public static final String DEFI_OK = "DEFI_OK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,18 +231,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les vegetaux trouver
                                 //
-
+                                foundVegetals.add(patrimoine);
                                 Marker marker;
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
-                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine);
+                                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi);
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
                                     markers.add(markerDefi);
                                 } else {
-
                                     marker = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
@@ -294,6 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markers.size() == 0) {
             mIsWaitingAPILoaded = true;
         }
+        int i = 0;
         for (Marker marker : markers) {
             if (marker == markers.get(mRandom)) {
                 marker.setVisible(true);
@@ -309,7 +302,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 float distance = loc1.distanceTo(loc2);
 
                 marker.setVisible(distance < 500);
+
+                if (distance < 20) {
+                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                    intent.putExtra("name", foundVegetals.get(i));
+                    startActivity(intent);
+                }
             }
+            i++;
         }
     }
 
