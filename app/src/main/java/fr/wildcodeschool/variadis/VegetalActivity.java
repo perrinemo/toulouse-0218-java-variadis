@@ -26,15 +26,6 @@ public class VegetalActivity extends AppCompatActivity {
         imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
         txtVegetal.setText(foundVegetal.getName());
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
-        returnToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(VegetalActivity.this, MapsActivity.class);
-                VegetalActivity.this.startActivity(intent);
-            }
-        });
-
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override

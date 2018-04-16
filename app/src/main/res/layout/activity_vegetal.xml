@@ -71,19 +71,6 @@
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/return_to_map"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:clickable="true"
-        app:backgroundTint="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_map" />
-
     <TextView
         android:id="@+id/lieu"
         android:layout_width="wrap_content"
