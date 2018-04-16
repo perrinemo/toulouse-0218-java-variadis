@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 
+import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
+
 public class VegetalHelperActivity extends AppCompatActivity {
 
     public static final String EXTRA_PARCEL_FOUNDVEGETAL = "EXTRA_PARCEL_FOUNDVEGETAL";
@@ -43,7 +45,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
                 Parcelable foundVegetal = new VegetalModel(mBitmap, "Testname");
                 Intent intent = new Intent(VegetalHelperActivity.this, VegetalActivity.class);
                 intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
-                intent.putExtra("classFrom", "helper");
+                intent.putExtra(CLASS_FROM, "helper");
                 startActivity(intent);
             }
         });
