@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,22 +40,40 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
+
+import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String DEFI_OK = "DEFI_OK";
     public static final String NAME = "NAME";
+    public static final String DATE = "DATE";
+    public static final String ADRESS = "ADRESS";
+
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
+
+    private String mUId;
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng mMyPosition;
@@ -62,7 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Random r2 = new Random();
     private int mRandom;
     private ArrayList<Integer> defiDone = new ArrayList<>();
-    private ArrayList<String> foundVegetals = new ArrayList<>();
+    private ArrayList<VegetalModel> foundVegetals = new ArrayList<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
@@ -74,6 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         apiReady();
+        mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -226,6 +247,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 String patrimoine = fields.getString("patrimoine");
                                 String adresse = fields.getString("adresse");
                                 String vegetalId = fields.getString("id");
+
+                                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
+                                Date date = Calendar.getInstance().getTime();
+                                String dateFormat = format.format(date);
+
                                 JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
                                 String latitude = coordonates.get(0).toString();
                                 String longitude = coordonates.get(1).toString();
@@ -234,8 +260,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les vegetaux trouver
-                                //
-                                foundVegetals.add(patrimoine);
+
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference reference = database.getReference("users").child(mUId);
+
+                                VegetalModel foundVegetal = new VegetalModel(null, patrimoine, adresse, null, false);
+                                reference.child("vegetaux").child(vegetalId).setValue(foundVegetal);
+
+
                                 Marker marker;
                                 Marker markerDefi;
                                 if (j == mRandom) {
@@ -310,10 +342,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 marker.setVisible(distance < 500);
 
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference itineraryRef = database.getReference("vegetaux");
+                itineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+
+                });
                 if (distance < 20) {
-                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    intent.putExtra(NAME, foundVegetals.get(i));
-                    startActivity(intent);
+                   // final Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                    //intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
+                    //startActivity(intent);
                 }
             }
             i++;
