@@ -340,8 +340,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference itineraryRef = database.getReference("vegetaux");
-                itineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                DatabaseReference vegetauxRef = database.getReference("vegetaux");
+                vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);

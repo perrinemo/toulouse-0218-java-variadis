@@ -12,61 +12,22 @@ import java.util.Date;
 public class VegetalModel implements Parcelable {
 
 
+    public static final Creator<VegetalModel> CREATOR = new Creator<VegetalModel>() {
+        @Override
+        public VegetalModel createFromParcel(Parcel in) {
+            return new VegetalModel(in);
+        }
+
+        @Override
+        public VegetalModel[] newArray(int size) {
+            return new VegetalModel[size];
+        }
+    };
     private int picture;
     private Bitmap bitmapPicture;
     private String name;
     private String adress;
     private boolean isFound;
-
-    public boolean isFound() {
-        return isFound;
-    }
-
-    public void setFound(boolean found) {
-        isFound = found;
-    }
-
-    public void setPicture(int picture) {
-        this.picture = picture;
-    }
-
-    public void setBitmapPicture(Bitmap bitmapPicture) {
-        this.bitmapPicture = bitmapPicture;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setAdress(String adress) {
-        this.adress = adress;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void setIdDatabase(int idDatabase) {
-        this.idDatabase = idDatabase;
-    }
-
-    public void setCoordonates(LatLng coordonates) {
-        this.coordonates = coordonates;
-    }
-
-    public String getAdress() {
-
-        return adress;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public static Creator<VegetalModel> getCREATOR() {
-        return CREATOR;
-    }
-
     private Date date;
     private int idDatabase;
     private LatLng coordonates;
@@ -85,11 +46,9 @@ public class VegetalModel implements Parcelable {
 
     }
 
-
     public VegetalModel() {
 
     }
-
 
     protected VegetalModel(Parcel in) {
         picture = in.readInt();
@@ -100,39 +59,74 @@ public class VegetalModel implements Parcelable {
         coordonates = in.readParcelable(LatLng.class.getClassLoader());
     }
 
-    public static final Creator<VegetalModel> CREATOR = new Creator<VegetalModel>() {
-        @Override
-        public VegetalModel createFromParcel(Parcel in) {
-            return new VegetalModel(in);
-        }
+    public static Creator<VegetalModel> getCREATOR() {
+        return CREATOR;
+    }
 
-        @Override
-        public VegetalModel[] newArray(int size) {
-            return new VegetalModel[size];
-        }
-    };
+    public boolean isFound() {
+        return isFound;
+    }
+
+    public void setFound(boolean found) {
+        isFound = found;
+    }
+
+    public String getAdress() {
+
+        return adress;
+    }
+
+    public void setAdress(String adress) {
+        this.adress = adress;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public Bitmap getBitmapPicture() {
         return bitmapPicture;
     }
 
+    public void setBitmapPicture(Bitmap bitmapPicture) {
+        this.bitmapPicture = bitmapPicture;
+    }
 
     public int getPicture() {
         return picture;
+    }
+
+    public void setPicture(int picture) {
+        this.picture = picture;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getIdDatabase() {
         return idDatabase;
+    }
+
+    public void setIdDatabase(int idDatabase) {
+        this.idDatabase = idDatabase;
     }
 
     public LatLng getCoordonates() {
         return coordonates;
     }
 
+    public void setCoordonates(LatLng coordonates) {
+        this.coordonates = coordonates;
+    }
 
     @Override
     public int describeContents() {
