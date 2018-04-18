@@ -38,7 +38,7 @@ public class ProfilActivity extends AppCompatActivity {
 
     private ImageView mAvatar;
     private EditText mEditPseudo;
-    private DatabaseReference databaseReference;
+    private DatabaseReference mDatabaseReference;
     private String mUid;
     private Uri mFileUri = null;
     private String mGetImageUrl = "";
@@ -64,8 +64,8 @@ public class ProfilActivity extends AppCompatActivity {
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
 
-        databaseReference = firebaseDatabase.getReference("users").child(mUid);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference = firebaseDatabase.getReference("users").child(mUid);
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child("pseudo").getValue() != null) {
@@ -143,13 +143,13 @@ public class ProfilActivity extends AppCompatActivity {
     private void createUser(String pseudo) {
         if (!TextUtils.isEmpty(mUid)) {
             ProfilModel profilModel = new ProfilModel(pseudo);
-            databaseReference.child(mUid).setValue(profilModel);
+            mDatabaseReference.child(mUid).setValue(profilModel);
             addUserChangeListener();
         }
     }
 
     private void addUserChangeListener() {
-        databaseReference.child(mUid).addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(mUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
