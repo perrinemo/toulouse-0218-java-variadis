@@ -216,10 +216,6 @@ public class ProfilActivity extends AppCompatActivity {
 
     private void saveCaptureImage() {
         if (!mGetImageUrl.equals("") && mGetImageUrl != null) {
-            Glide.with(this)
-                    .load(CameraUtils.convertImagePathToBitmap(mGetImageUrl, false))
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(mAvatar);
             StorageReference ref = FirebaseStorage.getInstance().getReference().child(mUid).child("avatar.jpg");
             ref.putFile(mFileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
