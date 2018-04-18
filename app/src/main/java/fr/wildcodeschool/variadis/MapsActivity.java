@@ -66,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String NAME = "NAME";
     public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
+    public static final int RADIUS_DISTANCE = 500
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
@@ -237,7 +238,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         try {
                             JSONArray records = response.getJSONArray("records");
                             mRandom = r2.nextInt(records.length());
-                            defiDone.add(mRandom);
+                            mDefiDone.add(mRandom);
                             for (int j = 0; j < records.length(); j++) {
                                 JSONObject recordsInfo = (JSONObject) records.get(j);
 
@@ -335,7 +336,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 float distance = loc1.distanceTo(loc2);
 
-                marker.setVisible(distance < 500);
+                marker.setVisible(distance < RADIUS_DISTANCE);
 
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
