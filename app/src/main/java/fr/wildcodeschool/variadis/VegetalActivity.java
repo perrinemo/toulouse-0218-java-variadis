@@ -43,7 +43,7 @@ public class VegetalActivity extends AppCompatActivity {
             imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
             txtVegetal.setText(foundVegetal.getName());
             placeVegetal.setText(foundVegetal.getAdress());
-            lastFind.setText(dateFormat);
+            lastFind.setText(foundVegetal.getDate());
         }
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("herbarium")) {

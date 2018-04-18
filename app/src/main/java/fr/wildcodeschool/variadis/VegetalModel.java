@@ -6,8 +6,6 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Date;
-
 
 public class VegetalModel implements Parcelable {
 
@@ -28,7 +26,7 @@ public class VegetalModel implements Parcelable {
     private String name;
     private String adress;
     private boolean isFound;
-    private Date date;
+    private String date;
     private int idDatabase;
     private LatLng coordonates;
 
@@ -37,7 +35,7 @@ public class VegetalModel implements Parcelable {
         this.name = name;
     }
 
-    public VegetalModel(Bitmap bitmapPicture, String name, String adress, Date date, boolean isFound) {
+    public VegetalModel(Bitmap bitmapPicture, String name, String adress, String date, boolean isFound) {
         this.bitmapPicture = bitmapPicture;
         this.name = name;
         this.adress = adress;
@@ -80,11 +78,11 @@ public class VegetalModel implements Parcelable {
         this.adress = adress;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
