@@ -3,7 +3,6 @@ package fr.wildcodeschool.variadis;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -39,7 +38,7 @@ public class ProfilActivity extends AppCompatActivity {
 
     private ImageView mAvatar;
     private EditText mEditPseudo;
-    private DatabaseReference mPseudoReference;
+    private DatabaseReference databaseReference;
     private String mUid;
     private Uri mFileUri = null;
     private String mGetImageUrl = "";
@@ -65,29 +64,22 @@ public class ProfilActivity extends AppCompatActivity {
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
 
-        mPseudoReference = firebaseDatabase.getReference("users").child(mUid).child("pseudo");
-        mPseudoReference.addValueEventListener(new ValueEventListener() {
+        databaseReference = firebaseDatabase.getReference("users").child(mUid);
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mEditPseudo.setText(dataSnapshot.getValue(String.class));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference avatarReference = firebaseDatabase.getReference("users").child(mUid).child("avatar");
-        avatarReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                progressBar.setVisibility(View.INVISIBLE);
-                String url = dataSnapshot.getValue(String.class);
-                Glide.with(ProfilActivity.this)
-                        .load(url)
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(mAvatar);
+                if (dataSnapshot.child("pseudo").getValue() != null) {
+                    String pseudo = (String) dataSnapshot.child("pseudo").getValue();
+                    mEditPseudo.setText(pseudo);
+                }
+                if (dataSnapshot.child("avatar").getValue() != null) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                    String url = (String) dataSnapshot.child("avatar").getValue();
+                    Glide.with(ProfilActivity.this)
+                            .load(url)
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(mAvatar);
+                }
             }
 
             @Override
@@ -151,13 +143,13 @@ public class ProfilActivity extends AppCompatActivity {
     private void createUser(String pseudo) {
         if (!TextUtils.isEmpty(mUid)) {
             ProfilModel profilModel = new ProfilModel(pseudo);
-            mPseudoReference.child(mUid).setValue(profilModel);
+            databaseReference.child(mUid).setValue(profilModel);
             addUserChangeListener();
         }
     }
 
     private void addUserChangeListener() {
-        mPseudoReference.child(mUid).addValueEventListener(new ValueEventListener() {
+        databaseReference.child(mUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
