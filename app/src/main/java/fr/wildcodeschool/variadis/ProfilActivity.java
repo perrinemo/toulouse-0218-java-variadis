@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -53,6 +54,7 @@ public class ProfilActivity extends AppCompatActivity {
 
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final ProgressBar progressBar = findViewById(R.id.progress_bar);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
@@ -80,6 +82,7 @@ public class ProfilActivity extends AppCompatActivity {
         avatarReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                progressBar.setVisibility(View.INVISIBLE);
                 String url = dataSnapshot.getValue(String.class);
                 Glide.with(ProfilActivity.this)
                         .load(url)
@@ -100,6 +103,7 @@ public class ProfilActivity extends AppCompatActivity {
                 mFileUri = CameraUtils.getOutputMediaFileUri(ProfilActivity.this);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
                 startActivityForResult(intent, APP_PHOTO);
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
 
