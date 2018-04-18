@@ -1,9 +1,14 @@
 package fr.wildcodeschool.variadis;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,6 +19,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,38 +28,43 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 public class ProfilActivity extends AppCompatActivity {
 
+    public final static int CAMERA = 123;
+    public final static int APP_PHOTO = 456;
+
     private ImageView mAvatar;
     private EditText mEditPseudo;
-    private DatabaseReference mDatabaseReference;
-    private StorageReference mStorageReference;
+    private DatabaseReference mPseudoReference;
     private String mUid;
+    private Uri mFileUri = null;
+    private String mGetImageUrl = "";
+    private boolean mIsOk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        mEditPseudo = findViewById(R.id.edit_pseudo);
+        checkPermission();
+
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
-        Button okPseudo = findViewById(R.id.btn_ok_pseudo);
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-
-
-        mAvatar = findViewById(R.id.avatar);
+        Button validPseudo = findViewById(R.id.btn_ok_pseudo);
 
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        mStorageReference = firebaseStorage.getReference();
+        mEditPseudo = findViewById(R.id.edit_pseudo);
+        mAvatar = findViewById(R.id.avatar);
 
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = firebaseDatabase.getReference("users").child(mUid).child("pseudo");
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+        mPseudoReference = firebaseDatabase.getReference("users").child(mUid).child("pseudo");
+        mPseudoReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mEditPseudo.setText(dataSnapshot.getValue(String.class));
@@ -65,7 +76,34 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        okPseudo.setOnClickListener(new View.OnClickListener() {
+        DatabaseReference avatarReference = firebaseDatabase.getReference("users").child(mUid).child("avatar");
+        avatarReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String url = dataSnapshot.getValue(String.class);
+                Glide.with(ProfilActivity.this)
+                        .load(url)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(mAvatar);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                mFileUri = CameraUtils.getOutputMediaFileUri(ProfilActivity.this);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                startActivityForResult(intent, APP_PHOTO);
+            }
+        });
+
+        validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String pseudo = mEditPseudo.getText().toString();
@@ -96,14 +134,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 0);
-            }
-        });
-
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,24 +143,17 @@ public class ProfilActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(mAvatar);
-    }
-
+    // Méthodes relatives au pseudo
     private void createUser(String pseudo) {
         if (!TextUtils.isEmpty(mUid)) {
             ProfilModel profilModel = new ProfilModel(pseudo);
-            mDatabaseReference.child(mUid).setValue(profilModel);
+            mPseudoReference.child(mUid).setValue(profilModel);
             addUserChangeListener();
         }
     }
 
     private void addUserChangeListener() {
-        mDatabaseReference.child(mUid).addValueEventListener(new ValueEventListener() {
+        mPseudoReference.child(mUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
@@ -149,5 +172,63 @@ public class ProfilActivity extends AppCompatActivity {
 
     private void updateUser(String pseudo) {
         FirebaseDatabase.getInstance().getReference("users").child(mUid).child("pseudo").setValue(pseudo);
+    }
+
+    // Permission pour utiliser l'appareil photo
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(ProfilActivity.this, Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            mIsOk = true;
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]
+                    {Manifest.permission.CAMERA}, CAMERA);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int request, String permissions[], int[] results) {
+        mIsOk = false;
+        switch (request) {
+            case CAMERA:
+                if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
+                    mIsOk = true;
+                }
+        }
+    }
+
+    // Méthodes relatives à l'avatar
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case APP_PHOTO:
+                try {
+                    if (resultCode == RESULT_OK) {
+                        mGetImageUrl = mFileUri.getPath();
+                    }
+                    saveCaptureImage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
+
+    private void saveCaptureImage() {
+        if (!mGetImageUrl.equals("") && mGetImageUrl != null) {
+            Glide.with(this)
+                    .load(CameraUtils.convertImagePathToBitmap(mGetImageUrl, false))
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(mAvatar);
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child(mUid).child("avatar.jpg");
+            ref.putFile(mFileUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadUri = taskSnapshot.getDownloadUrl();
+                    FirebaseDatabase.getInstance().getReference("users")
+                            .child(mUid).child("avatar").setValue(downloadUri.toString());
+                }
+            });
+        }
     }
 }
