@@ -38,6 +38,7 @@ public class VegetalModel implements Parcelable {
         this.name = name;
     }
 
+
     public void setAdress(String adress) {
         this.adress = adress;
     }
@@ -76,12 +77,13 @@ public class VegetalModel implements Parcelable {
         this.name = name;
     }
 
-    public VegetalModel(Bitmap bitmapPicture, String name, String adress, Date date, boolean isFound) {
+    public VegetalModel(Bitmap bitmapPicture, String name, String adress, Date date, boolean isFound, int idDatabase) {
         this.bitmapPicture = bitmapPicture;
         this.name = name;
         this.adress = adress;
         this.date = date;
         this.isFound = isFound;
+        this.idDatabase = idDatabase;
 
     }
 
@@ -111,6 +113,8 @@ public class VegetalModel implements Parcelable {
             return new VegetalModel[size];
         }
     };
+
+
 
     public Bitmap getBitmapPicture() {
         return bitmapPicture;

@@ -88,13 +88,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean mIsWaitingAPILoaded = false;
     private LatLng mLocationDefi;
 
+
+    VegetalModel foundVegetal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+
         apiReady();
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -246,7 +251,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 JSONObject fields = recordsInfo.getJSONObject("fields");
                                 String patrimoine = fields.getString("patrimoine");
                                 String adresse = fields.getString("adresse");
-                                String vegetalId = fields.getString("id");
+                                int vegetalId = Integer.parseInt(fields.getString("id"));
+
 
                                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
                                 Date date = Calendar.getInstance().getTime();
@@ -261,14 +267,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les vegetaux trouver
 
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference reference = database.getReference("users").child(mUId);
 
-                                VegetalModel foundVegetal = new VegetalModel(null, patrimoine, adresse, null, false);
-                                reference.child("vegetaux").child(vegetalId).setValue(foundVegetal);
-
-
-                                Marker marker;
+                                final Marker marker;
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
@@ -285,6 +285,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
                                     marker.setVisible(false);
+
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference reference = database.getReference("users").child(mUId);
+
+                                    foundVegetal = new VegetalModel(null, patrimoine, adresse, null, false, vegetalId);
+                                    reference.child("vegetaux").child(String.valueOf(vegetalId)).setValue(foundVegetal);
+
+
                                     markers.add(marker);
 
                                 }
@@ -325,7 +333,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (markers.size() == 0) {
             mIsWaitingAPILoaded = true;
         }
-        int i = 0;
+        int i = 1;
         for (Marker marker : markers) {
             if (marker == markers.get(mRandom)) {
                 marker.setVisible(true);
@@ -340,30 +348,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 float distance = loc1.distanceTo(loc2);
 
-                marker.setVisible(distance < 500);
-
-
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference itineraryRef = database.getReference("vegetaux");
-                itineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-
-                });
                 if (distance < 20) {
-                   // final Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    //intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
-                    //startActivity(intent);
+
+                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    final DatabaseReference vegetauxRef = database.getReference("users").child(mUId).child("vegetaux").child(String.valueOf(i));
+                    vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
+                            foundVegetal.setFound(true);
+                            vegetauxRef.setValue(foundVegetal);
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+
+                    });
+                    marker.setVisible(true);
+                    startActivity(intent);
                 }
             }
             i++;
