@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String NAME = "NAME";
     public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
-    public static final int RADIUS_DISTANCE = 500
+    public static final int RADIUS_DISTANCE = 500;
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
