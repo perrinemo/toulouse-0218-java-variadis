@@ -24,21 +24,21 @@ public class VegetalModel implements Parcelable {
     private int picture;
     private Bitmap bitmapPicture;
     private String name;
-    private String adress;
+    private String address;
     private boolean isFound;
     private String date;
     private int idDatabase;
-    private LatLng coordonates;
+    private LatLng coordinates;
 
     public VegetalModel(int picture, String name) {
         this.picture = picture;
         this.name = name;
     }
 
-    public VegetalModel(Bitmap bitmapPicture, String name, String adress, String date, boolean isFound) {
+    public VegetalModel(Bitmap bitmapPicture, String name, String address, String date, boolean isFound) {
         this.bitmapPicture = bitmapPicture;
         this.name = name;
-        this.adress = adress;
+        this.address = address;
         this.date = date;
         this.isFound = isFound;
 
@@ -52,9 +52,9 @@ public class VegetalModel implements Parcelable {
         picture = in.readInt();
         bitmapPicture = in.readParcelable(Bitmap.class.getClassLoader());
         name = in.readString();
-        adress = in.readString();
+        address = in.readString();
         idDatabase = in.readInt();
-        coordonates = in.readParcelable(LatLng.class.getClassLoader());
+        coordinates = in.readParcelable(LatLng.class.getClassLoader());
     }
 
     public static Creator<VegetalModel> getCREATOR() {
@@ -69,13 +69,13 @@ public class VegetalModel implements Parcelable {
         isFound = found;
     }
 
-    public String getAdress() {
+    public String getAddress() {
 
-        return adress;
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getDate() {
@@ -118,12 +118,12 @@ public class VegetalModel implements Parcelable {
         this.idDatabase = idDatabase;
     }
 
-    public LatLng getCoordonates() {
-        return coordonates;
+    public LatLng getCoordinates() {
+        return coordinates;
     }
 
-    public void setCoordonates(LatLng coordonates) {
-        this.coordonates = coordonates;
+    public void setCoordinates(LatLng coordinates) {
+        this.coordinates = coordinates;
     }
 
     @Override
@@ -136,8 +136,8 @@ public class VegetalModel implements Parcelable {
         dest.writeInt(picture);
         dest.writeParcelable(bitmapPicture, flags);
         dest.writeString(name);
-        dest.writeString(adress);
+        dest.writeString(address);
         dest.writeInt(idDatabase);
-        dest.writeParcelable(coordonates, flags);
+        dest.writeParcelable(coordinates, flags);
     }
 }

@@ -79,9 +79,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String mVegetalDefi;
     private Random r2 = new Random();
     private int mRandom;
-    private ArrayList<Integer> defiDone = new ArrayList<>();
+    private ArrayList<Integer> mDefiDone = new ArrayList<>();
     //Attribut qui sera utile ultérieurement
-    private ArrayList<VegetalModel> foundVegetals = new ArrayList<>();
+    private ArrayList<VegetalModel> mFoundVegetals = new ArrayList<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;

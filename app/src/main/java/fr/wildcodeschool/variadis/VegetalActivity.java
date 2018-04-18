@@ -3,13 +3,11 @@ package fr.wildcodeschool.variadis;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +40,7 @@ public class VegetalActivity extends AppCompatActivity {
         if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
             imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
             txtVegetal.setText(foundVegetal.getName());
-            placeVegetal.setText(foundVegetal.getAdress());
+            placeVegetal.setText(foundVegetal.getAddress());
             lastFind.setText(foundVegetal.getDate());
         }
 
