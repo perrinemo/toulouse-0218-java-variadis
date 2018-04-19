@@ -58,7 +58,12 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
-        Button validPseudo = findViewById(R.id.btn_ok_pseudo);
+        ImageView info = findViewById(R.id.btn_info);
+        Button okPseudo = findViewById(R.id.btn_ok_pseudo);
+        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+
+        mAvatar = findViewById(R.id.avatar);
 
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mEditPseudo = findViewById(R.id.edit_pseudo);
@@ -118,6 +123,14 @@ public class ProfilActivity extends AppCompatActivity {
                 startActivity(intent);
                 auth.signOut();
                 finish();
+            }
+        });
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfilActivity.this, InfosActivity.class);
+                startActivity(intent);
             }
         });
 
