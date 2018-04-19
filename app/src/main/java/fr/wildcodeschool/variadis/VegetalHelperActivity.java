@@ -14,8 +14,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.Date;
+
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
+import static fr.wildcodeschool.variadis.MapsActivity.ADRESS;
 import static fr.wildcodeschool.variadis.MapsActivity.NAME;
+
+import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 
 public class VegetalHelperActivity extends AppCompatActivity {
 
@@ -43,9 +48,8 @@ public class VegetalHelperActivity extends AppCompatActivity {
         goToVegetal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Parcelable foundVegetal = new VegetalModel(mBitmap, "Testname");
+
                 Intent intent = new Intent(VegetalHelperActivity.this, VegetalActivity.class);
-                intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
                 intent.putExtra(CLASS_FROM, "helper");
                 startActivity(intent);
                 finish();

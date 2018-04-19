@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class VegetalModel implements Parcelable {
 
+
     public static final Creator<VegetalModel> CREATOR = new Creator<VegetalModel>() {
         @Override
         public VegetalModel createFromParcel(Parcel in) {
@@ -23,56 +24,107 @@ public class VegetalModel implements Parcelable {
     private int picture;
     private Bitmap bitmapPicture;
     private String name;
+    private String address;
+    private boolean isFound;
+    private String date;
     private int idDatabase;
-    private LatLng coordonates;
+    private LatLng coordinates;
 
     public VegetalModel(int picture, String name) {
         this.picture = picture;
         this.name = name;
     }
 
-    public VegetalModel(Bitmap bitmapPicture, String name) {
+    public VegetalModel(Bitmap bitmapPicture, String name, String address, String date, boolean isFound) {
         this.bitmapPicture = bitmapPicture;
         this.name = name;
+        this.address = address;
+        this.date = date;
+        this.isFound = isFound;
 
     }
 
-    public VegetalModel(int picture, String name, int idDatabase, LatLng coordonates) {
-        this.picture = picture;
-        this.name = name;
-        this.idDatabase = idDatabase;
-        this.coordonates = coordonates;
+    public VegetalModel() {
+
     }
 
     protected VegetalModel(Parcel in) {
         picture = in.readInt();
         bitmapPicture = in.readParcelable(Bitmap.class.getClassLoader());
         name = in.readString();
+        address = in.readString();
         idDatabase = in.readInt();
-        coordonates = in.readParcelable(LatLng.class.getClassLoader());
+        coordinates = in.readParcelable(LatLng.class.getClassLoader());
+    }
+
+    public static Creator<VegetalModel> getCREATOR() {
+        return CREATOR;
+    }
+
+    public boolean isFound() {
+        return isFound;
+    }
+
+    public void setFound(boolean found) {
+        isFound = found;
+    }
+
+    public String getAddress() {
+
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Bitmap getBitmapPicture() {
         return bitmapPicture;
     }
 
+    public void setBitmapPicture(Bitmap bitmapPicture) {
+        this.bitmapPicture = bitmapPicture;
+    }
 
     public int getPicture() {
         return picture;
+    }
+
+    public void setPicture(int picture) {
+        this.picture = picture;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getIdDatabase() {
         return idDatabase;
     }
 
-    public LatLng getCoordonates() {
-        return coordonates;
+    public void setIdDatabase(int idDatabase) {
+        this.idDatabase = idDatabase;
     }
 
+    public LatLng getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(LatLng coordinates) {
+        this.coordinates = coordinates;
+    }
 
     @Override
     public int describeContents() {
@@ -84,7 +136,8 @@ public class VegetalModel implements Parcelable {
         dest.writeInt(picture);
         dest.writeParcelable(bitmapPicture, flags);
         dest.writeString(name);
+        dest.writeString(address);
         dest.writeInt(idDatabase);
-        dest.writeParcelable(coordonates, flags);
+        dest.writeParcelable(coordinates, flags);
     }
 }
