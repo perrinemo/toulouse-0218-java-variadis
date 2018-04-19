@@ -58,16 +58,16 @@
         <activity
             android:name=".ProfilActivity"
             android:screenOrientation="portrait" />
-        <activity 
+        <activity
             android:name=".VegetalHelperActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".InscriptionActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPassword"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".InfosActivity"></activity>
     </application>
 
 </manifest>
