@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="fr.wildcodeschool.variadis.MainActivity">
+    tools:context="fr.wildcodeschool.variadis.InscriptionActivity">
 
 
     <ImageView
@@ -28,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:fontFamily="@font/philosopher"
         android:text="@string/app_slogan"
         android:textAlignment="center"
@@ -40,45 +39,87 @@
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <EditText
-        android:id="@+id/edit_pseudo_main"
-        android:layout_width="wrap_content"
+        android:id="@+id/edit_email"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="@string/entre_un_pseudo"
-        android:inputType="textPersonName"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/slogan" />
 
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/mot_de_passe"
+        android:inputType="textPassword"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+
     <TextView
-        android:id="@+id/msg_error_pseudo"
+        android:id="@+id/msg_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="@string/msg_error_pseudo"
+        android:text="@string/minimum_mot_de_passe"
         android:textColor="@color/colorAccent"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo_main"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/edit_password" />
 
     <Button
-        android:id="@+id/btn_go"
+        android:id="@+id/btn_log"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/philosopher"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/border"
-        android:text="@string/go"
-        android:textColor="@color/white"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/colorAccent"
+        android:text="@string/inscription"
+        android:textColor="@color/cast_expanded_controller_text_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo_main" />
+        app:layout_constraintTop_toBottomOf="@+id/msg_error" />
+
+    <Button
+        android:id="@+id/btn_already_registered"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_width="87dp"
+        android:layout_height="28dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:text="@string/deja_inscrit"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/forgot_password"
+        style="@style/Widget.AppCompat.Button.Small"
+        android:layout_width="142dp"
+        android:layout_height="23dp"
+        android:layout_marginEnd="32dp"
+        android:background="@null"
+        android:text="@string/oublie_pass"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/msg_error" />
+
 
 </android.support.constraint.ConstraintLayout>

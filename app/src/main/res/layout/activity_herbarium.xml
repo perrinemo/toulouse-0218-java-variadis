@@ -73,17 +73,15 @@
         app:layout_constraintTop_toBottomOf="@+id/empty_herbarium" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/return_to_map"
+        android:id="@+id/btn_test"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginBottom="84dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:clickable="true"
-        app:backgroundTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_map" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/betula_papyrifera" />
 
 </android.support.constraint.ConstraintLayout>
 

@@ -1,14 +1,21 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
+import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
 public class VegetalActivity extends AppCompatActivity {
 
@@ -18,27 +25,36 @@ public class VegetalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vegetal);
 
         VegetalModel vegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_VEGETAL);
+        VegetalModel foundVegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_FOUNDVEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
         TextView txtVegetal = findViewById(R.id.nom_vegetal);
-        imgVegetal.setImageResource(vegetal.getPicture());
-        txtVegetal.setText(vegetal.getName());
+        TextView placeVegetal = findViewById(R.id.lieu);
+        TextView lastFind = findViewById(R.id.last_find);
 
-        FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
-        returnToMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent (VegetalActivity.this, MapsActivity.class);
-                VegetalActivity.this.startActivity(intent);
-            }
-        });
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
+        Date date = Calendar.getInstance().getTime();
+        String dateFormat = format.format(date);
 
+
+
+        if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
+            imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
+            txtVegetal.setText(foundVegetal.getName());
+            placeVegetal.setText(foundVegetal.getAddress());
+            lastFind.setText(foundVegetal.getDate());
+        }
+
+        if (getIntent().getStringExtra(CLASS_FROM).equals("herbarium")) {
+            imgVegetal.setImageResource(vegetal.getPicture());
+            txtVegetal.setText(vegetal.getName());
+        }
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(VegetalActivity.this, HerbariumActivity.class);
-                VegetalActivity.this.startActivity(intent);
+                startActivity(new Intent(VegetalActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
@@ -46,8 +62,19 @@ public class VegetalActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(VegetalActivity.this, ProfilActivity.class);
-                VegetalActivity.this.startActivity(intent);
+
+               startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+               finish();
+
+            }
+        });
+
+        ImageView ivMap = findViewById(R.id.img_map);
+        ivMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(VegetalActivity.this, MapsActivity.class));
+                finish();
             }
         });
 

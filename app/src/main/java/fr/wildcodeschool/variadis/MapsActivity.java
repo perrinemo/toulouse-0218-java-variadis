@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -20,9 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.TextView;
- 
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,37 +38,63 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Random;
 
-
-import static fr.wildcodeschool.variadis.MainActivity.EXTRA_PSEUDO;
+import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    public static final String DEFI_OK = "DEFI_OK";
+    public static final String NAME = "NAME";
+    public static final String DATE = "DATE";
+    public static final String ADRESS = "ADRESS";
+    public static final int RADIUS_DISTANCE = 500;
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
 
+    private String mUId;
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
-    private LatLng myPosition;
-    private boolean loadApi = false;
+    private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private Location lastLocation;
+    private String mVegetalDefi;
+    private Random r2 = new Random();
+    private int mRandom;
+    private ArrayList<Integer> mDefiDone = new ArrayList<>();
+    //Attribut qui sera utile ultérieurement
+    private ArrayList<VegetalModel> mFoundVegetals = new ArrayList<>();
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Location mLastLocation;
+    private boolean mIsWaitingAPILoaded = false;
+    private LatLng mLocationDefi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        DefiHelper.openDialogDefi(MapsActivity.this);
 
+        apiReady();
+        mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -98,10 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        Intent intent = getIntent();
-        final String pseudo = intent.getStringExtra(EXTRA_PSEUDO);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, HerbariumActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -117,19 +137,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MapsActivity.this, ProfilActivity.class);
-                intent.putExtra(EXTRA_PSEUDO, pseudo);
                 startActivity(intent);
+                finish();
             }
         });
 
-        ImageView ivDefi = findViewById(R.id.img_defi);
+        ImageView ivDefi = findViewById(R.id.img_map);
+        TextView txtDefi = findViewById(R.id.txt_map);
+        ivDefi.setImageResource(R.drawable.defi);
+        txtDefi.setText(R.string.defis);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
             }
         });
     }
+
 
     /**
      * Méthode qui demande la permission d'accéder au GPS du téléphone
@@ -184,26 +208,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         MapStyleOptions mapFilter = MapStyleOptions.loadRawResourceStyle(MapsActivity.this, R.raw.map_style);
         googleMap.setMapStyle(mapFilter);
 
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+        mFusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
                 if (location != null) {
-                    lastLocation = location;
+                    mLastLocation = location;
                     updateMarker(location);
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+
                 }
             }
         });
 
-        apiReady();
     }
 
     private void apiReady() {
-        if (loadApi) {
-            return;
-        }
-        loadApi = true;
+
         //Fil d'attente API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
@@ -219,6 +238,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         try {
                             JSONArray records = response.getJSONArray("records");
+                            mRandom = r2.nextInt(records.length());
+                            mDefiDone.add(mRandom);
                             for (int j = 0; j < records.length(); j++) {
                                 JSONObject recordsInfo = (JSONObject) records.get(j);
 
@@ -226,6 +247,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 String patrimoine = fields.getString("patrimoine");
                                 String adresse = fields.getString("adresse");
                                 String vegetalId = fields.getString("id");
+
+                                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
+                                Date date = Calendar.getInstance().getTime();
+                                String dateFormat = format.format(date);
+
                                 JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
                                 String latitude = coordonates.get(0).toString();
                                 String longitude = coordonates.get(1).toString();
@@ -233,22 +259,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 double lng = Double.parseDouble(longitude);
 
                                 //Ajout des points de tous les végétaux sur la carte
-                                //TODO: Afficher que les gegetaux trouver
-                                //
+                                //TODO: Afficher que les vegetaux trouver
 
-                                Marker marker =
-                                        mMap.addMarker(new MarkerOptions()
-                                                .position(new LatLng(lat, lng))
-                                                .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference reference = database.getReference("users").child(mUId);
 
-                                marker.setVisible(false);
+                                VegetalModel foundVegetal = new VegetalModel(null, patrimoine, adresse, dateFormat, false);
+                                reference.child("vegetaux").child(vegetalId).setValue(foundVegetal);
 
-                                markers.add(marker);
 
+                                Marker marker;
+                                Marker markerDefi;
+                                if (j == mRandom) {
+                                    mVegetalDefi = patrimoine;
+                                    markerDefi = mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(lat, lng))
+                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                    mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
+
+
+                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
+                                    markers.add(markerDefi);
+                                } else {
+                                    marker = mMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(lat, lng))
+                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                    marker.setVisible(false);
+                                    markers.add(marker);
+
+                                }
                             }
+                            if (mIsWaitingAPILoaded) {
+                                updateMarker(mLastLocation);
+                                mIsWaitingAPILoaded = false;
+                            }
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        mIsWaitingAPILoaded = true;
 
                     }
                 },
@@ -269,22 +319,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
     public void updateMarker(Location location) {
-        myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, DEFAULT_ZOOM));
+        mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
+        mLastLocation = location;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
+        if (markers.size() == 0) {
+            mIsWaitingAPILoaded = true;
+        }
+        int i = 0;
         for (Marker marker : markers) {
-            Location loc1 = new Location("");
-            loc1.setLatitude(myPosition.latitude);
-            loc1.setLongitude(myPosition.longitude);
+            if (marker == markers.get(mRandom)) {
+                marker.setVisible(true);
+            } else {
+                Location loc1 = new Location("");
+                loc1.setLatitude(mMyPosition.latitude);
+                loc1.setLongitude(mMyPosition.longitude);
 
-            Location loc2 = new Location("");
-            loc2.setLatitude(marker.getPosition().latitude);
-            loc2.setLongitude(marker.getPosition().longitude);
+                Location loc2 = new Location("");
+                loc2.setLatitude(marker.getPosition().latitude);
+                loc2.setLongitude(marker.getPosition().longitude);
 
-            float distance = loc1.distanceTo(loc2);
+                float distance = loc1.distanceTo(loc2);
 
-            marker.setVisible(distance < 500);
+                marker.setVisible(distance < RADIUS_DISTANCE);
+
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference vegetauxRef = database.getReference("vegetaux");
+                vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //Objet en lecture qui sera utile plus tard
+                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
+
+                });
+                if (distance < 20) {
+                    //Intent inutile et non fonctionnel en soi mais utile et fonctionnel avec le code de Georges
+                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                    intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
+                    startActivity(intent);
+                }
+            }
+            i++;
         }
     }
+
 
     @SuppressLint("MissingPermission")
     private void setDeviceLocation() {

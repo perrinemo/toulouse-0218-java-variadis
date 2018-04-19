@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class HerbariumActivity extends AppCompatActivity {
 
     public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
+    public static final String CLASS_FROM = "CLASS_FROM";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,22 +31,23 @@ public class HerbariumActivity extends AppCompatActivity {
         final CheckBox checkIfEmpty = findViewById(R.id.check_if_empty);
         final ArrayList<VegetalModel> vegetalList = new ArrayList<>();
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
-        final FloatingActionButton returnToMap = findViewById(R.id.return_to_map);
         ImageView ivProfil = findViewById(R.id.img_profile);
-        ImageView ivDefi = findViewById(R.id.img_defi);
+        ImageView ivMap = findViewById(R.id.img_map);
 
         ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-        ivDefi.setOnClickListener(new View.OnClickListener() {
+        ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(HerbariumActivity.this);
+                HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, MapsActivity.class));
+                finish();
             }
         });
 
@@ -74,44 +76,28 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
-
-        returnToMap.setOnClickListener(new View.OnClickListener() {
+        //Bouton test
+        FloatingActionButton btnTest = findViewById(R.id.btn_test);
+        btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HerbariumActivity.this, MapsActivity.class);
-                HerbariumActivity.this.startActivity(intent);
+                HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, VegetalHelperActivity.class));
+                finish();
             }
         });
 
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
                 Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
+                intent.putExtra(CLASS_FROM, "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
-                HerbariumActivity.this.startActivity(intent);
+                startActivity(intent);
+                finish();
 
             }
         });
-
-        herbView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {
-
-
-            }
-
-            @Override
-            public void onScroll(AbsListView absListView, int firstItem, int visibleItem, int totalItem) {
-                if ((totalItem < 9) || (herbView.canScrollVertically(View.SCROLL_INDICATOR_TOP))) {
-                    returnToMap.show();
-                } else {
-                    returnToMap.hide();
-                }
-            }
-        });
-
 
     }
 }
