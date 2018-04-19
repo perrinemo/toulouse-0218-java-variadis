@@ -2,6 +2,7 @@ package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         ImageView imgMark9 = findViewById(R.id.img_marker9);
         ImageView imgMark10 = findViewById(R.id.img_marker);
         ImageView imgMark11 = findViewById(R.id.img_defi);
+        ImageView imgBack = findViewById(R.id.img_background);
 
 
 
@@ -57,6 +59,7 @@ public class SplashActivity extends AppCompatActivity {
         animSplash(imgMark9, 2100);
         animSplash(imgMark10, 2300);
         animSplash(imgMark11, 2800);
+        animSplash(imgBack, 5000);
 
 
 
