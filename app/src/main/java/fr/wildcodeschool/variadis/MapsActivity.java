@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -57,6 +59,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import static fr.wildcodeschool.variadis.SplashActivity.PREF;
 import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
 
@@ -272,13 +275,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
+                                    SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+                                    boolean previouslyStarted = prefs.getBoolean(PREF, false);
+                                    if(!previouslyStarted) {
+                                        DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
+                                        SharedPreferences.Editor edit = prefs.edit();
+                                        edit.putBoolean(PREF, true);
+                                        edit.apply();
+                                    }
+
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
                                     mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
 
 
-                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
+
                                     markers.add(markerDefi);
                                 } else {
                                     marker = mMap.addMarker(new MarkerOptions()
@@ -363,7 +375,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (distance < 20) {
                     //Intent inutile et non fonctionnel en soi mais utile et fonctionnel avec le code de Georges
                     Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
+                    //intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
                     startActivity(intent);
                 }
             }
@@ -436,6 +448,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
+
 
 
 }
