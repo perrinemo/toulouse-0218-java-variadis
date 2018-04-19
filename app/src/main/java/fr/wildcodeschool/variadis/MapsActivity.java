@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -61,7 +59,6 @@ import java.util.Locale;
 import java.util.Random;
 
 import static fr.wildcodeschool.variadis.SplashActivity.PREF;
-import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -75,7 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-    private static long back_pressed;
+    public static long back_pressed;
 
 
     private String mUId;
@@ -281,7 +278,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     mLocationDefi = new LatLng(lat, lng);
                                     SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
                                     boolean previouslyStarted = prefs.getBoolean(PREF, false);
-                                    if(!previouslyStarted) {
+                                    if (!previouslyStarted) {
                                         DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
                                         SharedPreferences.Editor edit = prefs.edit();
                                         edit.putBoolean(PREF, true);
@@ -292,7 +289,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
                                     mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
-
 
 
                                     markers.add(markerDefi);
@@ -377,9 +373,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 });
                 if (distance < 20) {
-                    //Intent inutile et non fonctionnel en soi mais utile et fonctionnel avec le code de Georges
+                    //TODO Créer requête pour accéder aux données
                     Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    //intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
                     startActivity(intent);
                 }
             }
@@ -456,12 +451,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onBackPressed() {
         if (back_pressed + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
             super.onBackPressed();
         } else
             Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
         back_pressed = System.currentTimeMillis();
     }
-
 
 
 }

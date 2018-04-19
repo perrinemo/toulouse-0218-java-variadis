@@ -13,8 +13,11 @@ import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
 
 public class HerbariumActivity extends AppCompatActivity {
 
@@ -86,6 +89,7 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
+        //TODO Remplacer les Parcelables par des requêtes Firebase
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -99,5 +103,14 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
     }
 }

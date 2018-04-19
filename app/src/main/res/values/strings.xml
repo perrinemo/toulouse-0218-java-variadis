@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Variadís</string>
     <string name="variadis">Variadís</string>
-    <string name="app_slogan">Mets toi au vert dans la ville rose !</string>
+    <string name="app_slogan">Mets toi au vert dans la ville rose ! </string>
     <string name="empty">Ton herbier est encore vide ! Reviens quand tu auras trouvé ton premier végétal.</string>
     <string name="my_herbarium">Mon Herbier</string>
     <string name="empty_herbarium">Herbier vide</string>

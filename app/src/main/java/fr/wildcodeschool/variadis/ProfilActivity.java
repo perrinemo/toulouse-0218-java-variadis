@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -22,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
 
 
 public class ProfilActivity extends AppCompatActivity {
@@ -149,5 +152,14 @@ public class ProfilActivity extends AppCompatActivity {
 
     private void updateUser(String pseudo) {
         FirebaseDatabase.getInstance().getReference("users").child(mUid).child("pseudo").setValue(pseudo);
+    }
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
     }
 }

@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
+
 public class InscriptionActivity extends AppCompatActivity {
 
     private EditText mEmail, mPassword;
@@ -79,5 +81,14 @@ public class InscriptionActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
     }
 }
