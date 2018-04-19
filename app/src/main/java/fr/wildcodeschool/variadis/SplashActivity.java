@@ -18,15 +18,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-
+        SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
+        pref.edit().clear().apply();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
-                SharedPreferences.Editor edit = pref.edit();
-                edit.putBoolean(PREF, false);
-                edit.apply();
-                Intent i = new Intent(SplashActivity.this, ConnexionActivity.class);
+                Intent i = new Intent(SplashActivity.this, MapsActivity.class);
                 startActivity(i);
             }
 

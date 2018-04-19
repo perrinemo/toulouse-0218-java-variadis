@@ -275,6 +275,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
+                                    mLocationDefi = new LatLng(lat, lng);
                                     SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
                                     boolean previouslyStarted = prefs.getBoolean(PREF, false);
                                     if(!previouslyStarted) {
