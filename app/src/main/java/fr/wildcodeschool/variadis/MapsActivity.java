@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -74,6 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
+    private static long back_pressed;
+
 
     private String mUId;
     private boolean mLocationPermissionGranted;
@@ -448,6 +451,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (back_pressed + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
+        back_pressed = System.currentTimeMillis();
     }
 
 
