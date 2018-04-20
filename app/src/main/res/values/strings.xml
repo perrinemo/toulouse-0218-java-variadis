@@ -52,5 +52,15 @@
     <string name="visualiser_vegetal">Visualiser sur la carte</string>
     <string name="fermer_popup">Fermer</string>
     <string name="ok">OK</string>
+<<<<<<< HEAD
     <string name="back_again">Appuie encore pour quitter l\'app</string>
+=======
+    <string name="text_infos">Variadís est un jeu qui prend le pari de faire découvrir de façon ludique,
+        \nla flore qui vous entoure :
+        \npas besoin d’habiter à la campagne pour cela, le centre-ville de Toulouse regorge d\'arbres !
+        \n\nChaque jour, des défis à réaliser :
+        \nouvrez votre carte et trouvez une plante précise près de vous.
+        \nGagnez des points pour augmenter votre rang !
+        \n\nDeviendrez-vous le premier Écowild parmi vos amis ?</string>
+>>>>>>> b6e7d298bd642e924282edf9c79c27bb943793a1
 </resources>
