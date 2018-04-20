@@ -97,7 +97,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         apiReady();
+        VegetalModel vm = new VegetalModel(null, "test", "test", "test", false);
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("users");
+        userRef.setValue(mUId);
+        userRef.child(mUId).setValue(vm);
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -264,11 +269,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les vegetaux trouver
 
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference reference = database.getReference("users").child(mUId);
 
-                                VegetalModel foundVegetal = new VegetalModel(null, patrimoine, adresse, dateFormat, false);
-                                reference.child("vegetaux").child(vegetalId).setValue(foundVegetal);
+
+
+
 
 
                                 Marker marker;
@@ -355,23 +359,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 marker.setVisible(distance < RADIUS_DISTANCE);
 
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference vegetauxRef = database.getReference("vegetaux");
-                vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Objet en lecture qui sera utile plus tard
-                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
 
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-
-                });
                 if (distance < 20) {
                     //TODO Créer requête pour accéder aux données
                     Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
