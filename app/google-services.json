@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "795837259141-j87rjeb0caff91mf7tjj5mb8qcu5p0ea.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.wildcodeschool.variadis",
+            "certificate_hash": "861c40560415c36e130a58391b6cc8ba3c68071e"
+          }
+        },
+        {
           "client_id": "795837259141-46qt3nd8ur3c1lm2762o2ddl5jl4uuuu.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795837259141-46qt3nd8ur3c1lm2762o2ddl5jl4uuuu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

@@ -15,7 +15,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.ProgressBar;
+
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -29,6 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 
 public class ProfilActivity extends AppCompatActivity {
@@ -60,7 +64,6 @@ public class ProfilActivity extends AppCompatActivity {
         ImageButton deco = findViewById(R.id.btn_logout);
         ImageView info = findViewById(R.id.btn_info);
         Button okPseudo = findViewById(R.id.btn_ok_pseudo);
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
         mAvatar = findViewById(R.id.avatar);
@@ -104,7 +107,7 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        validPseudo.setOnClickListener(new View.OnClickListener() {
+        okPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String pseudo = mEditPseudo.getText().toString();
@@ -182,6 +185,18 @@ public class ProfilActivity extends AppCompatActivity {
     private void updateUser(String pseudo) {
         FirebaseDatabase.getInstance().getReference("users").child(mUid).child("pseudo").setValue(pseudo);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
+    }
+
 
     // Permission pour utiliser l'appareil photo
     public void checkPermission() {
