@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SplashActivity extends AppCompatActivity {
 
-    public static final int SPLASH_TIME_OUT = 8000;
+    public static final int SPLASH_TIME_OUT = 6000;
     public static final String PREF = "pref";
 
     @Override
@@ -44,7 +44,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-        animSplash(imgLogo, 5000);
+        animSplash(imgLogo, 4500);
         animSplash(imgTree2, 3500);
         animSplash(imgTree, 4000);
         animSplash(imgTree3, 4200);
@@ -59,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
         animSplash(imgMark9, 2100);
         animSplash(imgMark10, 2300);
         animSplash(imgMark11, 2800);
-        animSplash(imgBack, 5000);
+        animSplash(imgBack, 4500);
 
 
 

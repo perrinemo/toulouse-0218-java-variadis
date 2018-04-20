@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -16,7 +15,6 @@ import java.util.Locale;
 
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
-import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
 import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
 
 public class VegetalActivity extends AppCompatActivity {

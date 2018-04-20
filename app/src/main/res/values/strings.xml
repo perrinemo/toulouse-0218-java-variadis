@@ -52,4 +52,5 @@
     <string name="visualiser_vegetal">Visualiser sur la carte</string>
     <string name="fermer_popup">Fermer</string>
     <string name="ok">OK</string>
+    <string name="back_again">Appuie encore pour quitter l\'app</string>
 </resources>

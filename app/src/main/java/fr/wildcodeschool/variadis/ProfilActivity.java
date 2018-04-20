@@ -24,7 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 
 public class ProfilActivity extends AppCompatActivity {
@@ -155,11 +155,11 @@ public class ProfilActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if (back_pressed + 2000 > System.currentTimeMillis()) {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
             System.exit(0);
             super.onBackPressed();
         } else
-            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
-        back_pressed = System.currentTimeMillis();
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 }

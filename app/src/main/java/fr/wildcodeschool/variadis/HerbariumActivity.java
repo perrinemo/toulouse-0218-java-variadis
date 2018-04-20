@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class HerbariumActivity extends AppCompatActivity {
 
@@ -104,11 +103,11 @@ public class HerbariumActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if (back_pressed + 2000 > System.currentTimeMillis()) {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
             System.exit(0);
             super.onBackPressed();
         } else
-            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
-        back_pressed = System.currentTimeMillis();
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 }

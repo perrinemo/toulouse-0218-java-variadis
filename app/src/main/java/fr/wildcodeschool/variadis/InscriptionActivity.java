@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-import static fr.wildcodeschool.variadis.MapsActivity.back_pressed;
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class InscriptionActivity extends AppCompatActivity {
 
@@ -84,11 +84,11 @@ public class InscriptionActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if (back_pressed + 2000 > System.currentTimeMillis()) {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
             System.exit(0);
             super.onBackPressed();
         } else
-            Toast.makeText(getBaseContext(), "Press once again to exit!", Toast.LENGTH_SHORT).show();
-        back_pressed = System.currentTimeMillis();
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 }
