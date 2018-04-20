@@ -98,8 +98,6 @@ public class HerbariumActivity extends AppCompatActivity {
                 intent.putExtra(CLASS_FROM, "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
                 startActivity(intent);
-                finish();
-
             }
         });
 
