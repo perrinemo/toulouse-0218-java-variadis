@@ -44,7 +44,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
         TextView txtVegetal = findViewById(R.id.vegetal_name);
         txtVegetal.setText(getIntent().getStringExtra(NAME));
 
-        Button goToVegetal = findViewById(R.id.btn_goto_vegetal);
+        /*Button goToVegetal = findViewById(R.id.btn_goto_vegetal);
         goToVegetal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +54,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        });
+        });*/
 
         Button quit = findViewById(R.id.btn_quit);
         quit.setOnClickListener(new View.OnClickListener() {
@@ -71,13 +71,22 @@ public class VegetalHelperActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        ImageView ivVegetal = findViewById(R.id.img_found_vegetal);
-        TextView addPicture = findViewById(R.id.add_picture);
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        Glide.with(this).load(bitmap).into(ivVegetal);
-        ivVegetal.setClickable(false);
-        addPicture.setVisibility(View.INVISIBLE);
-        mBitmap = bitmap.copy(bitmap.getConfig(), true);
+
+        try {
+            if (resultCode == RESULT_OK) {
+                ImageView ivVegetal = findViewById(R.id.img_found_vegetal);
+                TextView addPicture = findViewById(R.id.add_picture);
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                Glide.with(this).load(bitmap).into(ivVegetal);
+                ivVegetal.setClickable(false);
+                addPicture.setVisibility(View.INVISIBLE);
+                mBitmap = bitmap.copy(bitmap.getConfig(), true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
 
     }

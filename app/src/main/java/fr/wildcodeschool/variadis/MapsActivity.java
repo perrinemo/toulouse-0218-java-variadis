@@ -359,13 +359,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
 
-                });
+                });/*
                 if (distance < 20) {
                     //Intent inutile et non fonctionnel en soi mais utile et fonctionnel avec le code de Georges
                     Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                     intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
                     startActivity(intent);
-                }
+                }*/
             }
             i++;
         }
