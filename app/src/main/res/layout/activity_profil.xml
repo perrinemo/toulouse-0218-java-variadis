@@ -87,8 +87,6 @@
         app:layout_constraintStart_toEndOf="@+id/edit_pseudo"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
-<<<<<<< HEAD
-
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
@@ -102,9 +100,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
->>>>>>> d2bdc7079756a9281281e197adffa27708553a4a
 
 </android.support.constraint.Const
-aintLayout>=======
+aintLayout>
 
 
