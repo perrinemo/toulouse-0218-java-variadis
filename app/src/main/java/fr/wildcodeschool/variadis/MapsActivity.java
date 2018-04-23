@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -55,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
 
@@ -81,7 +83,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
     private String mVegetalDefi;
-    private Random r2 = new Random();
     private int mRandom;
     private ArrayList<Integer> mDefiDone = new ArrayList<>();
     //Attribut qui sera utile ultérieurement
@@ -96,13 +97,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        apiReady();
-        VegetalModel vm = new VegetalModel(null, "test", "test", "test", false);
+
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("users");
-        userRef.setValue(mUId);
-        userRef.child(mUId).setValue(vm);
+
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -229,136 +228,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void apiReady() {
-
-        //Fil d'attente API
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=551&sort=id";
-
-        // Création de la requête vers l'API, ajout des écouteurs pour les réponses et erreurs possibles
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            JSONArray records = response.getJSONArray("records");
-                            mRandom = r2.nextInt(records.length());
-                            mDefiDone.add(mRandom);
-                            for (int j = 0; j < records.length(); j++) {
-                                JSONObject recordsInfo = (JSONObject) records.get(j);
-
-                                JSONObject fields = recordsInfo.getJSONObject("fields");
-                                String patrimoine = fields.getString("patrimoine");
-                                String adresse = fields.getString("adresse");
-                                String vegetalId = fields.getString("id");
-
-                                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
-                                Date date = Calendar.getInstance().getTime();
-                                String dateFormat = format.format(date);
-
-                                JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
-                                String latitude = coordonates.get(0).toString();
-                                String longitude = coordonates.get(1).toString();
-                                double lat = Double.parseDouble(latitude);
-                                double lng = Double.parseDouble(longitude);
-
-                                //Ajout des points de tous les végétaux sur la carte
-                                //TODO: Afficher que les vegetaux trouver
-
-
-
-
-
-
-
-                                Marker marker;
-                                Marker markerDefi;
-                                if (j == mRandom) {
-                                    mVegetalDefi = patrimoine;
-                                    mLocationDefi = new LatLng(lat, lng);
-                                    SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-                                    boolean previouslyStarted = prefs.getBoolean(PREF, false);
-                                    if (!previouslyStarted) {
-                                        DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
-                                        SharedPreferences.Editor edit = prefs.edit();
-                                        edit.putBoolean(PREF, true);
-                                        edit.apply();
-                                    }
-
-                                    markerDefi = mMap.addMarker(new MarkerOptions()
-                                            .position(new LatLng(lat, lng))
-                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
-                                    mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
-
-
-                                    markers.add(markerDefi);
-                                } else {
-                                    marker = mMap.addMarker(new MarkerOptions()
-                                            .position(new LatLng(lat, lng))
-                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
-                                    marker.setVisible(false);
-                                    markers.add(marker);
-
-                                }
-                            }
-                            if (mIsWaitingAPILoaded) {
-                                updateMarker(mLastLocation);
-                                mIsWaitingAPILoaded = false;
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        mIsWaitingAPILoaded = true;
-
-                    }
-                },
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_ERROR", "onErrorResponse: " + error.getMessage());
-                    }
-                }
-        );
-        // On ajoute la requête à la file d'attente
-        requestQueue.add(jsonObjectRequest);
-    }
 
     /**
      * Localisation du GPS, et par défaut se met sur Toulouse
      */
 
-    public void updateMarker(Location location) {
+    public void updateMarker(final Location location) {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Vegetaux");
+        Random r2 = new Random();
+        //défi aléatoire
+        mRandom = r2.nextInt(65);
+        //recuperation des marqueurs.
         reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public   void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot dataSnapVegetal : dataSnapshot.getChildren()){
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                int i = 0;
+                for (DataSnapshot dataSnapVegetal : dataSnapshot.getChildren()) {
+
                     String vegetalName = dataSnapVegetal.getKey();
-                    for(DataSnapshot dataSnapLatLngList :  dataSnapVegetal.getChildren()){
-                        for(DataSnapshot dataSnapLatLngInfos :  dataSnapLatLngList.getChildren()){
+                    for (DataSnapshot dataSnapLatLngList : dataSnapVegetal.getChildren()) {
+                        for (DataSnapshot dataSnapLatLngInfos : dataSnapLatLngList.getChildren()) {
                             String key = dataSnapLatLngInfos.getKey();
                             String address = dataSnapLatLngInfos.child("adresse").getValue(String.class);
                             double latitude = dataSnapLatLngInfos.child("latlng").child("latitude").getValue(Double.class);
                             double longitude = dataSnapLatLngInfos.child("latlng").child("longitude").getValue(Double.class);
                             LatLng latLng = new LatLng(latitude, longitude);
-                            Marker marker = mMap.addMarker(new MarkerOptions()
-                                    .position(latLng)
-                                    .title("test").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
-                            marker.setVisible(false);
-                            markers.add(marker);
-                            Toast.makeText(MapsActivity.this,latLng.toString(), Toast.LENGTH_SHORT).show();
+
+                            if (i == mRandom) {
+                                Marker markerDefi = mMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                Toast.makeText(MapsActivity.this, latLng.toString(), Toast.LENGTH_SHORT).show();
+                                markerDefi.setVisible(true);
+                                markers.add(markerDefi);
+                                final int defi = mRandom;
+
+                            } else {
+                                Marker marker = mMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                marker.setVisible(false);
+                                markers.add(marker);
+                            }
                         }
+                        i++;
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -366,40 +285,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
-        if (markers.size() == 0) {
-            mIsWaitingAPILoaded = true;
-        }
+
         for (Marker marker : markers) {
-            if (marker == markers.get(mRandom)) {
-                marker.setVisible(true);
-            } else {
-                Location loc1 = new Location("");
-                loc1.setLatitude(mMyPosition.latitude);
-                loc1.setLongitude(mMyPosition.longitude);
-                Location loc2 = new Location("");
-                loc2.setLatitude(marker.getPosition().latitude);
-                loc2.setLongitude(marker.getPosition().longitude);
-                float distance = loc1.distanceTo(loc2);
-           /* if (distance < 20) {
+            Marker markerDefi = markers.get(mRandom);
+            Location loc1 = new Location("");
+            loc1.setLatitude(mMyPosition.latitude);
+            loc1.setLongitude(mMyPosition.longitude);
+            Location loc2 = new Location("");
+            Location loc3 = new Location("");
+            loc2.setLatitude(marker.getPosition().latitude);
+            loc2.setLongitude(marker.getPosition().longitude);
+            loc3.setLatitude(markerDefi.getPosition().latitude);
+            loc3.setLongitude(markerDefi.getPosition().longitude);
+            float distance = loc1.distanceTo(loc2);
+            float distanceDefi = loc1.distanceTo(loc3);
+            if (distance < 20) {
                 Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                final DatabaseReference vegetauxRef = database.getReference("users").child(mUId).child("vegetaux").child(String.valueOf(i));
-                vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
-                        foundVegetal.setFound(true);
-                        vegetauxRef.setValue(foundVegetal);
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
                 marker.setVisible(true);
                 startActivity(intent);
-            }*/
+            }
+            if (distanceDefi < 20) {
+                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                marker.setVisible(true);
+                startActivity(intent);
             }
         }
+
+
     }
 
 
