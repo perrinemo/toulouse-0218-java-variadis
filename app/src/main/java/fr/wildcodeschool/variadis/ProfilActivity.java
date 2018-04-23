@@ -62,9 +62,7 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
-        ImageView info = findViewById(R.id.btn_info);
-        Button okPseudo = findViewById(R.id.btn_ok_pseudo);
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        Button validPseudo = findViewById(R.id.btn_ok_pseudo);
 
         mAvatar = findViewById(R.id.avatar);
 
@@ -107,7 +105,7 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        okPseudo.setOnClickListener(new View.OnClickListener() {
+        validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String pseudo = mEditPseudo.getText().toString();
@@ -126,14 +124,6 @@ public class ProfilActivity extends AppCompatActivity {
                 startActivity(intent);
                 auth.signOut();
                 finish();
-            }
-        });
-
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, InfosActivity.class);
-                startActivity(intent);
             }
         });
 
