@@ -24,6 +24,7 @@ public class VegetalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vegetal);
 
+        //TODO Remplacer les Parcelables par des requêtes Firebase
         VegetalModel vegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_VEGETAL);
         VegetalModel foundVegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_FOUNDVEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
@@ -79,4 +80,5 @@ public class VegetalActivity extends AppCompatActivity {
         });
 
     }
+
 }

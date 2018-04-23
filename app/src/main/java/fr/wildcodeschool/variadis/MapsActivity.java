@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,7 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,11 +40,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,7 +55,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
-import static fr.wildcodeschool.variadis.VegetalHelperActivity.EXTRA_PARCEL_FOUNDVEGETAL;
+import static fr.wildcodeschool.variadis.SplashActivity.PREF;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -71,6 +69,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
+    public static long sBackPress;
+
 
     private String mUId;
     private boolean mLocationPermissionGranted;
@@ -94,7 +94,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
         apiReady();
+        VegetalModel vm = new VegetalModel(null, "test", "test", "test", false);
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("users");
+        userRef.setValue(mUId);
+        userRef.child(mUId).setValue(vm);
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -261,24 +266,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 //Ajout des points de tous les végétaux sur la carte
                                 //TODO: Afficher que les vegetaux trouver
 
-                                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                                DatabaseReference reference = database.getReference("users").child(mUId);
 
-                                VegetalModel foundVegetal = new VegetalModel(null, patrimoine, adresse, dateFormat, false);
-                                reference.child("vegetaux").child(vegetalId).setValue(foundVegetal);
+
+
+
 
 
                                 Marker marker;
                                 Marker markerDefi;
                                 if (j == mRandom) {
                                     mVegetalDefi = patrimoine;
+                                    mLocationDefi = new LatLng(lat, lng);
+                                    SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+                                    boolean previouslyStarted = prefs.getBoolean(PREF, false);
+                                    if (!previouslyStarted) {
+                                        DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
+                                        SharedPreferences.Editor edit = prefs.edit();
+                                        edit.putBoolean(PREF, true);
+                                        edit.apply();
+                                    }
+
                                     markerDefi = mMap.addMarker(new MarkerOptions()
                                             .position(new LatLng(lat, lng))
                                             .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
                                     mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
 
 
-                                    DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
                                     markers.add(markerDefi);
                                 } else {
                                     marker = mMap.addMarker(new MarkerOptions()
@@ -343,27 +356,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 marker.setVisible(distance < RADIUS_DISTANCE);
 
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference vegetauxRef = database.getReference("vegetaux");
-                vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Objet en lecture qui sera utile plus tard
-                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
 
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-
-
-                });
                 if (distance < 20) {
-                    //Intent inutile et non fonctionnel en soi mais utile et fonctionnel avec le code de Georges
+                    //TODO Créer requête pour accéder aux données
                     Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    intent.putExtra(EXTRA_PARCEL_FOUNDVEGETAL, foundVegetal);
                     startActivity(intent);
                 }
             }
@@ -435,6 +431,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 
 
