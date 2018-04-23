@@ -93,13 +93,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        apiReady();
-        VegetalModel vm = new VegetalModel(null, "test", "test", "test", false);
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("users");
-        userRef.setValue(mUId);
-        userRef.child(mUId).setValue(vm);
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
 
@@ -226,106 +222,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void apiReady() {
 
-        //Fil d'attente API
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=551&sort=id";
-
-        // Création de la requête vers l'API, ajout des écouteurs pour les réponses et erreurs possibles
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            JSONArray records = response.getJSONArray("records");
-                            mRandom = r2.nextInt(records.length());
-                            mDefiDone.add(mRandom);
-                            for (int j = 0; j < records.length(); j++) {
-                                JSONObject recordsInfo = (JSONObject) records.get(j);
-
-                                JSONObject fields = recordsInfo.getJSONObject("fields");
-                                String patrimoine = fields.getString("patrimoine");
-                                String adresse = fields.getString("adresse");
-                                String vegetalId = fields.getString("id");
-
-                                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
-                                Date date = Calendar.getInstance().getTime();
-                                String dateFormat = format.format(date);
-
-                                JSONArray coordonates = (JSONArray) fields.get("geo_point_2d");
-                                String latitude = coordonates.get(0).toString();
-                                String longitude = coordonates.get(1).toString();
-                                double lat = Double.parseDouble(latitude);
-                                double lng = Double.parseDouble(longitude);
-
-                                //Ajout des points de tous les végétaux sur la carte
-                                //TODO: Afficher que les vegetaux trouver
-
-
-
-
-
-
-
-                                Marker marker;
-                                Marker markerDefi;
-                                if (j == mRandom) {
-                                    mVegetalDefi = patrimoine;
-                                    mLocationDefi = new LatLng(lat, lng);
-                                    SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-                                    boolean previouslyStarted = prefs.getBoolean(PREF, false);
-                                    if (!previouslyStarted) {
-                                        DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
-                                        SharedPreferences.Editor edit = prefs.edit();
-                                        edit.putBoolean(PREF, true);
-                                        edit.apply();
-                                    }
-
-                                    markerDefi = mMap.addMarker(new MarkerOptions()
-                                            .position(new LatLng(lat, lng))
-                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
-                                    mLocationDefi = new LatLng(markerDefi.getPosition().latitude, markerDefi.getPosition().longitude);
-
-
-                                    markers.add(markerDefi);
-                                } else {
-                                    marker = mMap.addMarker(new MarkerOptions()
-                                            .position(new LatLng(lat, lng))
-                                            .title(patrimoine).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
-                                    marker.setVisible(false);
-                                    markers.add(marker);
-
-                                }
-                            }
-                            if (mIsWaitingAPILoaded) {
-                                updateMarker(mLastLocation);
-                                mIsWaitingAPILoaded = false;
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        mIsWaitingAPILoaded = true;
-
-                    }
-                },
-                new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("VOLLEY_ERROR", "onErrorResponse: " + error.getMessage());
-                    }
-                }
-        );
-        // On ajoute la requête à la file d'attente
-        requestQueue.add(jsonObjectRequest);
-    }
 
     /**
      * Localisation du GPS, et par défaut se met sur Toulouse
