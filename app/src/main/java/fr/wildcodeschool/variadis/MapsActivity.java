@@ -68,6 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
     public static final int RADIUS_DISTANCE = 500;
+    public static final String DEFI_PREF = "DEFI_PREF";
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
@@ -247,6 +248,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         try {
                             JSONArray records = response.getJSONArray("records");
                             mRandom = r2.nextInt(records.length());
+                            SharedPreferences currentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
+                            SharedPreferences.Editor editCurrent = currentDefi.edit();
+                            int progressDefi = currentDefi.getInt(DEFI_PREF,0 );
+                            if (editCurrent == null || progressDefi != mRandom ) {
+                                editCurrent.putInt(DEFI_PREF, mRandom);
+                            }
                             mDefiDone.add(mRandom);
                             for (int j = 0; j < records.length(); j++) {
                                 JSONObject recordsInfo = (JSONObject) records.get(j);
@@ -277,14 +284,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 Marker marker;
                                 Marker markerDefi;
-                                if (j == mRandom) {
+                                if (j == progressDefi) {
                                     mVegetalDefi = patrimoine;
                                     mLocationDefi = new LatLng(lat, lng);
-                                    SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-                                    boolean previouslyStarted = prefs.getBoolean(PREF, false);
+                                    SharedPreferences previousLaunch = getSharedPreferences(PREF, MODE_PRIVATE);
+                                    boolean previouslyStarted = previousLaunch.getBoolean(PREF, false);
                                     if (!previouslyStarted) {
                                         DefiHelper.openDialogDefi(MapsActivity.this, patrimoine, mLocationDefi, mMap);
-                                        SharedPreferences.Editor edit = prefs.edit();
+                                        SharedPreferences.Editor edit = previousLaunch.edit();
                                         edit.putBoolean(PREF, true);
                                         edit.apply();
                                     }
@@ -351,8 +358,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             LatLng latLng = new LatLng(latitude, longitude);
                             Marker marker = mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
-                                    .title("test").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
-                            marker.setVisible(false);
+                                    .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                            marker.setVisible(true);
                             markers.add(marker);
                             Toast.makeText(MapsActivity.this,latLng.toString(), Toast.LENGTH_SHORT).show();
                         }
