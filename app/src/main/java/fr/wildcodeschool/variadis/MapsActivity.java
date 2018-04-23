@@ -69,6 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String NAME = "NAME";
     public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
+    public static final String DEFI_PREF = "DEFI";
     public static final int RADIUS_DISTANCE = 500;
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -238,7 +239,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DatabaseReference reference = database.getReference("Vegetaux");
         Random r2 = new Random();
         //défi aléatoire
+
+
         mRandom = r2.nextInt(65);
+        final SharedPreferences currentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
+        final SharedPreferences.Editor editCurrent = currentDefi.edit();
+
+
         //recuperation des marqueurs.
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -255,8 +262,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             double latitude = dataSnapLatLngInfos.child("latlng").child("latitude").getValue(Double.class);
                             double longitude = dataSnapLatLngInfos.child("latlng").child("longitude").getValue(Double.class);
                             LatLng latLng = new LatLng(latitude, longitude);
-
-                            if (i == mRandom) {
+                            int progressDefi = currentDefi.getInt(DEFI_PREF,0 );
+                            if (progressDefi != mRandom || progressDefi == 0 ) {
+                                editCurrent.putInt(DEFI_PREF, mRandom);
+                                //progressDefi = mRandom;
+                            }
+                            if (i == progressDefi) {
                                 Marker markerDefi = mMap.addMarker(new MarkerOptions()
                                         .position(latLng)
                                         .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
@@ -308,6 +319,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                 marker.setVisible(true);
                 startActivity(intent);
+                mDefiDone.add(mRandom);
+                editCurrent.clear().apply();
             }
         }
 
