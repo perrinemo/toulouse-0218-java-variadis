@@ -40,8 +40,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -332,13 +335,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
 
     public void updateMarker(Location location) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Vegetaux");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public   void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot dataSnapVegetal : dataSnapshot.getChildren()){
+                    String vegetalName = dataSnapVegetal.getKey();
+                    for(DataSnapshot dataSnapLatLngList :  dataSnapVegetal.getChildren()){
+                        for(DataSnapshot dataSnapLatLngInfos :  dataSnapLatLngList.getChildren()){
+                            String key = dataSnapLatLngInfos.getKey();
+                            String address = dataSnapLatLngInfos.child("adresse").getValue(String.class);
+                            double latitude = dataSnapLatLngInfos.child("latlng").child("latitude").getValue(Double.class);
+                            double longitude = dataSnapLatLngInfos.child("latlng").child("longitude").getValue(Double.class);
+                            LatLng latLng = new LatLng(latitude, longitude);
+                            Marker marker = mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title("test").icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                            marker.setVisible(false);
+                            markers.add(marker);
+                            Toast.makeText(MapsActivity.this,latLng.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
         if (markers.size() == 0) {
             mIsWaitingAPILoaded = true;
         }
-        int i = 0;
         for (Marker marker : markers) {
             if (marker == markers.get(mRandom)) {
                 marker.setVisible(true);
@@ -346,24 +376,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Location loc1 = new Location("");
                 loc1.setLatitude(mMyPosition.latitude);
                 loc1.setLongitude(mMyPosition.longitude);
-
                 Location loc2 = new Location("");
                 loc2.setLatitude(marker.getPosition().latitude);
                 loc2.setLongitude(marker.getPosition().longitude);
-
                 float distance = loc1.distanceTo(loc2);
-
-                marker.setVisible(distance < RADIUS_DISTANCE);
-
-
-
-                if (distance < 20) {
-                    //TODO Créer requête pour accéder aux données
-                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    startActivity(intent);
-                }
+           /* if (distance < 20) {
+                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference vegetauxRef = database.getReference("users").child(mUId).child("vegetaux").child(String.valueOf(i));
+                vegetauxRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        VegetalModel foundVegetal = dataSnapshot.getValue(VegetalModel.class);
+                        foundVegetal.setFound(true);
+                        vegetauxRef.setValue(foundVegetal);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+                marker.setVisible(true);
+                startActivity(intent);
+            }*/
             }
-            i++;
         }
     }
 
