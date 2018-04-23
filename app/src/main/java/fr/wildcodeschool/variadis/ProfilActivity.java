@@ -58,9 +58,7 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
-        Button okPseudo = findViewById(R.id.btn_ok_pseudo);
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        Button validPseudo = findViewById(R.id.btn_ok_pseudo);
 
         mAvatar = findViewById(R.id.avatar);
 
