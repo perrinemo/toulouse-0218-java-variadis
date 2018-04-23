@@ -37,8 +37,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_profil"
-        app:srcCompat="@drawable/camera"
-        android:padding="40dp"/>
+        app:srcCompat="@drawable/camera" />
 
     <EditText
         android:id="@+id/edit_pseudo"

@@ -122,9 +122,12 @@ public class ProfilActivity extends AppCompatActivity {
                                 photoFile);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
                         startActivityForResult(intent, APP_PHOTO);
+
                     }
+
                 }
                 progressBar.setVisibility(View.VISIBLE);
+
 
             }
         });

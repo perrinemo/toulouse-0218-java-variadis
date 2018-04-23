@@ -54,13 +54,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProfilActivity"
-            android:screenOrientation="portrait" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:screenOrientation="portrait" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".VegetalHelperActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -72,7 +67,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".SplashActivity"
-                android:noHistory="true" />
+                android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".InfosActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
