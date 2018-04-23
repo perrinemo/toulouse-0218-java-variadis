@@ -105,7 +105,7 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        okPseudo.setOnClickListener(new View.OnClickListener() {
+        validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String pseudo = mEditPseudo.getText().toString();
