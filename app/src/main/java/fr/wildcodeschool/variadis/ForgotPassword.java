@@ -27,7 +27,7 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forgot_password);
 
-        final EditText etEmail = findViewById(R.id.edit_email);
+        final EditText etEmail = findViewById(R.id.edit_mail);
         Button reset = findViewById(R.id.btn_reset);
         Button back = findViewById(R.id.btn_back);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -48,6 +48,7 @@ public class ForgotPassword extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(ForgotPassword.this, R.string.entrer_email, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 auth.sendPasswordResetEmail(email)
