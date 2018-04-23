@@ -32,7 +32,6 @@ public class InfosActivity extends AppCompatActivity {
 
         // Crée une file d'attente pour les requêtes vers l'API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        // TODO : URL de la requête à l'API
         String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=10000";
         final Map<String, Integer> treeMap = new HashMap<>();
         // Création de la requête vers l'API, ajout des écouteurs pour les réponses et erreurs possibles
