@@ -101,7 +101,4 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-</android.support.constraint.Const
-aintLayout>
-
-
+</android.support.constraint.ConstaintLayout>
