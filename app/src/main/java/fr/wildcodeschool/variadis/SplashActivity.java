@@ -11,6 +11,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -42,7 +44,8 @@ public class SplashActivity extends AppCompatActivity {
         ImageView imgMark11 = findViewById(R.id.img_defi);
         ImageView imgBack = findViewById(R.id.img_background);
 
-
+        Glide.with(SplashActivity.this).load(R.drawable.logo_variadis).into(imgLogo);
+        Glide.with(SplashActivity.this).load(R.drawable.arbre_trois).into(imgTree3);
 
         animSplash(imgLogo, 4500);
         animSplash(imgTree2, 3500);
