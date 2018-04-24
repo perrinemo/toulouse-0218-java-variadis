@@ -71,26 +71,22 @@ public class ProfilActivity extends AppCompatActivity {
         ImageButton deco = findViewById(R.id.btn_logout);
         Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         Button info = findViewById(R.id.btn_info);
+        SingletonClass singletonClass = SingletonClass.getInstance();
 
         mAvatar = findViewById(R.id.avatar);
-
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
 
-        SingletonClass singletonClass = SingletonClass.getInstance();
         if (singletonClass.getProfil() != null) {
             mEditPseudo.setText(singletonClass.getProfil().getPseudo());
         }
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        if (mAuth.getCurrentUser() == null) {
+        if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
             startActivity(intent);
             finish();
         }
-
 
         mDatabaseReference = firebaseDatabase.getReference("users").child(mUid);
         mDatabaseReference.addValueEventListener(new ValueEventListener() {

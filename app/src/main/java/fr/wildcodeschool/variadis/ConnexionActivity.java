@@ -39,8 +39,6 @@ public class ConnexionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
 
-
-
         mEmail = findViewById(R.id.edit_email);
         mPassword = findViewById(R.id.edit_password);
         mError = findViewById(R.id.msg_error);
