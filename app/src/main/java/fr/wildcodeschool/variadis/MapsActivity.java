@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -71,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String ADRESS = "ADRESS";
     public static final String DEFI_PREF = "DEFI";
     public static final int RADIUS_DISTANCE = 500;
+    public static final int MIN_DEFI_DISTANCE = 20;
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
@@ -97,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
 
 
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -253,7 +256,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 int i = 0;
                 for (DataSnapshot dataSnapVegetal : dataSnapshot.getChildren()) {
-
                     String vegetalName = dataSnapVegetal.getKey();
                     for (DataSnapshot dataSnapLatLngList : dataSnapVegetal.getChildren()) {
                         for (DataSnapshot dataSnapLatLngInfos : dataSnapLatLngList.getChildren()) {
@@ -265,7 +267,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             int progressDefi = currentDefi.getInt(DEFI_PREF,0 );
                             if (progressDefi != mRandom || progressDefi == 0 ) {
                                 editCurrent.putInt(DEFI_PREF, mRandom);
-                                //progressDefi = mRandom;
                             }
                             if (i == progressDefi) {
                                 Marker markerDefi = mMap.addMarker(new MarkerOptions()
@@ -274,7 +275,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 Toast.makeText(MapsActivity.this, latLng.toString(), Toast.LENGTH_SHORT).show();
                                 markerDefi.setVisible(true);
                                 markers.add(markerDefi);
-                                final int defi = mRandom;
+
 
                             } else {
                                 Marker marker = mMap.addMarker(new MarkerOptions()
@@ -293,12 +294,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
         mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
+        int progressDefi = currentDefi.getInt(DEFI_PREF,mRandom );
 
         for (Marker marker : markers) {
-            Marker markerDefi = markers.get(mRandom);
+            Marker markerDefi = markers.get(progressDefi);
             Location loc1 = new Location("");
             loc1.setLatitude(mMyPosition.latitude);
             loc1.setLongitude(mMyPosition.longitude);
@@ -310,16 +313,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             loc3.setLongitude(markerDefi.getPosition().longitude);
             float distance = loc1.distanceTo(loc2);
             float distanceDefi = loc1.distanceTo(loc3);
-            if (distance < 20) {
+            if (distance < MIN_DEFI_DISTANCE) {
                 Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                 marker.setVisible(true);
                 startActivity(intent);
-            }
-            if (distanceDefi < 20) {
+            } else if (distanceDefi < MIN_DEFI_DISTANCE) {
                 Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                marker.setVisible(true);
+                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                 startActivity(intent);
-                mDefiDone.add(mRandom);
+                mDefiDone.add(progressDefi);
                 editCurrent.clear().apply();
             }
         }
