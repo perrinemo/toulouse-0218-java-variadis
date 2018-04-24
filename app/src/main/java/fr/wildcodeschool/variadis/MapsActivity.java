@@ -84,8 +84,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
-        mProgressDefi = mCurrentDefi.getInt(DEFI_PREF,-1);
-        if(mProgressDefi == -1) {
+        mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, -1);
+        if (mProgressDefi == -1) {
             Random r2 = new Random();
             int random = r2.nextInt(65);
             mEditCurrent = mCurrentDefi.edit();
@@ -218,7 +218,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fireBaseReady();
     }
 
-    public void fireBaseReady(){
+    public void fireBaseReady() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Vegetaux");
         //recuperation des marqueurs.
@@ -298,8 +298,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        boolean isFound =dataSnapshot.getValue(Boolean.class);
-                        if(!isFound) {
+                        boolean isFound = dataSnapshot.getValue(Boolean.class);
+                        if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
                             startActivity(intent);
@@ -316,20 +316,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
             if (distanceDefi < MIN_DEFI_DISTANCE && !markerDefi.getTag().equals("found")) {
-                markerDefi.setTag("found");
-                markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                startActivity(intent);
-                userRef.child(mUId).child("defiDone").child(markers.get(i).getTitle()).setValue(true);
+                final Marker marker = markers.get(i);
+                userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean isFound = dataSnapshot.getValue(Boolean.class);
+                        if (!isFound) {
+                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
+                            startActivity(intent);
+                        } else {
+                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
                 mEditCurrent.clear().apply();
             }
             final Marker marker = markers.get(i);
             userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    boolean isFound =dataSnapshot.getValue(Boolean.class);
-                    if(isFound) {
+                    boolean isFound = dataSnapshot.getValue(Boolean.class);
+                    if (isFound) {
                         marker.setVisible(true);
+                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                     }
                 }
 
