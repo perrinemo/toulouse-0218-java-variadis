@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,8 +41,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
 
@@ -65,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
     public static final int RADIUS_DISTANCE = 500;
+    public static final int MIN_DEFI_DISTANCE = 20;
+
 
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
@@ -78,7 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
     private String mVegetalDefi;
-    private Random r2 = new Random();
     private int mRandom;
     private ArrayList<Integer> mDefiDone = new ArrayList<>();
     //Attribut qui sera utile ultérieurement
@@ -222,46 +228,89 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-
-
     /**
      * Localisation du GPS, et par défaut se met sur Toulouse
      */
 
-    public void updateMarker(Location location) {
+    public void updateMarker(final Location location) {
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("Vegetaux");
+        Random r2 = new Random();
+        //défi aléatoire
+        mRandom = r2.nextInt(65);
+        //recuperation des marqueurs.
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                int i = 0;
+                for (DataSnapshot dataSnapVegetal : dataSnapshot.getChildren()) {
+
+                    String vegetalName = dataSnapVegetal.getKey();
+                    for (DataSnapshot dataSnapLatLngList : dataSnapVegetal.getChildren()) {
+                        for (DataSnapshot dataSnapLatLngInfos : dataSnapLatLngList.getChildren()) {
+                            String key = dataSnapLatLngInfos.getKey();
+                            String address = dataSnapLatLngInfos.child("adresse").getValue(String.class);
+                            double latitude = dataSnapLatLngInfos.child("latlng").child("latitude").getValue(Double.class);
+                            double longitude = dataSnapLatLngInfos.child("latlng").child("longitude").getValue(Double.class);
+                            LatLng latLng = new LatLng(latitude, longitude);
+
+                            if (i == mRandom) {
+                                Marker markerDefi = mMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                Toast.makeText(MapsActivity.this, latLng.toString(), Toast.LENGTH_SHORT).show();
+                                markerDefi.setVisible(true);
+                                markers.add(markerDefi);
+                                final int defi = mRandom;
+
+                            } else {
+                                Marker marker = mMap.addMarker(new MarkerOptions()
+                                        .position(latLng)
+                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
+                                marker.setVisible(false);
+                                markers.add(marker);
+                            }
+                        }
+                        i++;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
         mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
-        if (markers.size() == 0) {
-            mIsWaitingAPILoaded = true;
-        }
-        int i = 0;
+
         for (Marker marker : markers) {
-            if (marker == markers.get(mRandom)) {
+            Marker markerDefi = markers.get(mRandom);
+            Location loc1 = new Location("");
+            loc1.setLatitude(mMyPosition.latitude);
+            loc1.setLongitude(mMyPosition.longitude);
+            Location loc2 = new Location("");
+            Location loc3 = new Location("");
+            loc2.setLatitude(marker.getPosition().latitude);
+            loc2.setLongitude(marker.getPosition().longitude);
+            loc3.setLatitude(markerDefi.getPosition().latitude);
+            loc3.setLongitude(markerDefi.getPosition().longitude);
+            float distance = loc1.distanceTo(loc2);
+            float distanceDefi = loc1.distanceTo(loc3);
+            if (distance < MIN_DEFI_DISTANCE) {
+                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                 marker.setVisible(true);
-            } else {
-                Location loc1 = new Location("");
-                loc1.setLatitude(mMyPosition.latitude);
-                loc1.setLongitude(mMyPosition.longitude);
-
-                Location loc2 = new Location("");
-                loc2.setLatitude(marker.getPosition().latitude);
-                loc2.setLongitude(marker.getPosition().longitude);
-
-                float distance = loc1.distanceTo(loc2);
-
-                marker.setVisible(distance < RADIUS_DISTANCE);
-
-
-
-                if (distance < 20) {
-                    //TODO Créer requête pour accéder aux données
-                    Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                    startActivity(intent);
-                }
+                startActivity(intent);
             }
-            i++;
+            if (distanceDefi < MIN_DEFI_DISTANCE) {
+                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                marker.setVisible(true);
+                startActivity(intent);
+            }
         }
+
+
     }
 
 
