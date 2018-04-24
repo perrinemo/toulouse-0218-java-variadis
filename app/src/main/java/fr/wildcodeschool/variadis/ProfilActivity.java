@@ -71,24 +71,34 @@ public class ProfilActivity extends AppCompatActivity {
         ImageButton deco = findViewById(R.id.btn_logout);
         Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         Button info = findViewById(R.id.btn_info);
+        SingletonClass singletonClass = SingletonClass.getInstance();
 
         mAvatar = findViewById(R.id.avatar);
-
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
+
+        if (singletonClass.getProfil() != null) {
+            mEditPseudo.setText(singletonClass.getProfil().getPseudo());
+        }
+
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         mDatabaseReference = firebaseDatabase.getReference("users").child(mUid);
         mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
                 if (dataSnapshot.child("pseudo").getValue() != null) {
-                    String pseudo = (String) dataSnapshot.child("pseudo").getValue();
-                    mEditPseudo.setText(pseudo);
+                    mEditPseudo.setText(profilModel.getPseudo());
                 }
                 if (dataSnapshot.child("avatar").getValue() != null) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    String url = (String) dataSnapshot.child("avatar").getValue();
+                    String url = profilModel.getAvatar();
                     Glide.with(ProfilActivity.this)
                             .load(url)
                             .apply(RequestOptions.circleCropTransform())
@@ -149,7 +159,6 @@ public class ProfilActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
                 startActivity(intent);
                 auth.signOut();
-                finish();
             }
         });
 
@@ -166,7 +175,6 @@ public class ProfilActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -174,7 +182,6 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
-                finish();
             }
         });
     }
@@ -193,6 +200,8 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
+                SingletonClass singletonClass = SingletonClass.getInstance();
+                singletonClass.setProfil(profilModel);
                 if (profilModel == null) {
                     return;
                 }
