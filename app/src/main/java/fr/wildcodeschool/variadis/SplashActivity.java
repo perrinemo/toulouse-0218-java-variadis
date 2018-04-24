@@ -12,8 +12,13 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +34,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+
 
 
 
@@ -68,28 +74,43 @@ public class SplashActivity extends AppCompatActivity {
         animSplash(imgMark11, 2800);
         animSplash(imgBack, 4500);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
         SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
         pref.edit().clear().apply();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent i = new Intent(SplashActivity.this, ConnexionActivity.class);
-                startActivity(i);
+                if (mAuth.getCurrentUser() != null) {
+                    String uid = mAuth.getCurrentUser().getUid();
+
+                    DatabaseReference mDatabaseReference = firebaseDatabase.getReference("users").child(uid);
+                    mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
+
+                            SingletonClass singletonClass = SingletonClass.getInstance();
+                            singletonClass.setProfil(profilModel);
+                            Intent intent = new Intent(SplashActivity.this, MapsActivity.class);
+                            startActivity(intent);
+
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                } else {
+                    Intent i = new Intent(SplashActivity.this, ConnexionActivity.class);
+                    startActivity(i);
+                }
+
             }
 
         }, SPLASH_TIME_OUT);
