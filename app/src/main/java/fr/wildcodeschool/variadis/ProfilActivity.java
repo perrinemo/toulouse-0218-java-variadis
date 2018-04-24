@@ -62,6 +62,8 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
+        checkPermission();
+
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final ProgressBar progressBar = findViewById(R.id.progress_bar);

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 public class InfosActivity extends AppCompatActivity {
-    private String mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +44,8 @@ public class InfosActivity extends AppCompatActivity {
                             JSONArray records = response.getJSONArray("records");
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             DatabaseReference reference = database.getReference("Vegetaux");
+                            DatabaseReference userRef = database.getReference("users");
+                            String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             for (int i = 0; i < records.length(); i++) {
                                 JSONObject recordsInfos = (JSONObject) records.get(i);
                                 JSONObject fields = recordsInfos.getJSONObject("fields");
@@ -56,7 +58,6 @@ public class InfosActivity extends AppCompatActivity {
                                 double lat = Double.parseDouble(latitude);
                                 double lng = Double.parseDouble(longitude);
                                 final LatLng latLng = new LatLng(lat,lng);
-                                boolean isfound = false;
                                 String minTreeName = "";
                                 int minTreeNumber = 0;
                                 // parcours la liste des arbres séparés par des virgules
@@ -76,6 +77,7 @@ public class InfosActivity extends AppCompatActivity {
                                 if (!treeMap.containsKey(minTreeName)) {
                                     treeMap.put(minTreeName, minTreeNumber);
                                     reference.child(minTreeName).child("latLng").push().setValue(findVegetalModel);
+                                    userRef.child(id).child("defiDone").child(minTreeName).setValue(false);
                                 } else {
                                     treeMap.put(minTreeName, treeMap.get(minTreeName) + minTreeNumber);
                                     final DatabaseReference refLat = reference.child(minTreeName);
