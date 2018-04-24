@@ -11,6 +11,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -23,6 +27,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
 
 
         ImageView imgLogo = findViewById(R.id.img_logo);

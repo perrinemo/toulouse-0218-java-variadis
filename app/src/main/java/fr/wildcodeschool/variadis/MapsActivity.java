@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,12 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,20 +41,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Locale;
 import java.util.Random;
-
-import static fr.wildcodeschool.variadis.SplashActivity.PREF;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -73,20 +54,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final String DEFI_PREF = "DEFI";
     public static final int RADIUS_DISTANCE = 500;
     public static final int MIN_DEFI_DISTANCE = 20;
-
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
     public static long sBackPress;
-
-
+    public static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public static DatabaseReference userRef = database.getReference("users");
     private String mUId;
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
     private String mVegetalDefi;
-    private int mRandom;
     private ArrayList<Integer> mDefiDone = new ArrayList<>();
     //Attribut qui sera utile ultérieurement
     private ArrayList<VegetalModel> mFoundVegetals = new ArrayList<>();
@@ -94,6 +73,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
     private LatLng mLocationDefi;
+    private int mProgressDefi;
+    private SharedPreferences mCurrentDefi;
+    private SharedPreferences.Editor mEditCurrent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,14 +83,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
 
-
+        mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
+        mProgressDefi = mCurrentDefi.getInt(DEFI_PREF,-1);
+        if(mProgressDefi == -1) {
+            Random r2 = new Random();
+            int random = r2.nextInt(65);
+            mEditCurrent = mCurrentDefi.edit();
+            mEditCurrent.putInt(DEFI_PREF, random).apply();
+            mProgressDefi = random;
+        }
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("users");
-
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
-
         if (!isLocationEnabled()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.gps_disabled_title)
@@ -229,26 +215,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
-
+        fireBaseReady();
     }
 
-
-    /**
-     * Localisation du GPS, et par défaut se met sur Toulouse
-     */
-
-    public void updateMarker(final Location location) {
+    public void fireBaseReady(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Vegetaux");
-        Random r2 = new Random();
-        //défi aléatoire
-
-
-        mRandom = r2.nextInt(65);
-        final SharedPreferences currentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
-        final SharedPreferences.Editor editCurrent = currentDefi.edit();
-
-
         //recuperation des marqueurs.
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -256,6 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 int i = 0;
                 for (DataSnapshot dataSnapVegetal : dataSnapshot.getChildren()) {
+
                     String vegetalName = dataSnapVegetal.getKey();
                     for (DataSnapshot dataSnapLatLngList : dataSnapVegetal.getChildren()) {
                         for (DataSnapshot dataSnapLatLngInfos : dataSnapLatLngList.getChildren()) {
@@ -264,18 +237,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             double latitude = dataSnapLatLngInfos.child("latlng").child("latitude").getValue(Double.class);
                             double longitude = dataSnapLatLngInfos.child("latlng").child("longitude").getValue(Double.class);
                             LatLng latLng = new LatLng(latitude, longitude);
-                            int progressDefi = currentDefi.getInt(DEFI_PREF,0 );
-                            if (progressDefi != mRandom || progressDefi == 0 ) {
-                                editCurrent.putInt(DEFI_PREF, mRandom);
-                            }
-                            if (i == progressDefi) {
+
+                            if (i == mProgressDefi) {
                                 Marker markerDefi = mMap.addMarker(new MarkerOptions()
                                         .position(latLng)
                                         .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
-                                Toast.makeText(MapsActivity.this, latLng.toString(), Toast.LENGTH_SHORT).show();
                                 markerDefi.setVisible(true);
+                                if (mDefiDone.contains(i)) {
+                                    markerDefi.setTag("found");
+                                    markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                                }
                                 markers.add(markerDefi);
-
 
                             } else {
                                 Marker marker = mMap.addMarker(new MarkerOptions()
@@ -295,35 +267,77 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+    }
+
+
+    /**
+     * Localisation du GPS, et par défaut se met sur Toulouse
+     */
+
+    public void updateMarker(final Location location) {
+
         mMyPosition = new LatLng(location.getLatitude(), location.getLongitude());
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
-        int progressDefi = currentDefi.getInt(DEFI_PREF,mRandom );
 
-        for (Marker marker : markers) {
-            Marker markerDefi = markers.get(progressDefi);
+        for (int i = 0; i < markers.size(); i++) {
+            Marker markerDefi = markers.get(mProgressDefi);
             Location loc1 = new Location("");
             loc1.setLatitude(mMyPosition.latitude);
             loc1.setLongitude(mMyPosition.longitude);
             Location loc2 = new Location("");
             Location loc3 = new Location("");
-            loc2.setLatitude(marker.getPosition().latitude);
-            loc2.setLongitude(marker.getPosition().longitude);
+            loc2.setLatitude(markers.get(i).getPosition().latitude);
+            loc2.setLongitude(markers.get(i).getPosition().longitude);
             loc3.setLatitude(markerDefi.getPosition().latitude);
             loc3.setLongitude(markerDefi.getPosition().longitude);
             float distance = loc1.distanceTo(loc2);
             float distanceDefi = loc1.distanceTo(loc3);
             if (distance < MIN_DEFI_DISTANCE) {
-                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                marker.setVisible(true);
-                startActivity(intent);
-            } else if (distanceDefi < MIN_DEFI_DISTANCE) {
-                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                startActivity(intent);
-                mDefiDone.add(progressDefi);
-                editCurrent.clear().apply();
+                final Marker marker = markers.get(i);
+                userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean isFound =dataSnapshot.getValue(Boolean.class);
+                        if(!isFound) {
+                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
+                            startActivity(intent);
+                        } else {
+                            marker.setVisible(true);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
+            if (distanceDefi < MIN_DEFI_DISTANCE && !markerDefi.getTag().equals("found")) {
+                markerDefi.setTag("found");
+                markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                startActivity(intent);
+                userRef.child(mUId).child("defiDone").child(markers.get(i).getTitle()).setValue(true);
+                mEditCurrent.clear().apply();
+            }
+            final Marker marker = markers.get(i);
+            userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    boolean isFound =dataSnapshot.getValue(Boolean.class);
+                    if(isFound) {
+                        marker.setVisible(true);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
 

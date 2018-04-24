@@ -39,7 +39,7 @@ public class VegetalActivity extends AppCompatActivity {
 
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
-            imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
+            //imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
             txtVegetal.setText(foundVegetal.getName());
             placeVegetal.setText(foundVegetal.getAddress());
             lastFind.setText(foundVegetal.getDate());
