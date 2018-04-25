@@ -15,7 +15,7 @@
     <string name="infos">Infos</string>
     <string name="mon_profil">Mon profil</string>
     <string name="nom_pseudo">Entrer un pseudo</string>
-    <string name="points">Points : Mes points</string>
+    <string name="nb_points">Points : </string>
     <string name="find_vegetal">Tu viens de trouver un nouveau végétal !</string>
     <string name="name_vegetal">Nom du végétal</string>
     <string name="acces">Voir la fiche</string>
@@ -62,4 +62,5 @@
         \nGagnez des points pour augmenter votre rang !
         \n\nDeviendrez-vous le premier Écowild parmi vos amis ?</string>
     <string name="pseudo_enregistre">Pseudo enregistré</string>
+    <string name="no_pts">0</string>
 </resources>

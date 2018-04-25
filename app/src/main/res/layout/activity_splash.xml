@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="fr.wildcodeschool.variadis.SplashActivity">
+
     <ImageView
         android:id="@+id/img_background"
         android:layout_width="match_parent"
@@ -14,8 +15,7 @@
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img_toulouse" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_tree3"
@@ -24,8 +24,7 @@
         android:layout_marginTop="24dp"
         android:keyboardNavigationCluster="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_logo"
-        app:srcCompat="@drawable/tree_one" />
+        app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
     <ImageView
         android:id="@+id/img_marker3"
@@ -124,8 +123,7 @@
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_variadis" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_tree"
@@ -134,8 +132,7 @@
         android:layout_marginTop="24dp"
         android:keyboardNavigationCluster="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_logo"
-        app:srcCompat="@drawable/tree_two" />
+        app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
     <ImageView
         android:id="@+id/img_tree2"
@@ -147,8 +144,7 @@
         android:keyboardNavigationCluster="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_logo"
-        app:srcCompat="@drawable/tree_three" />
+        app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
     <ImageView
         android:id="@+id/img_marker4"
@@ -164,15 +160,12 @@
         android:id="@+id/img_defi"
         android:layout_width="44dp"
         android:layout_height="47dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toStartOf="@+id/img_marker1"
         app:layout_constraintHorizontal_bias="0.661"
         app:layout_constraintStart_toEndOf="@+id/img_marker3"
-        app:layout_constraintTop_toBottomOf="@+id/img_tree"
-        app:layout_constraintVertical_bias="0.04"
+        app:layout_constraintTop_toBottomOf="@+id/img_tree2"
         app:srcCompat="@drawable/ic_action_defi" />
 </android.support.constraint.ConstraintLayout>
