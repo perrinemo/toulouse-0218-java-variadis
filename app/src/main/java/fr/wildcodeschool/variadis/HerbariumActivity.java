@@ -85,15 +85,6 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
-        //Bouton test
-        FloatingActionButton btnTest = findViewById(R.id.btn_test);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, VegetalHelperActivity.class));
-            }
-        });
-
         //TODO Remplacer les Parcelables par des requêtes Firebase
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
