@@ -29,7 +29,6 @@ public class InfosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infos);
 
-
         // Crée une file d'attente pour les requêtes vers l'API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         String url = "https://data.toulouse-metropole.fr/api/records/1.0/search/?dataset=arbres-d-alignement&rows=10000";

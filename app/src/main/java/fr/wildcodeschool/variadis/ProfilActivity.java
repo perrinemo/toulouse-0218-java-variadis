@@ -62,7 +62,13 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        checkPermission();
+        Button btnT = findViewById(R.id.btn_test);
+        btnT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfilActivity.this, InfosActivity.class));
+            }
+        });
 
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
