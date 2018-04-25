@@ -302,7 +302,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 }
-
                 SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
@@ -353,6 +352,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
+                            mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
                             startActivity(intent);
                         }
                         marker.setVisible(true);
