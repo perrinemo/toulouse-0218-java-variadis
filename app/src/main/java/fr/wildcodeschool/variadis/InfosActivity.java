@@ -3,6 +3,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -28,6 +31,15 @@ public class InfosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infos);
+
+        //test
+        Button btnOk = findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(InfosActivity.this, MapsActivity.class));
+            }
+        });
 
         // Crée une file d'attente pour les requêtes vers l'API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -99,7 +111,5 @@ public class InfosActivity extends AppCompatActivity {
         );
         // On ajoute la requête à la file d'attente
         requestQueue.add(jsonObjectRequest);
-        Intent intent = new Intent(InfosActivity.this, MapsActivity.class);
-        startActivity(intent);
     }
 }

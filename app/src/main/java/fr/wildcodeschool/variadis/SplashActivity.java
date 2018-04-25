@@ -33,10 +33,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-
-
 
         ImageView imgLogo = findViewById(R.id.img_logo);
         ImageView imgTree = findViewById(R.id.img_tree);

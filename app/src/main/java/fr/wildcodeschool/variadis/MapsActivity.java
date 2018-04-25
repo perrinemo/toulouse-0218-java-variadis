@@ -44,6 +44,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static fr.wildcodeschool.variadis.SplashActivity.PREF;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -66,6 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
     private String mVegetalDefi;
+    private boolean isPreviouslyLaunched;
 
     //Attribut qui sera utile ultérieurement
     private ArrayList<VegetalModel> mFoundVegetals = new ArrayList<>();
@@ -76,42 +79,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int mProgressDefi;
     private int mRandom;
     private SharedPreferences mCurrentDefi;
-    private SharedPreferences.Editor mEditCurrent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("users");
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
         mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, -1);
-        userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Integer> availableDefi = new ArrayList<>();
-                int i = 0;
-                for (DataSnapshot defiSnapshot : dataSnapshot.getChildren()) {
-                    boolean isDefiDone = defiSnapshot.getValue(Boolean.class);
-                    if (!isDefiDone) {
-                        availableDefi.add(i);
+
+        if (mProgressDefi == -1) {
+            userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Integer> availableDefi = new ArrayList<>();
+                    int i = 0;
+                    for (DataSnapshot defiSnapshot : dataSnapshot.getChildren()) {
+                        boolean isDefiDone = defiSnapshot.getValue(Boolean.class);
+                        if (!isDefiDone) {
+                            availableDefi.add(i);
+                        }
+                        i++;
                     }
-                    i++;
+                    Random r2 = new Random();
+                    if (!availableDefi.isEmpty()) {
+                        mRandom = r2.nextInt(availableDefi.size());
+                        mProgressDefi = availableDefi.get(mRandom);
+                        mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
+                    }
+
                 }
-                Random r2 = new Random();
-                mRandom = r2.nextInt(availableDefi.size());
-                mProgressDefi = availableDefi.get(mRandom);
 
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        }
 
 
 
@@ -242,6 +251,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         fireBaseReady();
+
     }
 
 
@@ -286,9 +296,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 marker.setVisible(false);
                                 markers.add(marker);
                             }
+
                         }
                         i++;
                     }
+
+                }
+                SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
+                isPreviouslyLaunched = pref.getBoolean(PREF, false);
+                if (!isPreviouslyLaunched) {
+                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
+                    pref.edit().putBoolean(PREF, true).apply();
                 }
             }
 
@@ -296,6 +314,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
 
     }
 
@@ -343,10 +362,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                 });
-
             }
+
             if (distanceDefi < MIN_DEFI_DISTANCE) {
                 final Marker marker = markers.get(i);
+                mCurrentDefi.edit().putInt(DEFI_PREF, -1).apply();
                 userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -354,6 +374,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
+
                             startActivity(intent);
                         } else {
                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
@@ -365,10 +386,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                 });
-                mEditCurrent.clear().apply();
+
             }
             final Marker marker = markers.get(i);
-            userRef.child(mUId).child("defiDone").child(marker.getTitle()).addValueEventListener(new ValueEventListener() {
+            userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean isFound = dataSnapshot.getValue(Boolean.class);
