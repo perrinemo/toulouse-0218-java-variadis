@@ -366,7 +366,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mEditCurrent.clear().apply();
             }
             final Marker marker = markers.get(i);
-            userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.child(mUId).child("defiDone").child(marker.getTitle()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean isFound = dataSnapshot.getValue(Boolean.class);
