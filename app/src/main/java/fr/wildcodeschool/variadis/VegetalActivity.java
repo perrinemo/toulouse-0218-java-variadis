@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,6 +26,7 @@ public class VegetalActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vegetal);
 
+        //TODO Remplacer les Parcelables par des requêtes Firebase
         VegetalModel vegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_VEGETAL);
         VegetalModel foundVegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_FOUNDVEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
@@ -31,14 +34,20 @@ public class VegetalActivity extends AppCompatActivity {
         TextView placeVegetal = findViewById(R.id.lieu);
         TextView lastFind = findViewById(R.id.last_find);
 
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
         Date date = Calendar.getInstance().getTime();
         String dateFormat = format.format(date);
 
-
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(VegetalActivity.this, ConnexionActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
-            imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
+            //imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
             txtVegetal.setText(foundVegetal.getName());
             placeVegetal.setText(foundVegetal.getAddress());
             lastFind.setText(foundVegetal.getDate());
@@ -54,7 +63,6 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(VegetalActivity.this, HerbariumActivity.class));
-                finish();
             }
         });
 
@@ -64,7 +72,6 @@ public class VegetalActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
-               finish();
 
             }
         });
@@ -74,9 +81,9 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(VegetalActivity.this, MapsActivity.class));
-                finish();
             }
         });
 
     }
+
 }

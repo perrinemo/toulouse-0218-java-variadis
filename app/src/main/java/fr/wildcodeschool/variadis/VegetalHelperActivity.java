@@ -60,7 +60,7 @@ public class VegetalHelperActivity extends AppCompatActivity {
         quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                startActivity(new Intent(VegetalHelperActivity.this, MapsActivity.class));
             }
         });
 

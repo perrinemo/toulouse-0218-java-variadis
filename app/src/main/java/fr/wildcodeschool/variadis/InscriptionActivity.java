@@ -15,6 +15,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class InscriptionActivity extends AppCompatActivity {
 
@@ -71,13 +75,22 @@ public class InscriptionActivity extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     Toast.makeText(InscriptionActivity.this, getString(R.string.mauvaise_authentification) + task.getException(), Toast.LENGTH_LONG).show();
                                 } else {
-                                    Intent intent = new Intent(InscriptionActivity.this, MapsActivity.class);
+                                    Intent intent = new Intent(InscriptionActivity.this, InfosActivity.class);
                                     startActivity(intent);
-                                    finish();
                                 }
                             }
                         });
+
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 }

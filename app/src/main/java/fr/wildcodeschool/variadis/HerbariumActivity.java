@@ -6,15 +6,19 @@ import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class HerbariumActivity extends AppCompatActivity {
 
@@ -33,13 +37,19 @@ public class HerbariumActivity extends AppCompatActivity {
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
         ImageView ivProfil = findViewById(R.id.img_profile);
         ImageView ivMap = findViewById(R.id.img_map);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(HerbariumActivity.this, ConnexionActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -47,7 +57,6 @@ public class HerbariumActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, MapsActivity.class));
-                finish();
             }
         });
 
@@ -76,16 +85,7 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
-        //Bouton test
-        FloatingActionButton btnTest = findViewById(R.id.btn_test);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, VegetalHelperActivity.class));
-                finish();
-            }
-        });
-
+        //TODO Remplacer les Parcelables par des requêtes Firebase
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -94,10 +94,17 @@ public class HerbariumActivity extends AppCompatActivity {
                 intent.putExtra(CLASS_FROM, "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
                 startActivity(intent);
-                finish();
-
             }
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 }

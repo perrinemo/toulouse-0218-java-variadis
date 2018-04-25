@@ -14,6 +14,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
+import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
+
 /**
  * Created by perrine on 16/04/18.
  */
@@ -25,7 +27,7 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forgot_password);
 
-        final EditText etEmail = findViewById(R.id.edit_email);
+        final EditText etEmail = findViewById(R.id.edit_mail);
         Button reset = findViewById(R.id.btn_reset);
         Button back = findViewById(R.id.btn_back);
         final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -46,6 +48,7 @@ public class ForgotPassword extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(ForgotPassword.this, R.string.entrer_email, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 auth.sendPasswordResetEmail(email)
@@ -62,5 +65,14 @@ public class ForgotPassword extends AppCompatActivity {
                         });
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        if (sBackPress + 2000 > System.currentTimeMillis()) {
+            System.exit(0);
+            super.onBackPressed();
+        } else
+            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
+        sBackPress = System.currentTimeMillis();
     }
 }
