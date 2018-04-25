@@ -2,19 +2,14 @@ package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-
-import java.util.concurrent.TimeUnit;
-
 
 public class SplashActivity extends AppCompatActivity {
 

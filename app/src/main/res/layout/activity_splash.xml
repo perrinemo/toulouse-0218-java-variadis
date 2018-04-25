@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="fr.wildcodeschool.variadis.SplashActivity">
+
     <ImageView
         android:id="@+id/img_background"
         android:layout_width="match_parent"
@@ -14,8 +15,7 @@
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img_toulouse" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_tree3"
@@ -24,8 +24,7 @@
         android:layout_marginTop="24dp"
         android:keyboardNavigationCluster="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_logo"
-        android:src="@drawable/arbre_un" />
+        app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
     <ImageView
         android:id="@+id/img_marker3"
@@ -133,8 +132,7 @@
         android:layout_marginTop="24dp"
         android:keyboardNavigationCluster="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_logo"
-        app:srcCompat="@drawable/arbre_deux" />
+        app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
     <ImageView
         android:id="@+id/img_tree2"
@@ -146,8 +144,7 @@
         android:keyboardNavigationCluster="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_logo"
-        app:srcCompat="@drawable/arbre_trois" />
+        app:layout_constraintTop_toBottomOf="@+id/img_logo" />
 
     <ImageView
         android:id="@+id/img_marker4"
