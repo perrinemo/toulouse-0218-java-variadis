@@ -18,8 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.concurrent.TimeUnit;
-
 public class SplashActivity extends AppCompatActivity {
 
     public static final int SPLASH_TIME_OUT = 6000;
@@ -30,7 +28,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         ImageView imgLogo = findViewById(R.id.img_logo);
         ImageView imgTree = findViewById(R.id.img_tree);

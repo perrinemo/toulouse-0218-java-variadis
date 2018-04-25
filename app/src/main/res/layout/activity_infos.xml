@@ -9,18 +9,30 @@
     <TextView
         android:id="@+id/text_infos"
         android:layout_width="306dp"
-        android:layout_height="401dp"
+        android:layout_height="442dp"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/philosopher"
-        android:gravity="center"
+        android:gravity="top|center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:text="@string/text_infos"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="@+id/text_infos"
+        app:layout_constraintEnd_toEndOf="@+id/text_infos"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="@+id/text_infos" />
 
 </android.support.constraint.ConstraintLayout>
