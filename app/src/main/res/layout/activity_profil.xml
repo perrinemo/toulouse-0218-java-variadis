@@ -53,17 +53,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
-    <TextView
-        android:id="@+id/text_points"
+    <LinearLayout
+        android:id="@+id/points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/philosopher"
-        android:text="@string/points"
-        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/philosopher"
+            android:text="@string/nb_points"
+            android:textSize="18sp"
+            android:layout_marginRight="16dp"/>
+
+        <TextView
+            android:id="@+id/text_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/philosopher"
+            android:text="@string/no_pts"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 
     <ImageButton
         android:id="@+id/btn_logout"
@@ -109,24 +127,16 @@
         android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_points">
+        app:layout_constraintTop_toBottomOf="@+id/points">
 
         <ImageView
             android:id="@+id/img_badge1"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="4dp"
+            android:visibility="invisible"
             app:srcCompat="@drawable/bourgeon"
             tools:layout_editor_absoluteX="68dp"
-            tools:layout_editor_absoluteY="413dp" />
-
-        <ImageView
-            android:id="@+id/img_badge3"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="4dp"
-            app:srcCompat="@drawable/branche"
-            tools:layout_editor_absoluteX="155dp"
             tools:layout_editor_absoluteY="413dp" />
 
         <ImageView
@@ -134,15 +144,27 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="4dp"
+            android:visibility="invisible"
             app:srcCompat="@drawable/feuille"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="420dp" />
+
+        <ImageView
+            android:id="@+id/img_badge3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/branche"
+            tools:layout_editor_absoluteX="155dp"
+            tools:layout_editor_absoluteY="413dp" />
 
         <ImageView
             android:id="@+id/img_badge4"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="4dp"
+            android:visibility="invisible"
             app:srcCompat="@drawable/arbre_un"
             tools:layout_editor_absoluteX="334dp"
             tools:layout_editor_absoluteY="350dp" />
@@ -152,6 +174,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="4dp"
+            android:visibility="invisible"
             app:srcCompat="@drawable/arbre_deux"
             tools:layout_editor_absoluteX="34dp"
             tools:layout_editor_absoluteY="106dp" />
