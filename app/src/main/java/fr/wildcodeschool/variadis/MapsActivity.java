@@ -275,6 +275,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         .position(latLng)
                                         .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
                                 markerDefi.setVisible(true);
+                                mVegetalDefi = vegetalName;
+                                mLocationDefi = latLng;
                                 markers.add(markerDefi);
 
                             } else {
