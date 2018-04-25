@@ -46,6 +46,9 @@ public class SplashActivity extends AppCompatActivity {
 
         Glide.with(SplashActivity.this).load(R.drawable.logo_variadis).into(imgLogo);
         Glide.with(SplashActivity.this).load(R.drawable.arbre_trois).into(imgTree3);
+        Glide.with(SplashActivity.this).load(R.drawable.arbre_deux).into(imgTree2);
+        Glide.with(SplashActivity.this).load(R.drawable.arbre_un).into(imgTree);
+        Glide.with(SplashActivity.this).load(R.drawable.arbre_trois).into(imgBack);
 
         animSplash(imgLogo, 4500);
         animSplash(imgTree2, 3500);
