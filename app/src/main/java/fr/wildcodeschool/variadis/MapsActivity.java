@@ -90,9 +90,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DatabaseReference userRef = database.getReference("users");
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
-        mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, -1);
+        mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
 
-        if (mProgressDefi == -1) {
+        if (mProgressDefi == 0) {
             userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -302,6 +302,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 }
+
                 SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
@@ -366,7 +367,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             if (distanceDefi < MIN_DEFI_DISTANCE) {
                 final Marker marker = markers.get(i);
-                mCurrentDefi.edit().putInt(DEFI_PREF, -1).apply();
+
                 userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -374,7 +375,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
-
+                            mCurrentDefi.edit().clear().apply();
+                            mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
                             startActivity(intent);
                         } else {
                             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
