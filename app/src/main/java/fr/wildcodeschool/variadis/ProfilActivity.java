@@ -70,7 +70,6 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
         Button validPseudo = findViewById(R.id.btn_ok_pseudo);
-        Button info = findViewById(R.id.btn_info);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
         mAvatar = findViewById(R.id.avatar);
@@ -159,14 +158,6 @@ public class ProfilActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
                 startActivity(intent);
                 auth.signOut();
-            }
-        });
-
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, InfosActivity.class);
-                startActivity(intent);
             }
         });
 

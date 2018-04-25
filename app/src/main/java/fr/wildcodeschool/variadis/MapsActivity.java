@@ -228,7 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Localisation du GPS, et par défaut se met sur Toulouse
      */
 
-    public void updateMarker(final Location location) {
+    public void fireBaseReady() {
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Vegetaux");
