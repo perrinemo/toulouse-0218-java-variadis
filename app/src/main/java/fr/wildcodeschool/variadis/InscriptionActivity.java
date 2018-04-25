@@ -77,7 +77,6 @@ public class InscriptionActivity extends AppCompatActivity {
                                 } else {
                                     Intent intent = new Intent(InscriptionActivity.this, InfosActivity.class);
                                     startActivity(intent);
-                                    finish();
                                 }
                             }
                         });

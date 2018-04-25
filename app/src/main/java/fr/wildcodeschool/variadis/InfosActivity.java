@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,13 +34,14 @@ public class InfosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_infos);
 
         //test
-        Button btnOk = findViewById(R.id.btn_ok);
+        ImageButton btnOk = findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(InfosActivity.this, MapsActivity.class));
             }
         });
+
 
         // Crée une file d'attente pour les requêtes vers l'API
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -87,12 +89,12 @@ public class InfosActivity extends AppCompatActivity {
                                 FindVegetalModel findVegetalModel = new FindVegetalModel(latLng, adresse);
                                 if (!treeMap.containsKey(minTreeName)) {
                                     treeMap.put(minTreeName, minTreeNumber);
-                                    reference.child(minTreeName).child("latLng").push().setValue(findVegetalModel);
+                                    //reference.child(minTreeName).child("latLng").push().setValue(findVegetalModel);
                                     userRef.child(id).child("defiDone").child(minTreeName).setValue(false);
                                 } else {
                                     treeMap.put(minTreeName, treeMap.get(minTreeName) + minTreeNumber);
                                     final DatabaseReference refLat = reference.child(minTreeName);
-                                    refLat.child("latLng").push().setValue(findVegetalModel);
+                                    //refLat.child("latLng").push().setValue(findVegetalModel);
                                 }
                             }
                             Log.d("VOLLEY_SUCCESS", "onResponse: " + treeMap.toString());
