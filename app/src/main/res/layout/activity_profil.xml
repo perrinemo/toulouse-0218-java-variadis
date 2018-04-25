@@ -53,17 +53,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
-    <TextView
-        android:id="@+id/text_points"
+    <LinearLayout
+        android:id="@+id/points"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/philosopher"
-        android:text="@string/points"
-        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_pseudo">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/philosopher"
+            android:text="@string/nb_points"
+            android:textSize="18sp"
+            android:layout_marginRight="16dp"/>
+
+        <TextView
+            android:id="@+id/text_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/philosopher"
+            android:text="@string/no_pts"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
 
     <ImageButton
         android:id="@+id/btn_logout"
@@ -88,17 +106,6 @@
         app:layout_constraintStart_toEndOf="@+id/edit_pseudo"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
-    <Button
-        android:id="@+id/btn_test"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="49dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:background="@null"
-        android:text="@string/ok"
-   />
-
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyle"
@@ -112,18 +119,66 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_info"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@null"
-        android:backgroundTint="@null"
-        android:text="í"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_logout" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/points">
 
+        <ImageView
+            android:id="@+id/img_badge1"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/bourgeon"
+            tools:layout_editor_absoluteX="68dp"
+            tools:layout_editor_absoluteY="413dp" />
+
+        <ImageView
+            android:id="@+id/img_badge2"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/feuille"
+            tools:layout_editor_absoluteX="246dp"
+            tools:layout_editor_absoluteY="420dp" />
+
+        <ImageView
+            android:id="@+id/img_badge3"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/branche"
+            tools:layout_editor_absoluteX="155dp"
+            tools:layout_editor_absoluteY="413dp" />
+
+        <ImageView
+            android:id="@+id/img_badge4"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/arbre_un"
+            tools:layout_editor_absoluteX="334dp"
+            tools:layout_editor_absoluteY="350dp" />
+
+        <ImageView
+            android:id="@+id/img_badge5"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/arbre_deux"
+            tools:layout_editor_absoluteX="34dp"
+            tools:layout_editor_absoluteY="106dp" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

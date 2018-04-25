@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ProgressBar;
 
@@ -62,8 +63,6 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        checkPermission();
-
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         final ProgressBar progressBar = findViewById(R.id.progress_bar);
@@ -72,8 +71,14 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
         Button validPseudo = findViewById(R.id.btn_ok_pseudo);
-        Button info = findViewById(R.id.btn_info);
         SingletonClass singletonClass = SingletonClass.getInstance();
+
+        TextView tvPoints = findViewById(R.id.text_points);
+        ImageView badge1 = findViewById(R.id.img_badge1);
+        ImageView badge2 = findViewById(R.id.img_badge2);
+        ImageView badge3 = findViewById(R.id.img_badge3);
+        ImageView badge4 = findViewById(R.id.img_badge4);
+        ImageView badge5 = findViewById(R.id.img_badge5);
 
         mAvatar = findViewById(R.id.avatar);
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -155,20 +160,38 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
+        // Test pour afficher les badges avec des points fictifs
+        tvPoints.setText("12");
+        int points = Integer.parseInt(tvPoints.getText().toString());
+
+        if (points > 0 && points <= 10) {
+            badge1.setVisibility(View.VISIBLE);
+        } else if (points <= 50) {
+            badge1.setVisibility(View.VISIBLE);
+            badge2.setVisibility(View.VISIBLE);
+        } else if (points > 50 && points <= 100) {
+            badge1.setVisibility(View.VISIBLE);
+            badge2.setVisibility(View.VISIBLE);
+            badge3.setVisibility(View.VISIBLE);
+        } else if (points > 100 && points <= 200) {
+            badge1.setVisibility(View.VISIBLE);
+            badge2.setVisibility(View.VISIBLE);
+            badge3.setVisibility(View.VISIBLE);
+            badge4.setVisibility(View.VISIBLE);
+        } else if (points < 200) {
+            badge1.setVisibility(View.VISIBLE);
+            badge2.setVisibility(View.VISIBLE);
+            badge3.setVisibility(View.VISIBLE);
+            badge4.setVisibility(View.VISIBLE);
+            badge5.setVisibility(View.VISIBLE);
+        }
+
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
                 startActivity(intent);
                 auth.signOut();
-            }
-        });
-
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, InfosActivity.class);
-                startActivity(intent);
             }
         });
 
