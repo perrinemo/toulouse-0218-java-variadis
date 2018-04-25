@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
@@ -35,13 +37,19 @@ public class HerbariumActivity extends AppCompatActivity {
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
         ImageView ivProfil = findViewById(R.id.img_profile);
         ImageView ivMap = findViewById(R.id.img_map);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(HerbariumActivity.this, ConnexionActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         ivProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HerbariumActivity.this, ProfilActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -49,7 +57,6 @@ public class HerbariumActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, MapsActivity.class));
-                finish();
             }
         });
 
@@ -84,7 +91,6 @@ public class HerbariumActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HerbariumActivity.this.startActivity(new Intent(HerbariumActivity.this, VegetalHelperActivity.class));
-                finish();
             }
         });
 

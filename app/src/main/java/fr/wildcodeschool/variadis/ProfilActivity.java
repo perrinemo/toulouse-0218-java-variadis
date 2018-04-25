@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +34,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 
@@ -48,19 +55,12 @@ public class ProfilActivity extends AppCompatActivity {
     private String mGetImageUrl = "";
     private boolean mIsOk;
 
+    private String mCurrentPhotoPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
-
-        //Test
-        Button btnTest = findViewById(R.id.btn_test);
-        btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ProfilActivity.this, InfosActivity.class));
-            }
-        });
 
         checkPermission();
 
@@ -72,24 +72,35 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
         Button validPseudo = findViewById(R.id.btn_ok_pseudo);
+        Button info = findViewById(R.id.btn_info);
+        SingletonClass singletonClass = SingletonClass.getInstance();
 
         mAvatar = findViewById(R.id.avatar);
-
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
+
+        if (singletonClass.getProfil() != null) {
+            mEditPseudo.setText(singletonClass.getProfil().getPseudo());
+        }
+
+        if (auth.getCurrentUser() == null) {
+            Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         mDatabaseReference = firebaseDatabase.getReference("users").child(mUid);
         mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
                 if (dataSnapshot.child("pseudo").getValue() != null) {
-                    String pseudo = (String) dataSnapshot.child("pseudo").getValue();
-                    mEditPseudo.setText(pseudo);
+                    mEditPseudo.setText(profilModel.getPseudo());
                 }
                 if (dataSnapshot.child("avatar").getValue() != null) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    String url = (String) dataSnapshot.child("avatar").getValue();
+                    String url = profilModel.getAvatar();
                     Glide.with(ProfilActivity.this)
                             .load(url)
                             .apply(RequestOptions.circleCropTransform())
@@ -106,11 +117,28 @@ public class ProfilActivity extends AppCompatActivity {
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                mFileUri = CameraUtils.getOutputMediaFileUri(ProfilActivity.this);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                startActivityForResult(intent, APP_PHOTO);
+                Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException ex) {
+
+                    }
+
+                    if (photoFile != null) {
+                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                "fr.wildcodeschool.variadis",
+                                photoFile);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                        startActivityForResult(intent, APP_PHOTO);
+
+                    }
+
+                }
                 progressBar.setVisibility(View.VISIBLE);
+
+
             }
         });
 
@@ -123,6 +151,7 @@ public class ProfilActivity extends AppCompatActivity {
                 } else {
                     updateUser(pseudo);
                 }
+                Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -132,7 +161,14 @@ public class ProfilActivity extends AppCompatActivity {
                 Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
                 startActivity(intent);
                 auth.signOut();
-                finish();
+            }
+        });
+
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProfilActivity.this, InfosActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -141,7 +177,6 @@ public class ProfilActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -149,7 +184,6 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
-                finish();
             }
         });
     }
@@ -168,6 +202,8 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
+                SingletonClass singletonClass = SingletonClass.getInstance();
+                singletonClass.setProfil(profilModel);
                 if (profilModel == null) {
                     return;
                 }
@@ -196,30 +232,23 @@ public class ProfilActivity extends AppCompatActivity {
         sBackPress = System.currentTimeMillis();
     }
 
-
-    // Permission pour utiliser l'appareil photo
-    public void checkPermission() {
-        if (ContextCompat.checkSelfPermission(ProfilActivity.this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-            mIsOk = true;
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]
-                    {Manifest.permission.CAMERA}, CAMERA);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int request, String permissions[], int[] results) {
-        mIsOk = false;
-        switch (request) {
-            case CAMERA:
-                if (results.length > 0 && results[0] == PackageManager.PERMISSION_GRANTED) {
-                    mIsOk = true;
-                }
-        }
-    }
-
     // Méthodes relatives à l'avatar
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

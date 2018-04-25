@@ -83,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
 
 
+
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
         mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, -1);
         if (mProgressDefi == -1) {
@@ -93,6 +94,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mProgressDefi = random;
         }
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("users");
+
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
         if (!isLocationEnabled()) {
@@ -219,7 +224,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fireBaseReady();
     }
 
-    public void fireBaseReady() {
+
+    /**
+     * Localisation du GPS, et par défaut se met sur Toulouse
+     */
+
+    public void updateMarker(final Location location) {
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("Vegetaux");
         //recuperation des marqueurs.
