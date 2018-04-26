@@ -174,7 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null,  mLocationDefi, mMap);
             }
         });
     }
@@ -298,7 +298,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
-                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
+                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null, mLocationDefi, mMap);
                     pref.edit().putBoolean(PREF, true).apply();
                 }
             }
