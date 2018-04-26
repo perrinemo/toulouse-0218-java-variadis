@@ -315,6 +315,17 @@ public class ProfilActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
+            case GALLERY:
+                try {
+                    if (resultCode == RESULT_OK) {
+                        mFileUri = data.getData();
+                        mGetImageUrl = mFileUri.getPath();
+                    }
+                    saveCaptureImage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 

@@ -46,16 +46,19 @@
 
         <activity
             android:name=".HerbariumActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity
             android:name=".MapsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity
             android:name=".VegetalActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProfilActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
 
         <activity
             android:name=".VegetalHelperActivity"

@@ -8,7 +8,7 @@
         android:id="@+id/congrats"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#FB3"
+        android:background="@color/colorAccent"
         android:fontFamily="@font/philosopher"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
