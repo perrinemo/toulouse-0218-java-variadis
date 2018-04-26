@@ -67,11 +67,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
+    private ArrayList<Marker> markersDefi = new ArrayList<>();
     private String mVegetalDefi;
     private boolean isPreviouslyLaunched;
-
-    //Attribut qui sera utile ultérieurement
-    private ArrayList<VegetalModel> mFoundVegetals = new ArrayList<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
     private boolean mIsWaitingAPILoaded = false;
@@ -92,28 +90,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
         mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
 
+        //Attribution d'un nouveau défi
         if (mProgressDefi == 0) {
-            userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
+            userRef.child(mUId).child("defiDone").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<Integer> availableDefi = new ArrayList<>();
                     int i = 0;
+                    boolean isDefiDone;
                     for (DataSnapshot defiSnapshot : dataSnapshot.getChildren()) {
-                        boolean isDefiDone = defiSnapshot.getValue(Boolean.class);
+                        isDefiDone = defiSnapshot.getValue(Boolean.class);
                         if (!isDefiDone) {
                             availableDefi.add(i);
                         }
                         i++;
                     }
                     Random r2 = new Random();
+
                     if (!availableDefi.isEmpty()) {
                         mRandom = r2.nextInt(availableDefi.size());
                         mProgressDefi = availableDefi.get(mRandom);
                         mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
                     }
-
                 }
-
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -121,12 +120,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
-
-
-
-
-
-
 
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -287,7 +280,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 markerDefi.setVisible(true);
                                 mVegetalDefi = vegetalName;
                                 mLocationDefi = latLng;
-                                markers.add(markerDefi);
+                                markersDefi.add(markerDefi);
 
                             } else {
                                 Marker marker = mMap.addMarker(new MarkerOptions()
@@ -329,31 +322,61 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
 
-        for (int i = 0; i < markers.size(); i++) {
-            Marker markerDefi = markers.get(mProgressDefi);
-            Location loc1 = new Location("");
-            loc1.setLatitude(mMyPosition.latitude);
-            loc1.setLongitude(mMyPosition.longitude);
-            Location loc2 = new Location("");
+        Location loc1 = new Location("");
+        loc1.setLatitude(mMyPosition.latitude);
+        loc1.setLongitude(mMyPosition.longitude);
+
+        for (int i = 0; i < markersDefi.size(); i++) {
+            final Marker markerDefi = markersDefi.get(i);
             Location loc3 = new Location("");
-            loc2.setLatitude(markers.get(i).getPosition().latitude);
-            loc2.setLongitude(markers.get(i).getPosition().longitude);
             loc3.setLatitude(markerDefi.getPosition().latitude);
             loc3.setLongitude(markerDefi.getPosition().longitude);
-            float distance = loc1.distanceTo(loc2);
             float distanceDefi = loc1.distanceTo(loc3);
 
+            //Lorsque le défi est relevé
+            if (distanceDefi < MIN_DEFI_DISTANCE) {
+                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean isFound = dataSnapshot.getValue(Boolean.class);
+                        if (!isFound) {
+                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).setValue(true);
+                            mCurrentDefi.edit().clear().apply();
+                            markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                            startActivity(intent);
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        }
+
+        for (int i = 0; i < markers.size(); i++) {
+            final Marker marker = markers.get(i);
+            Location loc2 = new Location("");
+            loc2.setLatitude(markers.get(i).getPosition().latitude);
+            loc2.setLongitude(markers.get(i).getPosition().longitude);
+            float distance = loc1.distanceTo(loc2);
+
+            //Lorsqu'un végétal est trouvé (hors défi)
             if (distance < MIN_DEFI_DISTANCE) {
-                final Marker marker = markers.get(i);
-                userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.getValue(Boolean.class);
                         if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
-                            mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
                             startActivity(intent);
+                        } else {
+                            mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
                         }
                         marker.setVisible(true);
                     }
@@ -364,51 +387,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
+        }
 
-            if (distanceDefi < MIN_DEFI_DISTANCE) {
-                final Marker marker = markers.get(i);
 
-                userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        boolean isFound = dataSnapshot.getValue(Boolean.class);
-                        if (!isFound) {
-                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
-                            mCurrentDefi.edit().clear().apply();
-                            mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
-                            startActivity(intent);
-                        } else {
-                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
 
-            }
-            final Marker marker = markers.get(i);
+            /*final Marker markerFound = markers.get(i);
             userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean isFound = dataSnapshot.getValue(Boolean.class);
                     if (isFound) {
-                        marker.setVisible(true);
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                        markerFound.setVisible(true);
+                        markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                     }
+
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
-        }
-
-
+            });*/
     }
 
 
@@ -486,8 +487,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
         sBackPress = System.currentTimeMillis();
     }
-
-
 
 
 }
