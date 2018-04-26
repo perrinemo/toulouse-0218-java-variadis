@@ -498,7 +498,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.quitter)
                 .setMessage(R.string.confirm_quit)
                 .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {

@@ -312,14 +312,25 @@ public class ProfilActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (sBackPress + 2000 > System.currentTimeMillis()) {
-            System.exit(0);
-            super.onBackPressed();
-        } else
-
-            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
-        sBackPress = System.currentTimeMillis();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.quitter)
+                .setMessage(R.string.confirm_quit)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(0);
+                        ProfilActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
+
 
     // Méthodes relatives à l'avatar
 
@@ -345,6 +356,17 @@ public class ProfilActivity extends AppCompatActivity {
             case APP_PHOTO:
                 try {
                     if (resultCode == RESULT_OK) {
+                        mGetImageUrl = mFileUri.getPath();
+                    }
+                    saveCaptureImage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case GALLERY:
+                try {
+                    if (resultCode == RESULT_OK) {
+                        mFileUri = data.getData();
                         mGetImageUrl = mFileUri.getPath();
                     }
                     saveCaptureImage();
