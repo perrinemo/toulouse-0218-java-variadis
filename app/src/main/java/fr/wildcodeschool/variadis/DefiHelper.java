@@ -36,7 +36,7 @@ public class DefiHelper {
         Button back = subView.findViewById(R.id.btn_quit);
 
         defiTitle.setText(R.string.nouveau_d_fi);
-        message.setVisibility(View.GONE);
+        message.setText(R.string.find_tree);
         Glide.with(context).load(url).into(vegetalImg);
         vegetalName.setText(vegetal);
         goTo.setText(R.string.visualiser_sur_la_carte);

@@ -71,4 +71,5 @@
     <string name="picture_app">Appareil Photo</string>
     <string name="gallery">Galerie</string>
     <string name="back">Retour</string>
+    <string name="find_tree">Tu dois trouver l\'arbre ci-dessous :</string>
 </resources>
