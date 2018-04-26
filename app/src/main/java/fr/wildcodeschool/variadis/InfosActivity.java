@@ -108,14 +108,13 @@ public class InfosActivity extends AppCompatActivity {
                                         public void onSuccess(Uri uri) {
                                             String imageUrl = uri.toString();
                                             userRef.child(id).child("defiDone").child(currentTreeName).child("image").setValue(imageUrl);
-                                            Toast.makeText(InfosActivity.this, imageUrl, Toast.LENGTH_SHORT).show();
 
 
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(InfosActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
                                         }
                                     });
 

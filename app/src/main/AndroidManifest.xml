@@ -46,27 +46,23 @@
 
         <activity
             android:name=".HerbariumActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MapsActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".VegetalActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProfilActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".VegetalHelperActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".InscriptionActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPassword"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -81,7 +77,8 @@
         </activity>
 
         <activity android:name=".InfosActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
 
 
         <provider
