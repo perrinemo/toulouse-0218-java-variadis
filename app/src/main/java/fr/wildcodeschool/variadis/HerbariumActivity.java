@@ -14,7 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -24,6 +30,8 @@ public class HerbariumActivity extends AppCompatActivity {
 
     public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
     public static final String CLASS_FROM = "CLASS_FROM";
+
+    private String mUId ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,10 @@ public class HerbariumActivity extends AppCompatActivity {
         ImageView ivProfil = findViewById(R.id.img_profile);
         ImageView ivMap = findViewById(R.id.img_map);
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userRef = database.getReference("users");
+        mUId = auth.getCurrentUser().getUid();
+
 
         if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(HerbariumActivity.this, ConnexionActivity.class);
@@ -60,36 +72,44 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
 
-        //Checkbox temporaire jusqu'à l'implémentation de l'API
-        checkIfEmpty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if (isChecked) {
-                    vegetalList.clear();
-                } else {
-                    vegetalList.add(new VegetalModel(R.drawable.tilleul_arbre_300x300, "Tilleul"));
-                    vegetalList.add(new VegetalModel(R.drawable.erable_sucre_fr_500_0006237, "Erable"));
-                    vegetalList.add(new VegetalModel(R.drawable.img_ulmus_americana_2209, "Orme"));
-                    vegetalList.add(new VegetalModel(R.drawable.micocoulier_300x300, "Micocoulier"));
-                    vegetalList.add(new VegetalModel(R.drawable.pinus_pinea_pin_parasol_ou_pin_pignon, "Pin Parasol"));
-                    vegetalList.add(new VegetalModel(R.drawable.c_dre_liban_ch_teau_de_hautefort_23, "Cèdre"));
-                    vegetalList.add(new VegetalModel(R.drawable.charme_commun_fastigiata_, "Charme"));
-                    vegetalList.add(new VegetalModel(R.drawable.murier_platane_sterile, "Platane"));
-                    vegetalList.add(new VegetalModel(R.drawable.betula_papyrifera, "Bouleau"));
 
-                }
+                    userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            for(DataSnapshot defiSnapshot : dataSnapshot.getChildren()){
+                                String vegetalName = defiSnapshot.getValue(String.class);
+
+                                boolean found = defiSnapshot.child(vegetalName).child("isFound").getValue(Boolean.class);
+                                String url = defiSnapshot.child(vegetalName).child("image").getValue(String.class);
+                                if(found){
+                                    vegetalList.add(new VegetalModel(url, vegetalName));
+
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+
 
                 herbView.setAdapter(adapter);
                 herbView.setEmptyView(emptyHerbarium);
 
-            }
-        });
+
+
 
         //TODO Remplacer les Parcelables par des requêtes Firebase
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPicture(), vegetalList.get(i).getName());
+                Parcelable vegetal = new VegetalModel(vegetalList.get(i).getPictureUrl(), vegetalList.get(i).getName());
                 Intent intent = new Intent(HerbariumActivity.this, VegetalActivity.class);
                 intent.putExtra(CLASS_FROM, "herbarium");
                 intent.putExtra(EXTRA_PARCEL_VEGETAL, vegetal);
