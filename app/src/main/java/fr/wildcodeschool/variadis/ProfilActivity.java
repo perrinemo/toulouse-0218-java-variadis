@@ -47,7 +47,7 @@ public class ProfilActivity extends AppCompatActivity {
     private ImageView mAvatar;
     private EditText mEditPseudo;
     private DatabaseReference mDatabaseUsers;
-    private DatabaseReference mDatabaseVegetaux;
+    //private DatabaseReference mDatabaseVegetaux;
     private String mUid;
     private Uri mFileUri = null;
     private String mGetImageUrl = "";
@@ -71,12 +71,12 @@ public class ProfilActivity extends AppCompatActivity {
         final Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
-        TextView tvPoints = findViewById(R.id.text_points);
-        ImageView badge1 = findViewById(R.id.img_badge1_ok);
-        ImageView badge2 = findViewById(R.id.img_badge2_ok);
-        ImageView badge3 = findViewById(R.id.img_badge3_ok);
-        ImageView badge4 = findViewById(R.id.img_badge4_ok);
-        ImageView badge5 = findViewById(R.id.img_badge5_ok);
+        final TextView tvPoints = findViewById(R.id.text_points);
+        final ImageView badge1 = findViewById(R.id.img_badge1_ok);
+        final ImageView badge2 = findViewById(R.id.img_badge2_ok);
+        final ImageView badge3 = findViewById(R.id.img_badge3_ok);
+        final ImageView badge4 = findViewById(R.id.img_badge4_ok);
+        final ImageView badge5 = findViewById(R.id.img_badge5_ok);
 
         mAvatar = findViewById(R.id.avatar);
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -110,16 +110,18 @@ public class ProfilActivity extends AppCompatActivity {
                             .into(mAvatar);
                 }
                 for (DataSnapshot plante: dataSnapshot.child("defiDone").getChildren()) {
-                    if (plante.child("isFound").getValue(Boolean.class)) {
-                        String nomPlante = plante.getValue(String.class);
-                        mDatabaseVegetaux = firebaseDatabase.getReference(nomPlante);
-                        mDatabaseVegetaux.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                int nbPlante = 0;
-                                for (DataSnapshot vegetaux: dataSnapshot.child("latLng").getChildren()) {
-                                    nbPlante++;
-                                }
+                    String nomPlante = plante.getKey().toString();
+                    final DatabaseReference databaseVegetaux = firebaseDatabase.getReference("Vegetaux").child(nomPlante);
+                    final boolean isfound = plante.child("isFound").getValue(Boolean.class);
+
+                    databaseVegetaux.child("latLng").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int nbPlante = 0;
+                            if (isfound) {
+                                String strPlante = String.valueOf(dataSnapshot.getChildrenCount());
+                                nbPlante = Integer.parseInt(strPlante);
+
                                 if (nbPlante == 1) {
                                     mPoints += 5;
                                 } else if (nbPlante > 1 && nbPlante <= 5) {
@@ -133,12 +135,37 @@ public class ProfilActivity extends AppCompatActivity {
                                 }
                             }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                            tvPoints.setText(String.valueOf(mPoints));
 
+                            if (mPoints > 0 && mPoints <= 10) {
+                                badge1.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 10 && mPoints <= 50) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 50 && mPoints <= 100) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                                badge3.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 100 && mPoints <= 200) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                                badge3.setVisibility(View.VISIBLE);
+                                badge4.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 200) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                                badge3.setVisibility(View.VISIBLE);
+                                badge4.setVisibility(View.VISIBLE);
+                                badge5.setVisibility(View.VISIBLE);
                             }
-                        });
-                    }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
                 }
             }
 
@@ -192,29 +219,7 @@ public class ProfilActivity extends AppCompatActivity {
         });
 
         // Test pour afficher les badges avec des points fictifs
-        tvPoints.setText(String.valueOf(mPoints));
 
-        if (mPoints > 0 && mPoints <= 10) {
-            badge1.setVisibility(View.VISIBLE);
-        } else if (mPoints > 10 && mPoints <= 50) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-        } else if (mPoints > 50 && mPoints <= 100) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-            badge3.setVisibility(View.VISIBLE);
-        } else if (mPoints > 100 && mPoints <= 200) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-            badge3.setVisibility(View.VISIBLE);
-            badge4.setVisibility(View.VISIBLE);
-        } else if (mPoints > 200) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-            badge3.setVisibility(View.VISIBLE);
-            badge4.setVisibility(View.VISIBLE);
-            badge5.setVisibility(View.VISIBLE);
-        }
 
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
