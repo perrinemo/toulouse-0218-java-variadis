@@ -47,25 +47,23 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".HerbariumActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MapsActivity"
-            android:noHistory="true"
+
             android:screenOrientation="portrait" />
         <activity
             android:name=".VegetalActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProfilActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".VegetalHelperActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".InscriptionActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPassword"
@@ -79,9 +77,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".InfosActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".InfosActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
