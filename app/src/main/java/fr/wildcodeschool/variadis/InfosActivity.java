@@ -112,7 +112,7 @@ public class InfosActivity extends AppCompatActivity {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(InfosActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
                                         }
                                     });
 

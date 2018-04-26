@@ -103,7 +103,7 @@ public class ProfilActivity extends AppCompatActivity {
                 if (dataSnapshot.child("avatar").getValue() != null) {
                     progressBar.setVisibility(View.INVISIBLE);
                     String url = profilModel.getAvatar();
-                    Glide.with(ProfilActivity.this)
+                    Glide.with(getApplicationContext())
                             .load(url)
                             .apply(RequestOptions.circleCropTransform())
                             .into(mAvatar);
