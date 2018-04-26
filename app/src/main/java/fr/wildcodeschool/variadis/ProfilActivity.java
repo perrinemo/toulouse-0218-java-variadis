@@ -1,6 +1,8 @@
 package fr.wildcodeschool.variadis;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -45,7 +47,7 @@ import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class ProfilActivity extends AppCompatActivity {
 
-    public final static int CAMERA = 123;
+    public final static int GALLERY = 123;
     public final static int APP_PHOTO = 456;
 
     private ImageView mAvatar;
@@ -122,26 +124,43 @@ public class ProfilActivity extends AppCompatActivity {
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle(R.string.add_image)
+                        .setMessage(R.string.select_resource)
+                        .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    File photoFile = null;
+                                    try {
+                                        photoFile = createImageFile();
+                                    } catch (IOException ex) {
 
-                    }
+                                    }
 
-                    if (photoFile != null) {
-                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
-                                "fr.wildcodeschool.variadis",
-                                photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                        startActivityForResult(intent, APP_PHOTO);
+                                    if (photoFile != null) {
+                                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                                "fr.wildcodeschool.variadis",
+                                                photoFile);
+                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                                        startActivityForResult(intent, APP_PHOTO);
 
-                    }
+                                    }
 
-                }
-                progressBar.setVisibility(View.VISIBLE);
+                                }
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .show();
+
 
 
             }
@@ -186,12 +205,29 @@ public class ProfilActivity extends AppCompatActivity {
             badge5.setVisibility(View.VISIBLE);
         }
 
+        //Confiramtion déconnection
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
-                startActivity(intent);
-                auth.signOut();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle(R.string.deco)
+                        .setMessage(R.string.confirm_deco)
+                        .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+                                startActivity(intent);
+                                auth.signOut();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -200,6 +236,7 @@ public class ProfilActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -207,6 +244,7 @@ public class ProfilActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                finish();
             }
         });
     }
@@ -244,16 +282,7 @@ public class ProfilActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference("users").child(mUid).child("pseudo").setValue(pseudo);
     }
 
-    @Override
-    public void onBackPressed() {
-        if (sBackPress + 2000 > System.currentTimeMillis()) {
-            System.exit(0);
-            super.onBackPressed();
-        } else
 
-            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
-        sBackPress = System.currentTimeMillis();
-    }
 
     // Méthodes relatives à l'avatar
 
@@ -286,9 +315,40 @@ public class ProfilActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
+            case GALLERY:
+                try {
+                    if (resultCode == RESULT_OK) {
+                        mFileUri = data.getData();
+                        mGetImageUrl = mFileUri.getPath();
+                    }
+                    saveCaptureImage();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.quitter)
+                .setMessage(R.string.confirm_quit)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(0);
+                        ProfilActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
+    }
     private void saveCaptureImage() {
         if (!mGetImageUrl.equals("") && mGetImageUrl != null) {
             StorageReference ref = FirebaseStorage.getInstance().getReference().child(mUid).child("avatar.jpg");

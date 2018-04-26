@@ -356,6 +356,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
 
             }
+            final Marker markerFound = markersDefi.get(i);
+            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    boolean isFound = dataSnapshot.getValue(Boolean.class);
+                    if (isFound) {
+                        markerFound.setVisible(true);
+                        markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
 
         for (int i = 0; i < markers.size(); i++) {
@@ -387,14 +404,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
-        }
-
-
-
-
-
-            /*final Marker markerFound = markers.get(i);
-            userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+            final Marker markerFound = markers.get(i);
+            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean isFound = dataSnapshot.getValue(Boolean.class);
@@ -409,7 +420,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });*/
+            });
+        }
+
+
+
+
+
+
     }
 
 
@@ -480,12 +498,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        if (sBackPress + 2000 > System.currentTimeMillis()) {
-            System.exit(0);
-            super.onBackPressed();
-        } else
-            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
-        sBackPress = System.currentTimeMillis();
+        final android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setTitle(R.string.quitter)
+                .setMessage(R.string.confirm_quit)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(0);
+                        MapsActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 
 
