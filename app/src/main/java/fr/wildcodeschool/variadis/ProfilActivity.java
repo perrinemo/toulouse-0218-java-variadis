@@ -74,11 +74,11 @@ public class ProfilActivity extends AppCompatActivity {
         SingletonClass singletonClass = SingletonClass.getInstance();
 
         TextView tvPoints = findViewById(R.id.text_points);
-        ImageView badge1 = findViewById(R.id.img_badge1);
-        ImageView badge2 = findViewById(R.id.img_badge2);
-        ImageView badge3 = findViewById(R.id.img_badge3);
-        ImageView badge4 = findViewById(R.id.img_badge4);
-        ImageView badge5 = findViewById(R.id.img_badge5);
+        ImageView badge1 = findViewById(R.id.img_badge1_ok);
+        ImageView badge2 = findViewById(R.id.img_badge2_ok);
+        ImageView badge3 = findViewById(R.id.img_badge3_ok);
+        ImageView badge4 = findViewById(R.id.img_badge4_ok);
+        ImageView badge5 = findViewById(R.id.img_badge5_ok);
 
         mAvatar = findViewById(R.id.avatar);
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
