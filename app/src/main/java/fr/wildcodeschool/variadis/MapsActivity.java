@@ -335,7 +335,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //Lorsque le défi est relevé
             if (distanceDefi < MIN_DEFI_DISTANCE) {
-                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
@@ -357,7 +357,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
             final Marker markerFound = markersDefi.get(i);
-            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
@@ -384,7 +384,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //Lorsqu'un végétal est trouvé (hors défi)
             if (distance < MIN_DEFI_DISTANCE) {
-                userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+                userRef.child(mUId).child("defiDone").child(marker.getTitle()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
@@ -405,7 +405,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
             }
             final Marker markerFound = markers.get(i);
-            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
