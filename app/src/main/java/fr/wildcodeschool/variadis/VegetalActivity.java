@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.DateFormat;
@@ -49,12 +51,13 @@ public class VegetalActivity extends AppCompatActivity {
         if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
             //imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
             txtVegetal.setText(foundVegetal.getName());
-            placeVegetal.setText(foundVegetal.getAddress());
-            lastFind.setText(foundVegetal.getDate());
         }
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("herbarium")) {
-            imgVegetal.setImageResource(vegetal.getPicture());
+            Glide.with(getApplicationContext())
+                    .load(vegetal.getPictureUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgVegetal);
             txtVegetal.setText(vegetal.getName());
         }
 
