@@ -1,5 +1,7 @@
 package fr.wildcodeschool.variadis;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,7 +43,7 @@ import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class ProfilActivity extends AppCompatActivity {
 
-    public final static int CAMERA = 123;
+    public final static int GALLERY = 123;
     public final static int APP_PHOTO = 456;
 
     private ImageView mAvatar;
@@ -176,33 +178,47 @@ public class ProfilActivity extends AppCompatActivity {
 
 
 
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
 
-                    }
+            mAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                    builder.setTitle(R.string.add_image)
+                            .setMessage(R.string.select_resource)
+                            .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    if (intent.resolveActivity(getPackageManager()) != null) {
+                                        File photoFile = null;
+                                        try {
+                                            photoFile = createImageFile();
+                                        } catch (IOException ex) {
 
-                    if (photoFile != null) {
-                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
-                                "fr.wildcodeschool.variadis",
-                                photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                        startActivityForResult(intent, APP_PHOTO);
+                                        }
 
-                    }
+                                        if (photoFile != null) {
+                                            mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                                    "fr.wildcodeschool.variadis",
+                                                    photoFile);
+                                            intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                                            startActivityForResult(intent, APP_PHOTO);
+
+                                        }
+                                    }
+                                }
+                            })
+                            .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                }
+                            })
+                            .show();
 
                 }
-                progressBar.setVisibility(View.VISIBLE);
-
-
-            }
-        });
+            });
 
         validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,9 +239,25 @@ public class ProfilActivity extends AppCompatActivity {
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
-                startActivity(intent);
-                auth.signOut();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle(R.string.deco)
+                        .setMessage(R.string.confirm_deco)
+                        .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+                                startActivity(intent);
+                                auth.signOut();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
             }
         });
 
