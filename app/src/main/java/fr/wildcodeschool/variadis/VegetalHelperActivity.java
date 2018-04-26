@@ -32,14 +32,8 @@ public class VegetalHelperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_popup);
 
-        ImageView ivVegetal = findViewById(R.id.img_found_vegetal);
-        ivVegetal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), 0);
+       // ImageView ivVegetal = findViewById(R.id.img_found_vegetal);
 
-            }
-        });
 
         TextView txtVegetal = findViewById(R.id.vegetal_name);
         txtVegetal.setText(getIntent().getStringExtra(NAME));
@@ -68,19 +62,6 @@ public class VegetalHelperActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        ImageView ivVegetal = findViewById(R.id.img_found_vegetal);
-        TextView addPicture = findViewById(R.id.add_picture);
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        Glide.with(this).load(bitmap).into(ivVegetal);
-        ivVegetal.setClickable(false);
-        addPicture.setVisibility(View.INVISIBLE);
-        mBitmap = bitmap.copy(bitmap.getConfig(), true);
-
-
-    }
 
 
 }
