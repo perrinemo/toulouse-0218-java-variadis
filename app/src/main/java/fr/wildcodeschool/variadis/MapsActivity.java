@@ -99,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     int i = 0;
                     boolean isDefiDone;
                     for (DataSnapshot defiSnapshot : dataSnapshot.getChildren()) {
-                        isDefiDone = defiSnapshot.getValue(Boolean.class);
+                        isDefiDone = defiSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isDefiDone) {
                             availableDefi.add(i);
                         }
@@ -338,10 +338,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        boolean isFound = dataSnapshot.getValue(Boolean.class);
+                        boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).setValue(true);
+                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
                             mCurrentDefi.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                             startActivity(intent);
@@ -360,7 +360,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    boolean isFound = dataSnapshot.getValue(Boolean.class);
+                    boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                     if (isFound) {
                         markerFound.setVisible(true);
                         markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
@@ -387,10 +387,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        boolean isFound = dataSnapshot.getValue(Boolean.class);
+                        boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isFound) {
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
+                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
                             startActivity(intent);
                         } else {
                             mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
@@ -408,7 +408,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    boolean isFound = dataSnapshot.getValue(Boolean.class);
+                    boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                     if (isFound) {
                         markerFound.setVisible(true);
                         markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
