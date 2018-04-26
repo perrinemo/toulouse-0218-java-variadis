@@ -5,18 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,14 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
-
 public class HerbariumActivity extends AppCompatActivity {
 
     public static final String EXTRA_PARCEL_VEGETAL = "EXTRA_PARCEL_VEGETAL";
     public static final String CLASS_FROM = "CLASS_FROM";
-
-    private String mUId ;
+    public VegetalModel mVegetalModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +32,6 @@ public class HerbariumActivity extends AppCompatActivity {
         setContentView(R.layout.activity_herbarium);
 
         final GridView herbView = findViewById(R.id.herbview);
-        final TextView emptyHerbarium = findViewById(R.id.empty_herbarium);
-        final CheckBox checkIfEmpty = findViewById(R.id.check_if_empty);
         final ArrayList<VegetalModel> vegetalList = new ArrayList<>();
         final GridAdapter adapter = new GridAdapter(this, vegetalList);
         ImageView ivProfil = findViewById(R.id.img_profile);
@@ -50,7 +39,7 @@ public class HerbariumActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("users");
-        mUId = auth.getCurrentUser().getUid();
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
         if (auth.getCurrentUser() == null) {
@@ -75,36 +64,32 @@ public class HerbariumActivity extends AppCompatActivity {
         });
 
 
-                    userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+        userRef.child(uid).child("defiDone").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            for(DataSnapshot defiSnapshot : dataSnapshot.getChildren()){
-                                String vegetalName = defiSnapshot.getValue(String.class);
+                for (DataSnapshot defiSnapshot : dataSnapshot.getChildren()) {
+                    String vegetalName = defiSnapshot.getKey().toString();
 
-                                boolean found = defiSnapshot.child(vegetalName).child("isFound").getValue(Boolean.class);
-                                String url = defiSnapshot.child(vegetalName).child("image").getValue(String.class);
-                                if(found){
-                                    vegetalList.add(new VegetalModel(url, vegetalName));
+                    boolean found = defiSnapshot.child("isFound").getValue(Boolean.class);
+                    String url = defiSnapshot.child("image").getValue(String.class);
+                    mVegetalModel = new VegetalModel(url, vegetalName);
+                    if (found) {
+                        vegetalList.add(new VegetalModel(url, vegetalName));
+                        adapter.notifyDataSetChanged();
 
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                    }
 
 
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-
-                herbView.setAdapter(adapter);
-                herbView.setEmptyView(emptyHerbarium);
-
-
+            }
+        });
+        herbView.setAdapter(adapter);
 
 
         //TODO Remplacer les Parcelables par des requêtes Firebase
@@ -120,6 +105,7 @@ public class HerbariumActivity extends AppCompatActivity {
         });
 
     }
+
     @Override
     public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);

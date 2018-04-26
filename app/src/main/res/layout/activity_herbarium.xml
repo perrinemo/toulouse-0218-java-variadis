@@ -25,32 +25,6 @@
         app:layout_constraintTop_toBottomOf="parent" />
 
 
-    <CheckBox
-        android:id="@+id/check_if_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:checked="true"
-        android:fontFamily="@font/philosopher"
-        android:gravity="center_vertical"
-        android:text="@string/empty_herbarium"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_herbarium" />
-
-    <TextView
-        android:id="@+id/empty_herbarium"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="9dp"
-        android:fontFamily="@font/philosopher"
-        android:text="@string/empty"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/check_if_empty" />
 
 
     <include
@@ -70,7 +44,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/empty_herbarium" />
+        app:layout_constraintTop_toBottomOf="@+id/my_herbarium" />
 
 </android.support.constraint.ConstraintLayout>
 
