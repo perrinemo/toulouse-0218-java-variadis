@@ -47,7 +47,6 @@ public class ProfilActivity extends AppCompatActivity {
     private ImageView mAvatar;
     private EditText mEditPseudo;
     private DatabaseReference mDatabaseUsers;
-    //private DatabaseReference mDatabaseVegetaux;
     private String mUid;
     private Uri mFileUri = null;
     private String mGetImageUrl = "";
