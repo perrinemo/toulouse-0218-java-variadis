@@ -38,9 +38,6 @@ public class VegetalActivity extends AppCompatActivity {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
-        Date date = Calendar.getInstance().getTime();
-        String dateFormat = format.format(date);
 
         if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(VegetalActivity.this, ConnexionActivity.class);
@@ -49,7 +46,10 @@ public class VegetalActivity extends AppCompatActivity {
         }
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
-            //imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
+            Glide.with(getApplicationContext())
+                    .load(foundVegetal.getPictureUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgVegetal);
             txtVegetal.setText(foundVegetal.getName());
         }
 
@@ -66,6 +66,7 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(VegetalActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
@@ -73,8 +74,8 @@ public class VegetalActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+               finish();
 
             }
         });
@@ -84,6 +85,7 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(VegetalActivity.this, MapsActivity.class));
+                finish();
             }
         });
 

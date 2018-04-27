@@ -45,6 +45,7 @@ public class InfosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(InfosActivity.this, MapsActivity.class));
+                finish();
             }
         });
 

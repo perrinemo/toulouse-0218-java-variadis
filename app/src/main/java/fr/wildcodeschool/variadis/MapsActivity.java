@@ -41,7 +41,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 import static fr.wildcodeschool.variadis.SplashActivity.PREF;
@@ -340,8 +343,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isFound) {
+                            String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
                             Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
+                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
                             mCurrentDefi.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                             startActivity(intent);
@@ -389,9 +394,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isFound) {
-                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                            String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
+                            String vegetalPic = dataSnapshot.child("image").getValue(String.class);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
-                            startActivity(intent);
+                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("Date").setValue(dateFormat);
+                            VegetalHelperActivity.openDialogVegetal(MapsActivity.this, marker.getTitle(), vegetalPic);
                         } else {
                             mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
                         }
@@ -504,8 +511,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        System.exit(0);
                         MapsActivity.super.onBackPressed();
+                        System.exit(0);
                     }
                 })
                 .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
