@@ -109,7 +109,7 @@ public class VegetalHelperActivity extends Activity{
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.cancel();
+                context.startActivity(new Intent(context, MapsActivity.class));
             }
         });
 

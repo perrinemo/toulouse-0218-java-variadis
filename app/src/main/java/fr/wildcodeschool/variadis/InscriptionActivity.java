@@ -94,8 +94,9 @@ public class InscriptionActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        System.exit(0);
                         InscriptionActivity.super.onBackPressed();
+                        System.exit(0);
+                        finish();
                     }
                 })
                 .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
