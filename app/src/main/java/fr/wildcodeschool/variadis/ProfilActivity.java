@@ -110,6 +110,17 @@ public class ProfilActivity extends AppCompatActivity {
                             .apply(RequestOptions.circleCropTransform())
                             .into(mAvatar);
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot plante: dataSnapshot.child("defiDone").getChildren()) {
                     String nomPlante = plante.getKey().toString();
                     final DatabaseReference databaseVegetaux = firebaseDatabase.getReference("Vegetaux").child(nomPlante);
@@ -118,7 +129,7 @@ public class ProfilActivity extends AppCompatActivity {
                     databaseVegetaux.child("latLng").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            int nbPlante = 0;
+                            int nbPlante;
                             if (isfound) {
                                 String strPlante = String.valueOf(dataSnapshot.getChildrenCount());
                                 nbPlante = Integer.parseInt(strPlante);
@@ -179,6 +190,8 @@ public class ProfilActivity extends AppCompatActivity {
 
 
 
+
+
             mAvatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -206,6 +219,7 @@ public class ProfilActivity extends AppCompatActivity {
 
                                         }
                                     }
+                                    progressBar.setVisibility(View.VISIBLE);
                                 }
                             })
                             .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
@@ -264,15 +278,16 @@ public class ProfilActivity extends AppCompatActivity {
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(ProfilActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                finish();
             }
         });
     }
