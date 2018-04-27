@@ -220,14 +220,14 @@ public class ProfilActivity extends AppCompatActivity {
 
                                         }
                                     }
-                                    progressBar.setVisibility(View.VISIBLE);
+                                    mProgressBar.setVisibility(View.VISIBLE);
                                 }
                             })
                             .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
-                                    progressBar.setVisibility(View.VISIBLE);
+                                    mProgressBar.setVisibility(View.VISIBLE);
                                 }
                             })
                             .show();
