@@ -1,5 +1,6 @@
 package fr.wildcodeschool.variadis;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
@@ -29,7 +30,7 @@ import static fr.wildcodeschool.variadis.MapsActivity.NAME;
 
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 
-public class VegetalHelperActivity extends Application{
+public class VegetalHelperActivity extends Activity{
 
     public static final String EXTRA_PARCEL_FOUNDVEGETAL = "EXTRA_PARCEL_FOUNDVEGETAL";
     Bitmap mBitmap;
@@ -47,7 +48,49 @@ public class VegetalHelperActivity extends Application{
         Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
         Button back = subView.findViewById(R.id.btn_quit);
 
-        Glide.with(context).load(url).into(vegetalImg);
+        Glide.with(context.getApplicationContext()).load(url).into(vegetalImg);
+        vegetalName.setText(vegetal);
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setView(subView);
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+        goTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Parcelable foundVegetal = new VegetalModel(url, vegetal);
+                VegetalHelperActivity.goToVegetal(context, foundVegetal);
+                alertDialog.dismiss();
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.cancel();
+            }
+        });
+
+        return alertDialog;
+    }
+
+    public static Dialog openDialogDefiDone(final Context context, final String vegetal, final String url) {
+
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        final View subView = inflater.inflate(R.layout.layout_popup, null);
+
+
+        TextView defiDone = subView.findViewById(R.id.congrats);
+        TextView message = subView.findViewById(R.id.tv_message);
+        defiDone.setText(R.string.good_game);
+        message.setText(R.string.msg_defi);
+
+        final ImageView vegetalImg = subView.findViewById(R.id.img_found_vegetal);
+        TextView vegetalName = subView.findViewById(R.id.vegetal_name);
+        Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
+        Button back = subView.findViewById(R.id.btn_quit);
+
+        Glide.with(context.getApplicationContext()).load(url).into(vegetalImg);
         vegetalName.setText(vegetal);
 
 
