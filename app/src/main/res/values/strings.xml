@@ -72,4 +72,5 @@
     <string name="gallery">Galerie</string>
     <string name="back">Retour</string>
     <string name="find_tree">Tu dois trouver l\'arbre ci-dessous :</string>
+    <string name="max_points">/244</string>
 </resources>
