@@ -193,19 +193,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageView ivDefi = findViewById(R.id.img_map);
+        final ImageView ivDefi = findViewById(R.id.img_map);
         TextView txtDefi = findViewById(R.id.txt_map);
         ivDefi.setImageResource(R.drawable.defi);
         txtDefi.setText(R.string.defis);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageView ivMap = findViewById(R.id.img_map);
-                ivMap.setColorFilter(R.color.colorPrimary);
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null,  mLocationDefi, mMap);
+                ivDefi.setColorFilter(R.color.colorPrimary);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl,  mLocationDefi, mMap);
 
             }
         });
+
 
     }
 
@@ -372,7 +372,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
                             String vegetalPic = dataSnapshot.child("image").getValue(String.class);
-                            VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
+                            VegetalHelperActivity.openDialogVegetal(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
                             mCurrentDefi.edit().clear().apply();

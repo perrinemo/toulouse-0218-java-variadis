@@ -52,7 +52,7 @@
         android:id="@+id/vegetal_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/philosopher"
         android:text="@string/name_vegetal"
         android:textAlignment="center"
