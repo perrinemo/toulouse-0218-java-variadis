@@ -93,6 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
         mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
 
+
         //Attribution d'un nouveau défi
         if (mProgressDefi == 0) {
             userRef.child(mUId).child("defiDone").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -199,9 +200,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
+                ImageView ivMap = findViewById(R.id.img_map);
+                ivMap.setColorFilter(R.color.colorPrimary);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null,  mLocationDefi, mMap);
+
             }
         });
+
     }
 
 
@@ -366,12 +371,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isFound) {
                             String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
-                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                            String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                            VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
                             mCurrentDefi.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                            startActivity(intent);
+
                         }
 
                     }
