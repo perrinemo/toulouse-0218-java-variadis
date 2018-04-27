@@ -11,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+
+import java.net.URL;
 
 /**
  * Created by perrine on 09/04/18.
@@ -37,7 +40,11 @@ public class DefiHelper {
 
         defiTitle.setText(R.string.nouveau_d_fi);
         message.setText(R.string.find_tree);
-        Glide.with(context).load(url).into(vegetalImg);
+        Glide.with(context)
+                .load(url)
+                .apply(RequestOptions.circleCropTransform())
+                .into(vegetalImg);
+
         vegetalName.setText(vegetal);
         goTo.setText(R.string.visualiser_sur_la_carte);
 
