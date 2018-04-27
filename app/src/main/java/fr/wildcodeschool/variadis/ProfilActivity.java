@@ -1,5 +1,7 @@
 package fr.wildcodeschool.variadis;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,7 +43,7 @@ import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class ProfilActivity extends AppCompatActivity {
 
-    public final static int CAMERA = 123;
+    public final static int GALLERY = 123;
     public final static int APP_PHOTO = 456;
 
     private ImageView mAvatar;
@@ -109,6 +111,17 @@ public class ProfilActivity extends AppCompatActivity {
                             .apply(RequestOptions.circleCropTransform())
                             .into(mAvatar);
                 }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot plante: dataSnapshot.child("defiDone").getChildren()) {
                     String nomPlante = plante.getKey().toString();
                     final DatabaseReference databaseVegetaux = firebaseDatabase.getReference("Vegetaux").child(nomPlante);
@@ -117,7 +130,7 @@ public class ProfilActivity extends AppCompatActivity {
                     databaseVegetaux.child("latLng").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            int nbPlante = 0;
+                            int nbPlante;
                             if (isfound) {
                                 String strPlante = String.valueOf(dataSnapshot.getChildrenCount());
                                 nbPlante = Integer.parseInt(strPlante);
@@ -177,33 +190,52 @@ public class ProfilActivity extends AppCompatActivity {
 
 
 
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
 
-                    }
 
-                    if (photoFile != null) {
-                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
-                                "fr.wildcodeschool.variadis",
-                                photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                        startActivityForResult(intent, APP_PHOTO);
 
-                    }
+            mAvatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                    builder.setTitle(R.string.add_image)
+                            .setMessage(R.string.select_resource)
+                            .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    if (intent.resolveActivity(getPackageManager()) != null) {
+                                        File photoFile = null;
+                                        try {
+                                            photoFile = createImageFile();
+                                        } catch (IOException ex) {
+
+                                        }
+
+                                        if (photoFile != null) {
+                                            mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                                    "fr.wildcodeschool.variadis",
+                                                    photoFile);
+                                            intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                                            startActivityForResult(intent, APP_PHOTO);
+
+                                        }
+                                    }
+                                    progressBar.setVisibility(View.VISIBLE);
+                                }
+                            })
+                            .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
+                                    progressBar.setVisibility(View.VISIBLE);
+                                }
+                            })
+                            .show();
 
                 }
-                mProgressBar.setVisibility(View.VISIBLE);
 
+            });
 
-            }
-        });
 
         validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,24 +256,41 @@ public class ProfilActivity extends AppCompatActivity {
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
-                startActivity(intent);
-                auth.signOut();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle(R.string.deco)
+                        .setMessage(R.string.confirm_deco)
+                        .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+                                startActivity(intent);
+                                auth.signOut();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
             }
         });
 
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(ProfilActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                finish();
             }
         });
     }
@@ -281,14 +330,25 @@ public class ProfilActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (sBackPress + 2000 > System.currentTimeMillis()) {
-            System.exit(0);
-            super.onBackPressed();
-        } else
-
-            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
-        sBackPress = System.currentTimeMillis();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.quitter)
+                .setMessage(R.string.confirm_quit)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.exit(0);
+                        ProfilActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
+
 
     // Méthodes relatives à l'avatar
 
@@ -319,6 +379,17 @@ public class ProfilActivity extends AppCompatActivity {
                     } else {
                         mProgressBar.setVisibility(View.INVISIBLE);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case GALLERY:
+                try {
+                    if (resultCode == RESULT_OK) {
+                        mFileUri = data.getData();
+                        mGetImageUrl = mFileUri.getPath();
+                    }
+                    saveCaptureImage();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
