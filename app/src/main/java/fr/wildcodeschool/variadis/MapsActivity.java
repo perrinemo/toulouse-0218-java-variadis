@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -77,6 +76,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int mProgressDefi;
     private int mRandom;
     private SharedPreferences mCurrentDefi;
+    private String mDefiUrl;
 
 
     @Override
@@ -111,6 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mRandom = r2.nextInt(availableDefi.size());
                         mProgressDefi = availableDefi.get(mRandom);
                         mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
+
                     }
                 }
 
@@ -120,6 +121,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+
+        DatabaseReference reference = userRef.child(mUId).child("defiDone");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int j = 0;
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    if (mProgressDefi == j) {
+                        mDefiUrl = dataSnapshot1.child("image").getValue(String.class);
+                    }
+                    j++;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -174,7 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null,  mLocationDefi, mMap);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
             }
         });
     }
@@ -298,7 +320,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
-                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null, mLocationDefi, mMap);
+                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
                     pref.edit().putBoolean(PREF, true).apply();
                 }
             }
@@ -422,10 +444,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
-
-
-
-
 
 
     }
