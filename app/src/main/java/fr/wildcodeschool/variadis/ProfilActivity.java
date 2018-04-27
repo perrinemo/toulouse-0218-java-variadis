@@ -56,6 +56,7 @@ public class ProfilActivity extends AppCompatActivity {
     private int mPoints = 0;
 
     private String mCurrentPhotoPath;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class ProfilActivity extends AppCompatActivity {
 
         final FirebaseAuth auth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        mProgressBar = findViewById(R.id.progress_bar);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
@@ -103,7 +104,7 @@ public class ProfilActivity extends AppCompatActivity {
                     mEditPseudo.setText(profilModel.getPseudo());
                 }
                 if (dataSnapshot.child("avatar").getValue() != null) {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     String url = profilModel.getAvatar();
                     Glide.with(getApplicationContext())
                             .load(url)
@@ -232,7 +233,9 @@ public class ProfilActivity extends AppCompatActivity {
                             .show();
 
                 }
+
             });
+
 
         validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,8 +375,10 @@ public class ProfilActivity extends AppCompatActivity {
                 try {
                     if (resultCode == RESULT_OK) {
                         mGetImageUrl = mFileUri.getPath();
+                        saveCaptureImage();
+                    } else {
+                        mProgressBar.setVisibility(View.INVISIBLE);
                     }
-                    saveCaptureImage();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
