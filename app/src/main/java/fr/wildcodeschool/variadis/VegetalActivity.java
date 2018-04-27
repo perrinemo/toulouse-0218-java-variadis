@@ -1,6 +1,7 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -45,6 +46,8 @@ public class VegetalActivity extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String uid = auth.getCurrentUser().getUid();
 
+        ImageView ivHerbier = findViewById(R.id.img_herbier);
+        ivHerbier.setColorFilter(R.color.colorPrimary);
 
 
         if (auth.getCurrentUser() == null) {
@@ -94,7 +97,7 @@ public class VegetalActivity extends AppCompatActivity {
             txtVegetal.setText(vegetal.getName());
         }
 
-        ImageView ivHerbier = findViewById(R.id.img_herbier);
+
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -72,4 +72,6 @@
     <string name="gallery">Galerie</string>
     <string name="back">Retour</string>
     <string name="find_tree">Tu dois trouver l\'arbre ci-dessous :</string>
+    <string name="msg_defi">Tu viens de relever le défi du jour !</string>
+    <string name="good_game">Réussite !</string>
 </resources>
