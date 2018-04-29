@@ -56,7 +56,7 @@ public class DefiHelper {
         goTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                map.moveCamera(CameraUpdateFactory.newLatLng(location));
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 17));
                 alertDialog.dismiss();
             }
         });
