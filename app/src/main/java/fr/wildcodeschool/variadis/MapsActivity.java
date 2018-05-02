@@ -306,7 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (i == mProgressDefi) {
                                 Marker markerDefi = mMap.addMarker(new MarkerOptions()
                                         .position(latLng)
-                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi2)));
                                 markerDefi.setVisible(true);
                                 mVegetalDefi = vegetalName;
                                 mLocationDefi = latLng;
@@ -378,7 +378,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             pref.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                             VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
-
                         }
 
                     }
@@ -428,8 +427,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("Date").setValue(dateFormat);
                             VegetalHelperActivity.openDialogVegetal(MapsActivity.this, marker.getTitle(), vegetalPic);
-                        } else {
-                            mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
                         }
                         marker.setVisible(true);
                     }
