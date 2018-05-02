@@ -200,6 +200,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ImageView ivMap = findViewById(R.id.img_map);
+                ivMap.setColorFilter(R.color.colorPrimary);
                 DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl,  mLocationDefi, mMap);
 
             }
