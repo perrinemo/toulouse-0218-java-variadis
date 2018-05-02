@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'variadis'
+            keyPassword 'CAF!R=4SjBfPE5wq'
+            storeFile file('keystore.jks')
+            storePassword 'gd6r3@y@#^xLm*^%'
+        }
+    }
     compileSdkVersion 26
     defaultConfig {
         applicationId "fr.wildcodeschool.variadis"
@@ -9,17 +17,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.android.gms:play-services-maps:12.0.1'
@@ -30,15 +40,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.google.android.gms:play-services:12.0.1'
     compile 'com.android.volley:volley:1.1.0'
-
     // Firebase
     compile 'com.google.firebase:firebase-core:12.0.1'
     compile 'com.google.firebase:firebase-firestore:12.0.1'
-
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
-
+    compile 'com.android.support:multidex:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
