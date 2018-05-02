@@ -243,7 +243,6 @@ public class ProfilActivity extends AppCompatActivity {
 
             });
 
-
         validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
