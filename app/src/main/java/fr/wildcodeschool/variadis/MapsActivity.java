@@ -51,19 +51,17 @@ import static fr.wildcodeschool.variadis.SplashActivity.PREF;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    public static final String DEFI_OK = "DEFI_OK";
+
     public static final String NAME = "NAME";
-    public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
     public static final String DEFI_PREF = "DEFI";
-    public static final int RADIUS_DISTANCE = 500;
     public static final int MIN_DEFI_DISTANCE = 20;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-    public static long sBackPress;
-    public static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    public static DatabaseReference userRef = database.getReference("users");
+    public static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public static final DatabaseReference userRef = database.getReference("users");
+
     private String mUId;
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
@@ -74,7 +72,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean isPreviouslyLaunched;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
-    private boolean mIsWaitingAPILoaded = false;
     private LatLng mLocationDefi;
     private int mProgressDefi;
     private int mRandom;
@@ -118,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
 
                     }
+
                 }
 
                 @Override
