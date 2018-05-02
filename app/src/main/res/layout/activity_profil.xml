@@ -44,13 +44,16 @@
         android:id="@+id/edit_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
@@ -81,6 +84,13 @@
             android:text="@string/no_pts"
             android:textSize="18sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/philosopher"
+            android:text="@string/max_points"
+            android:textSize="18sp"/>
+
     </LinearLayout>
 
 
@@ -100,11 +110,11 @@
         style="@style/Widget.AppCompat.Button.Small"
         android:layout_width="49dp"
         android:layout_height="24dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginEnd="70dp"
         android:layout_marginTop="34dp"
         android:background="@null"
         android:text="@string/ok"
-        app:layout_constraintStart_toEndOf="@+id/edit_pseudo"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <ProgressBar
