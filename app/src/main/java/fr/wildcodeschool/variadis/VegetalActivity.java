@@ -39,7 +39,7 @@ public class VegetalActivity extends AppCompatActivity {
         VegetalModel foundVegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_FOUNDVEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
         TextView txtVegetal = findViewById(R.id.nom_vegetal);
-        TextView placeVegetal = findViewById(R.id.lieu);
+        final TextView placeVegetal = findViewById(R.id.lieu);
         final TextView lastFind = findViewById(R.id.last_find);
 
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
@@ -61,7 +61,9 @@ public class VegetalActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String date = dataSnapshot.child("Date").getValue(String.class);
+                    String address = dataSnapshot.child("adresse").getValue(String.class);
                     lastFind.setText(date);
+                    placeVegetal.setText(address);
                 }
 
                 @Override
@@ -82,7 +84,9 @@ public class VegetalActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String date = dataSnapshot.child("Date").getValue(String.class);
+                    String address = dataSnapshot.child("adresse").getValue(String.class);
                     lastFind.setText(date);
+                    placeVegetal.setText(address);
                 }
 
                 @Override
