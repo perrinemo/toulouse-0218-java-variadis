@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -80,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int mProgressDefi;
     private int mRandom;
     private SharedPreferences mCurrentDefi;
+    private String mDefiUrl;
 
 
     @Override
@@ -92,6 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mUId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
         mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
+
 
         //Attribution d'un nouveau défi
         if (mProgressDefi == 0) {
@@ -114,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mRandom = r2.nextInt(availableDefi.size());
                         mProgressDefi = availableDefi.get(mRandom);
                         mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
+
                     }
                 }
 
@@ -123,6 +125,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+
+        DatabaseReference reference = userRef.child(mUId).child("defiDone");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int j = 0;
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    if (mProgressDefi == j) {
+                        mDefiUrl = dataSnapshot1.child("image").getValue(String.class);
+                    }
+                    j++;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -177,9 +200,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ImageView ivMap = findViewById(R.id.img_map);
+                ivMap.setColorFilter(R.color.colorPrimary);
                 DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null,  mLocationDefi, mMap);
+
             }
         });
+
     }
 
 
@@ -301,7 +328,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
-                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, null, mLocationDefi, mMap);
+                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
                     pref.edit().putBoolean(PREF, true).apply();
                 }
             }
@@ -344,12 +371,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isFound) {
                             String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
-                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
+                            String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                            VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
                             mCurrentDefi.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                            startActivity(intent);
+
                         }
 
                     }
@@ -429,10 +457,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
-
-
-
-
 
 
     }

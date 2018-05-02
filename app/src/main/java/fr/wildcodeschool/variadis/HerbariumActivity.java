@@ -41,6 +41,8 @@ public class HerbariumActivity extends AppCompatActivity {
         DatabaseReference userRef = database.getReference("users");
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+        ImageView ivHerbier = findViewById(R.id.img_herbier);
+        ivHerbier.setColorFilter(R.color.colorPrimary);
 
         if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(HerbariumActivity.this, ConnexionActivity.class);
@@ -92,7 +94,6 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
         herbView.setAdapter(adapter);
-
 
         //TODO Remplacer les Parcelables par des requêtes Firebase
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

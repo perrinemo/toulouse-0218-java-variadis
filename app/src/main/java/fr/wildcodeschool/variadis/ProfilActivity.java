@@ -73,6 +73,9 @@ public class ProfilActivity extends AppCompatActivity {
         final Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
+        ImageView ivProfile = findViewById(R.id.img_profile);
+        ivProfile.setColorFilter(R.color.colorPrimary);
+
         final TextView tvPoints = findViewById(R.id.text_points);
         final ImageView badge1 = findViewById(R.id.img_badge1_ok);
         final ImageView badge2 = findViewById(R.id.img_badge2_ok);
