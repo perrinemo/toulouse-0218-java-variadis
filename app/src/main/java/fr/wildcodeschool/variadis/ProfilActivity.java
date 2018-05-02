@@ -3,6 +3,7 @@ package fr.wildcodeschool.variadis;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static fr.wildcodeschool.variadis.MapsActivity.DEFI_PREF;
 import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 
@@ -57,6 +59,8 @@ public class ProfilActivity extends AppCompatActivity {
 
     private String mCurrentPhotoPath;
     private ProgressBar mProgressBar;
+    private SharedPreferences mCurrentDefi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -267,6 +271,8 @@ public class ProfilActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
                                 startActivity(intent);
+                                mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
+                                mCurrentDefi.edit().clear().apply();
                                 auth.signOut();
                                 finish();
                             }
