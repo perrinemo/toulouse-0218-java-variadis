@@ -79,6 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int mProgressDefi;
     private int mRandom;
     private SharedPreferences mCurrentDefi;
+    private SharedPreferences pref;
     private String mDefiUrl;
 
 
@@ -193,19 +194,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageView ivDefi = findViewById(R.id.img_map);
+        final ImageView ivDefi = findViewById(R.id.img_map);
         TextView txtDefi = findViewById(R.id.txt_map);
         ivDefi.setImageResource(R.drawable.defi);
         txtDefi.setText(R.string.defis);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageView ivMap = findViewById(R.id.img_map);
-                ivMap.setColorFilter(R.color.colorPrimary);
                 DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl,  mLocationDefi, mMap);
 
             }
         });
+
 
     }
 
@@ -325,7 +325,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 }
-                SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
+                pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
                     DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
@@ -372,11 +372,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
                             String vegetalPic = dataSnapshot.child("image").getValue(String.class);
-                            VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
                             mCurrentDefi.edit().clear().apply();
+                            pref.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                            VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
 
                         }
 
@@ -537,6 +538,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onClick(DialogInterface dialog, int which) {
                         MapsActivity.super.onBackPressed();
                         System.exit(0);
+                        finish();
                     }
                 })
                 .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {

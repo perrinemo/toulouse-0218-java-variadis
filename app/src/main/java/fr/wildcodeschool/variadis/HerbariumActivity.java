@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +41,7 @@ public class HerbariumActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference userRef = database.getReference("users");
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        TextView empty = findViewById(R.id.empty);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ivHerbier.setColorFilter(R.color.colorPrimary);
@@ -94,6 +96,7 @@ public class HerbariumActivity extends AppCompatActivity {
             }
         });
         herbView.setAdapter(adapter);
+        herbView.setEmptyView(empty);
 
         //TODO Remplacer les Parcelables par des requêtes Firebase
         herbView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -117,8 +120,9 @@ public class HerbariumActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        System.exit(0);
                         HerbariumActivity.super.onBackPressed();
+                        System.exit(0);
+                        finish();
                     }
                 })
                 .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {

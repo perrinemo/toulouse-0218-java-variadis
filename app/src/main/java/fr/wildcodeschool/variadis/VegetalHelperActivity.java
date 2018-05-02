@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -30,7 +31,7 @@ import static fr.wildcodeschool.variadis.MapsActivity.NAME;
 
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 
-public class VegetalHelperActivity extends Activity{
+public class VegetalHelperActivity {
 
     public static final String EXTRA_PARCEL_FOUNDVEGETAL = "EXTRA_PARCEL_FOUNDVEGETAL";
     Bitmap mBitmap;
@@ -48,7 +49,7 @@ public class VegetalHelperActivity extends Activity{
         Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
         Button back = subView.findViewById(R.id.btn_quit);
 
-        Glide.with(context.getApplicationContext()).load(url).into(vegetalImg);
+        Glide.with(context.getApplicationContext()).load(url).apply(RequestOptions.circleCropTransform()).into(vegetalImg);
         vegetalName.setText(vegetal);
 
 
@@ -90,7 +91,7 @@ public class VegetalHelperActivity extends Activity{
         Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
         Button back = subView.findViewById(R.id.btn_quit);
 
-        Glide.with(context.getApplicationContext()).load(url).into(vegetalImg);
+        Glide.with(context.getApplicationContext()).load(url).apply(RequestOptions.circleCropTransform()).into(vegetalImg);
         vegetalName.setText(vegetal);
 
 
@@ -109,7 +110,7 @@ public class VegetalHelperActivity extends Activity{
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.cancel();
+                context.startActivity(new Intent(context, MapsActivity.class));
             }
         });
 
