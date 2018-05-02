@@ -75,4 +75,7 @@
     <string name="max_points">/244</string>
     <string name="msg_defi">Tu viens de relever le défi du jour !</string>
     <string name="good_game">Réussite !</string>
+    <string name="date_de_la_d_couverte">Date de la découverte</string>
+    <string name="lieu_de_la_d_couverte">Lieu de la découverte</string>
+    <string name="lieu">Lieu</string>
 </resources>
