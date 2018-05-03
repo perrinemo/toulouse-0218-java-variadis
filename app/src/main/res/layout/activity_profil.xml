@@ -12,6 +12,24 @@
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
 
+
+    <TextView
+        android:id="@+id/my_profil"
+        android:layout_width="0dp"
+        android:layout_height="68dp"
+        android:background="@null"
+        android:fontFamily="@font/philosopher"
+        android:paddingTop="16dp"
+        android:text="@string/mon_profil"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="200dp"
@@ -78,32 +96,6 @@
             android:textSize="18sp"/>
 
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/btn_logout"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_power_off" />
-
-    <Button
-        android:id="@+id/btn_ok_pseudo"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="49dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginTop="34dp"
-        android:background="@null"
-        android:text="@string/ok"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -241,5 +233,21 @@
             tools:layout_editor_absoluteY="106dp" />
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_edit_picture"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:tint="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/btn_ok_pseudo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.83"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_add" />
 
 </android.support.constraint.ConstraintLayout>

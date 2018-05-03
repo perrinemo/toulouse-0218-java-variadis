@@ -1,6 +1,7 @@
 package fr.wildcodeschool.variadis;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -355,30 +356,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         loc1.setLatitude(mMyPosition.latitude);
         loc1.setLongitude(mMyPosition.longitude);
 
-        for (int i = 0; i < markersDefi.size(); i++) {
-            final Marker markerDefi = markersDefi.get(i);
-            Location loc3 = new Location("");
-            loc3.setLatitude(markerDefi.getPosition().latitude);
-            loc3.setLongitude(markerDefi.getPosition().longitude);
-            float distanceDefi = loc1.distanceTo(loc3);
+        if (!MapsActivity.this.isFinishing()) {
 
-            //Lorsque le défi est relevé
-            if (distanceDefi < MIN_DEFI_DISTANCE) {
-                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addValueEventListener(new ValueEventListener() {
+            for (int i = 0; i < markersDefi.size(); i++) {
+                final Marker markerDefi = markersDefi.get(i);
+                Location loc3 = new Location("");
+                loc3.setLatitude(markerDefi.getPosition().latitude);
+                loc3.setLongitude(markerDefi.getPosition().longitude);
+                float distanceDefi = loc1.distanceTo(loc3);
+
+                //Lorsque le défi est relevé
+                if (distanceDefi < MIN_DEFI_DISTANCE) {
+                    userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
+                            if (!isFound) {
+                                String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
+                                String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                                String address = markerDefi.getTag().toString();
+                                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
+                                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
+                                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("adresse").setValue(address);
+                                mCurrentDefi.edit().clear().apply();
+                                pref.edit().clear().apply();
+                                markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                                VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+                final Marker markerFound = markersDefi.get(i);
+                userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
-                        if (!isFound) {
-                            String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
-                            String vegetalPic = dataSnapshot.child("image").getValue(String.class);
-                            String address = markerDefi.getTag().toString();
-                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
-                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
-                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("adresse").setValue(address);
-                            mCurrentDefi.edit().clear().apply();
-                            pref.edit().clear().apply();
-                            markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                            VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
+                        if (isFound) {
+                            markerFound.setVisible(true);
+                            markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                         }
 
                     }
@@ -388,50 +410,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                 });
-
             }
-            final Marker markerFound = markersDefi.get(i);
-            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
-                    if (isFound) {
-                        markerFound.setVisible(true);
-                        markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                    }
 
+            for (int i = 0; i < markers.size(); i++) {
+                final Marker marker = markers.get(i);
+                Location loc2 = new Location("");
+                loc2.setLatitude(markers.get(i).getPosition().latitude);
+                loc2.setLongitude(markers.get(i).getPosition().longitude);
+                float distance = loc1.distanceTo(loc2);
+
+                //Lorsqu'un végétal est trouvé (hors défi)
+                if (distance < MIN_DEFI_DISTANCE) {
+                    userRef.child(mUId).child("defiDone").child(marker.getTitle()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
+                            if (!isFound) {
+                                String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
+                                String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                                String address = marker.getTag().toString();
+                                userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
+                                userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("Date").setValue(dateFormat);
+                                userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("adresse").setValue(address);
+                                VegetalHelperActivity.openDialogVegetal(MapsActivity.this, marker.getTitle(), vegetalPic);
+                            }
+                            marker.setVisible(true);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-        for (int i = 0; i < markers.size(); i++) {
-            final Marker marker = markers.get(i);
-            Location loc2 = new Location("");
-            loc2.setLatitude(markers.get(i).getPosition().latitude);
-            loc2.setLongitude(markers.get(i).getPosition().longitude);
-            float distance = loc1.distanceTo(loc2);
-
-            //Lorsqu'un végétal est trouvé (hors défi)
-            if (distance < MIN_DEFI_DISTANCE) {
-                userRef.child(mUId).child("defiDone").child(marker.getTitle()).addValueEventListener(new ValueEventListener() {
+                final Marker markerFound = markers.get(i);
+                userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
-                        if (!isFound) {
-                            String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
-                            String vegetalPic = dataSnapshot.child("image").getValue(String.class);
-                            String address = marker.getTag().toString();
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("Date").setValue(dateFormat);
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("adresse").setValue(address);
-                            VegetalHelperActivity.openDialogVegetal(MapsActivity.this, marker.getTitle(), vegetalPic);
+                        if (isFound) {
+                            markerFound.setVisible(true);
+                            markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                         }
-                        marker.setVisible(true);
+
                     }
 
                     @Override
@@ -440,23 +461,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
             }
-            final Marker markerFound = markers.get(i);
-            userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
-                    if (isFound) {
-                        markerFound.setVisible(true);
-                        markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
         }
 
 

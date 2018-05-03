@@ -19,7 +19,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,7 +81,8 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
-        final Button validPseudo = findViewById(R.id.btn_ok_pseudo);
+        final ImageButton validPseudo = findViewById(R.id.btn_ok_pseudo);
+        final ImageButton validPicture = findViewById(R.id.btn_edit_picture);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
         ImageView ivProfile = findViewById(R.id.img_profile);
@@ -205,90 +205,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-/*
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
-                builder.setTitle(R.string.add_image)
-                        .setMessage(R.string.select_resource)
-                        .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                if (intent.resolveActivity(getPackageManager()) != null) {
-                                    File photoFile = null;
-                                    try {
-                                        photoFile = createImageFile();
-                                    } catch (IOException ex) {
-
-                                    }
-
-                                    if (photoFile != null) {
-                                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
-                                                "fr.wildcodeschool.variadis",
-                                                photoFile);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                                        startActivityForResult(intent, APP_PHOTO);
-
-                                    }
-                                }
-                                mProgressBar.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
-                                mProgressBar.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .show();
-
-            }
-
-        });
-
-        validPseudo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String pseudo = mEditPseudo.getText().toString();
-                if (TextUtils.isEmpty(mUid)) {
-                    createUser(pseudo);
-                } else {
-                    updateUser(pseudo);
-                }
-                Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        deco.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
-                builder.setTitle(R.string.deco)
-                        .setMessage(R.string.confirm_deco)
-                        .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
-                                startActivity(intent);
-                                mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
-                                mCurrentDefi.edit().clear().apply();
-                                auth.signOut();
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
-*/
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,6 +220,7 @@ public class ProfilActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     // Méthodes relatives au pseudo
