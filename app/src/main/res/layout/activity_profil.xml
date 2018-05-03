@@ -34,6 +34,7 @@
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
 
+
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="200dp"
@@ -47,7 +48,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/camera3" />
 
-    <EditText
+    <TextView
         android:id="@+id/edit_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,8 +63,7 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar"
-        android:imeOptions="actionSend"/>
+        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <LinearLayout
         android:id="@+id/points"
@@ -100,20 +100,6 @@
             android:textSize="18sp"/>
 
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/btn_ok_pseudo"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="49dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginTop="34dp"
-        android:background="@null"
-        android:text="@string/ok"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

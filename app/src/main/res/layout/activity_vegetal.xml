@@ -22,13 +22,15 @@
 
     <TextView
         android:id="@+id/nom_vegetal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="386dp"
+        android:layout_height="68dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:background="@null"
         android:fontFamily="@font/philosopher"
+        android:paddingTop="16dp"
         android:text="@string/nom_vegetal"
+        android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:textStyle="bold"

@@ -2,12 +2,12 @@
     <string name="app_name">Variadís</string>
     <string name="variadis">Variadís</string>
     <string name="app_slogan">Mets toi au vert dans la ville rose ! </string>
-    <string name="empty">Ton herbier est encore vide ! Reviens quand tu auras trouvé ton premier végétal.</string>
+    <string name="empty">Ton arboretum est encore vide ! Reviens quand tu auras trouvé ton premier arbre.</string>
     <string name="my_herbarium">Mon Arboretum</string>
     <string name="empty_herbarium">Arboretum vide</string>
     <string name="title_activity_maps">Map</string>
     <string name="profil">Profil</string>
-    <string name="herbier">Herbier</string>
+    <string name="herbier">Arboretum</string>
     <string name="defis">Défis</string>
     <string name="vegetal">Arbre</string>
     <string name="nom_vegetal">Nom de l\'arbre</string>
@@ -58,7 +58,7 @@
         \nla flore qui vous entoure :
         \npas besoin d’habiter à la campagne pour cela, le centre-ville de Toulouse regorge d\'arbres !
         \n\nChaque jour, des défis à réaliser :
-        \nouvrez votre carte et trouvez une plante précise près de vous.
+        \nouvrez votre carte et trouvez un arbre précis près de vous.
         \nGagnez des points pour augmenter votre rang !
         \n\nDeviendrez-vous le premier Écowild parmi vos amis ?</string>
     <string name="pseudo_enregistre">Pseudo enregistré</string>
@@ -71,11 +71,13 @@
     <string name="picture_app">Appareil Photo</string>
     <string name="gallery">Galerie</string>
     <string name="back">Retour</string>
-    <string name="find_tree">Tu dois trouver l\'arbre ci-dessous :</string>
+    <string name="find_tree">Trouve cet arbre !</string>
     <string name="max_points">/244</string>
     <string name="msg_defi">Tu viens de relever le défi du jour !</string>
     <string name="good_game">Réussite !</string>
     <string name="date_de_la_d_couverte">Date de la découverte</string>
     <string name="lieu_de_la_d_couverte">Lieu de la découverte</string>
     <string name="lieu">Lieu</string>
+    <string name="enter_pseudo">Entrez votre pseudo</string>
+    <string name="confirm_pseudo">Confirmer</string>
 </resources>
