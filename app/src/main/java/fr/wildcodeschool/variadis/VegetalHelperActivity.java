@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +20,14 @@ import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 
 public class VegetalHelperActivity {
 
+
     public static final String EXTRA_PARCEL_FOUNDVEGETAL = "EXTRA_PARCEL_FOUNDVEGETAL";
     Bitmap mBitmap;
 
 
     public static Dialog openDialogVegetal(final Context context, final String vegetal, final String url) {
 
+        Typeface face = Typeface.createFromAsset(context.getAssets(), "classic.ttf");
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View subView = inflater.inflate(R.layout.layout_popup, null);
 
@@ -32,8 +35,16 @@ public class VegetalHelperActivity {
 
         final ImageView vegetalImg = subView.findViewById(R.id.img_found_vegetal);
         TextView vegetalName = subView.findViewById(R.id.vegetal_name);
+        TextView congrats = subView.findViewById(R.id.congrats);
+        TextView message = subView.findViewById(R.id.tv_message);
         Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
         Button back = subView.findViewById(R.id.btn_quit);
+
+        congrats.setTypeface(face);
+        vegetalName.setTypeface(face);
+        message.setTypeface(face);
+        goTo.setTypeface(face);
+        back.setTypeface(face);
 
         Glide.with(context.getApplicationContext()).load(url).apply(RequestOptions.circleCropTransform()).into(vegetalImg);
         vegetalName.setText(vegetal);
@@ -63,6 +74,7 @@ public class VegetalHelperActivity {
 
     public static Dialog openDialogDefiDone(final Context context, final String vegetal, final String url) {
 
+        Typeface face = Typeface.createFromAsset(context.getAssets(), "classic.ttf");
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View subView = inflater.inflate(R.layout.layout_popup, null);
 
@@ -76,6 +88,12 @@ public class VegetalHelperActivity {
         TextView vegetalName = subView.findViewById(R.id.vegetal_name);
         Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
         Button back = subView.findViewById(R.id.btn_quit);
+
+        defiDone.setTypeface(face);
+        message.setTypeface(face);
+        vegetalName.setTypeface(face);
+        goTo.setTypeface(face);
+        back.setTypeface(face);
 
         Glide.with(context.getApplicationContext()).load(url).apply(RequestOptions.circleCropTransform()).into(vegetalImg);
         vegetalName.setText(vegetal);

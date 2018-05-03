@@ -21,12 +21,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +59,7 @@ public class ProfilActivity extends AppCompatActivity {
     public final static int APP_PHOTO = 456;
 
     private ImageView mAvatar;
-    private EditText mEditPseudo;
+    private TextView mEditPseudo;
     private DatabaseReference mDatabaseUsers;
     private String mUid;
     private Uri mFileUri = null;
@@ -86,7 +86,6 @@ public class ProfilActivity extends AppCompatActivity {
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
-        final Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
         ImageView ivProfile = findViewById(R.id.img_profile);
@@ -222,6 +221,7 @@ public class ProfilActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     // Méthodes relatives au pseudo
@@ -364,8 +364,31 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void changePseudo() {
+        final EditText input = new EditText(ProfilActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
 
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.enter_pseudo)
+                .setView(input)
+                .setNeutralButton(R.string.confirm_pseudo, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (input.getText() != null) {
+                            String pseudo = input.getText().toString();
+                            if (TextUtils.isEmpty(mUid)) {
+                                createUser(pseudo);
+                            } else {
+                                updateUser(pseudo);
+                            }
+                        }
+                    }
+                })
+                .show();
     }
+
 
     private void changerAvatar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
