@@ -56,8 +56,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ProfilActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".InscriptionActivity"
             android:screenOrientation="portrait" />

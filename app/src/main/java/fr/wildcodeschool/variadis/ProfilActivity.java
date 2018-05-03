@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -74,6 +77,9 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         mAuth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mProgressBar = findViewById(R.id.progress_bar);
@@ -96,8 +102,6 @@ public class ProfilActivity extends AppCompatActivity {
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
-
-
 
         if (singletonClass.getProfil() != null) {
             mEditPseudo.setText(singletonClass.getProfil().getPseudo());
