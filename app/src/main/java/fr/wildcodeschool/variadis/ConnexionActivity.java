@@ -25,8 +25,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
-
 /**
  * Created by perrine on 16/04/18.
  */

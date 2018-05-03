@@ -20,7 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 public class InscriptionActivity extends AppCompatActivity {
 

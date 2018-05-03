@@ -40,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static fr.wildcodeschool.variadis.MapsActivity.DEFI_PREF;
-import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
 
 
 public class ProfilActivity extends AppCompatActivity {
