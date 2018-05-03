@@ -1,31 +1,11 @@
 package fr.wildcodeschool.variadis;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
 
 
 public class VegetalModel implements Parcelable {
 
-
-
-    private String name;
-    private String pictureUrl;
-
-
-    public VegetalModel(String pictureUrl, String name) {
-        this.pictureUrl = pictureUrl;
-        this.name = name;
-    }
-
-    protected VegetalModel(Parcel in) {
-        name = in.readString();
-        pictureUrl = in.readString();
-    }
 
     public static final Creator<VegetalModel> CREATOR = new Creator<VegetalModel>() {
         @Override
@@ -38,6 +18,18 @@ public class VegetalModel implements Parcelable {
             return new VegetalModel[size];
         }
     };
+    private String name;
+    private String pictureUrl;
+
+    public VegetalModel(String pictureUrl, String name) {
+        this.pictureUrl = pictureUrl;
+        this.name = name;
+    }
+
+    protected VegetalModel(Parcel in) {
+        name = in.readString();
+        pictureUrl = in.readString();
+    }
 
     public String getName() {
         return name;
