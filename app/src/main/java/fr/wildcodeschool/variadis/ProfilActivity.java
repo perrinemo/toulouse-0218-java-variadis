@@ -80,9 +80,6 @@ public class ProfilActivity extends AppCompatActivity {
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
-        ImageButton deco = findViewById(R.id.btn_logout);
-        final ImageButton validPseudo = findViewById(R.id.btn_ok_pseudo);
-        final ImageButton validPicture = findViewById(R.id.btn_edit_picture);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
         ImageView ivProfile = findViewById(R.id.img_profile);

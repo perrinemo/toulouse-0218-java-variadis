@@ -496,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0,
-                25,
+                10,
                 locationListener);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TOULOUSE, DEFAULT_ZOOM));
 
