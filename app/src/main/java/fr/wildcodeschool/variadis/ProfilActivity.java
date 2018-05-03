@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +57,7 @@ public class ProfilActivity extends AppCompatActivity {
     public final static int APP_PHOTO = 456;
 
     private ImageView mAvatar;
-    private EditText mEditPseudo;
+    private TextView mEditPseudo;
     private DatabaseReference mDatabaseUsers;
     private String mUid;
     private Uri mFileUri = null;
@@ -445,33 +446,31 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void changePseudo() {
-        mEditPseudo.requestFocus();
-        InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        keyboard.showSoftInput(mEditPseudo, InputMethodManager.SHOW_IMPLICIT);
-        mEditPseudo.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
+        final EditText input = new EditText(ProfilActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
 
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_ENTER:
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.enter_pseudo)
+                .setView(input)
+                .setNeutralButton(R.string.confirm_pseudo, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (input.getText() != null) {
+                            String pseudo = input.getText().toString();
                             if (TextUtils.isEmpty(mUid)) {
-                                createUser(mEditPseudo.getText().toString());
+                                createUser(pseudo);
                             } else {
-                                updateUser(mEditPseudo.getText().toString());
+                                updateUser(pseudo);
                             }
-                            Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
-                            return true;
-                        default:
-                            break;
+                        }
                     }
-                }
-                return true;
-            }
-        });
-
-        //
+                })
+                .show();
     }
+
 
     private void changerAvatar() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
