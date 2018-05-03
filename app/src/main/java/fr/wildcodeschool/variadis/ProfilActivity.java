@@ -250,9 +250,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        // Test pour afficher les badges avec des points fictifs
-
-
         deco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
