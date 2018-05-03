@@ -308,6 +308,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 markerDefi.setVisible(true);
                                 mVegetalDefi = vegetalName;
                                 mLocationDefi = latLng;
+                                markerDefi.setTag(address);
                                 markersDefi.add(markerDefi);
 
                             } else {
@@ -315,6 +316,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         .position(latLng)
                                         .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
                                 marker.setVisible(false);
+                                marker.setTag(address);
                                 markers.add(marker);
                             }
 
@@ -370,8 +372,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
                             String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                            String address = markerDefi.getTag().toString();
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
+                            userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("adresse").setValue(address);
                             mCurrentDefi.edit().clear().apply();
                             pref.edit().clear().apply();
                             markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
@@ -422,8 +426,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (!isFound) {
                             String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
                             String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                            String address = marker.getTag().toString();
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
                             userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("Date").setValue(dateFormat);
+                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("adresse").setValue(address);
                             VegetalHelperActivity.openDialogVegetal(MapsActivity.this, marker.getTitle(), vegetalPic);
                         }
                         marker.setVisible(true);
