@@ -35,5 +35,4 @@
         app:layout_constraintTop_toBottomOf="@+id/new_defi" />
 
 
-
 </android.support.constraint.ConstraintLayout>

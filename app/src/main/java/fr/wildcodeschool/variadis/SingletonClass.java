@@ -1,12 +1,5 @@
 package fr.wildcodeschool.variadis;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 /**
  * Created by perrine on 24/04/18.
  */
@@ -17,10 +10,10 @@ public class SingletonClass {
     public ProfilModel profilModel = null;
 
     //private constructor.
-    private SingletonClass(){
+    private SingletonClass() {
 
         //Prevent form the reflection api.
-        if (sSoleInstance != null){
+        if (sSoleInstance != null) {
             throw new RuntimeException("Use getInstance() method to get the single instance of this class.");
         }
     }
@@ -38,12 +31,12 @@ public class SingletonClass {
         return sSoleInstance;
     }
 
-    public void setProfil(ProfilModel profilModel) {
-        this.profilModel = profilModel;
-    }
-
     public ProfilModel getProfil() {
         return profilModel;
+    }
+
+    public void setProfil(ProfilModel profilModel) {
+        this.profilModel = profilModel;
     }
 
 

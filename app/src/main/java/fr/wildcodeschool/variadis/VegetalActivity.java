@@ -1,7 +1,6 @@
 package fr.wildcodeschool.variadis;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -16,12 +15,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
@@ -114,8 +107,8 @@ public class VegetalActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
-               finish();
+                startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+                finish();
 
             }
         });

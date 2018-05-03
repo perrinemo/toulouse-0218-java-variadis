@@ -50,9 +50,9 @@
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
+        android:gravity="center"
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
-        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
@@ -71,10 +71,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
             android:fontFamily="@font/philosopher"
             android:text="@string/nb_points"
-            android:textSize="18sp"
-            android:layout_marginRight="16dp"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_points"
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/philosopher"
             android:text="@string/max_points"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
     </LinearLayout>
 
