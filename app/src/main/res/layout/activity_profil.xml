@@ -12,6 +12,7 @@
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
 
+
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="200dp"
@@ -78,32 +79,6 @@
             android:textSize="18sp"/>
 
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/btn_logout"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_power_off" />
-
-    <Button
-        android:id="@+id/btn_ok_pseudo"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="49dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginTop="34dp"
-        android:background="@null"
-        android:text="@string/ok"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
