@@ -78,4 +78,6 @@
     <string name="date_de_la_d_couverte">Date de la découverte</string>
     <string name="lieu_de_la_d_couverte">Lieu de la découverte</string>
     <string name="lieu">Lieu</string>
+    <string name="enter_pseudo">Entrez votre pseudo</string>
+    <string name="confirm_pseudo">Confirmer</string>
 </resources>

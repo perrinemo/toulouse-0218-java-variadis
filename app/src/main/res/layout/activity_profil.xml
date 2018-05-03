@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="fr.wildcodeschool.variadis.ProfilActivity">
+    tools:context="fr.wildcodeschool.variadis.ProfilActivity"
+    >
 
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
+
 
     <TextView
         android:id="@+id/my_profil"
@@ -27,6 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="200dp"
@@ -38,10 +41,10 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_profil"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/camera" />
 
-    <EditText
+    <TextView
         android:id="@+id/edit_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,9 +54,9 @@
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
-        android:gravity="center"
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
@@ -72,10 +75,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
             android:fontFamily="@font/philosopher"
             android:text="@string/nb_points"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginRight="16dp"/>
 
         <TextView
             android:id="@+id/text_points"
@@ -90,38 +93,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/philosopher"
             android:text="@string/max_points"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/btn_logout"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:tint="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_power_off" />
-
-    <ImageButton
-        android:id="@+id/btn_ok_pseudo"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginTop="25dp"
-        android:background="@null"
-        android:scaleType="fitXY"
-        android:text="@string/ok"
-        android:tint="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar"
-        app:srcCompat="@drawable/ic_action_name" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -130,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="110dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
