@@ -1,6 +1,7 @@
 package fr.wildcodeschool.variadis;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -72,7 +74,8 @@ public class ProfilActivity extends AppCompatActivity {
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
         ImageButton deco = findViewById(R.id.btn_logout);
-        final Button validPseudo = findViewById(R.id.btn_ok_pseudo);
+        final ImageButton validPseudo = findViewById(R.id.btn_ok_pseudo);
+        final ImageButton validPicture = findViewById(R.id.btn_edit_picture);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
         ImageView ivProfile = findViewById(R.id.img_profile);
@@ -233,20 +236,76 @@ public class ProfilActivity extends AppCompatActivity {
                         })
                         .show();
 
+
             }
 
+        });
+
+        validPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle(R.string.add_image)
+                        .setMessage(R.string.select_resource)
+                        .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                if (intent.resolveActivity(getPackageManager()) != null) {
+                                    File photoFile = null;
+                                    try {
+                                        photoFile = createImageFile();
+                                    } catch (IOException ex) {
+
+                                    }
+
+                                    if (photoFile != null) {
+                                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                                "fr.wildcodeschool.variadis",
+                                                photoFile);
+                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                                        startActivityForResult(intent, APP_PHOTO);
+
+                                    }
+                                }
+                                mProgressBar.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
+                                mProgressBar.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .show();
+            }
         });
 
         validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String pseudo = mEditPseudo.getText().toString();
-                if (TextUtils.isEmpty(mUid)) {
-                    createUser(pseudo);
-                } else {
-                    updateUser(pseudo);
-                }
-                Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
+                mEditPseudo.requestFocus();
+                InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(mEditPseudo, InputMethodManager.SHOW_IMPLICIT);
+                validPseudo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String pseudo = mEditPseudo.getText().toString();
+                        if (pseudo.isEmpty()) {
+                            Toast.makeText(ProfilActivity.this, "Veuillez entrer un pseudo", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (TextUtils.isEmpty(mUid)) {
+                            createUser(pseudo);
+                            Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
+                        } else {
+                            updateUser(pseudo);
+                            Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+
             }
         });
 
@@ -292,6 +351,7 @@ public class ProfilActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     // Méthodes relatives au pseudo
