@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -74,13 +77,15 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         mAuth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mProgressBar = findViewById(R.id.progress_bar);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
-        ImageButton deco = findViewById(R.id.btn_logout);
         final Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
@@ -98,8 +103,6 @@ public class ProfilActivity extends AppCompatActivity {
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
-
-
 
         if (singletonClass.getProfil() != null) {
             mEditPseudo.setText(singletonClass.getProfil().getPseudo());
@@ -204,90 +207,6 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-/*
-        mAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
-                builder.setTitle(R.string.add_image)
-                        .setMessage(R.string.select_resource)
-                        .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                if (intent.resolveActivity(getPackageManager()) != null) {
-                                    File photoFile = null;
-                                    try {
-                                        photoFile = createImageFile();
-                                    } catch (IOException ex) {
-
-                                    }
-
-                                    if (photoFile != null) {
-                                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
-                                                "fr.wildcodeschool.variadis",
-                                                photoFile);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                                        startActivityForResult(intent, APP_PHOTO);
-
-                                    }
-                                }
-                                mProgressBar.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
-                                mProgressBar.setVisibility(View.VISIBLE);
-                            }
-                        })
-                        .show();
-
-            }
-
-        });
-
-        validPseudo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String pseudo = mEditPseudo.getText().toString();
-                if (TextUtils.isEmpty(mUid)) {
-                    createUser(pseudo);
-                } else {
-                    updateUser(pseudo);
-                }
-                Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        deco.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
-                builder.setTitle(R.string.deco)
-                        .setMessage(R.string.confirm_deco)
-                        .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
-                                startActivity(intent);
-                                mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
-                                mCurrentDefi.edit().clear().apply();
-                                auth.signOut();
-                                finish();
-                            }
-                        })
-                        .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
-            }
-        });
-*/
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -445,32 +364,7 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void changePseudo() {
-        mEditPseudo.requestFocus();
-        InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        keyboard.showSoftInput(mEditPseudo, InputMethodManager.SHOW_IMPLICIT);
-        mEditPseudo.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_ENTER:
-                            if (TextUtils.isEmpty(mUid)) {
-                                createUser(mEditPseudo.getText().toString());
-                            } else {
-                                updateUser(mEditPseudo.getText().toString());
-                            }
-                            Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
-                            return true;
-                        default:
-                            break;
-                    }
-                }
-                return true;
-            }
-        });
-
-        //
     }
 
     private void changerAvatar() {
