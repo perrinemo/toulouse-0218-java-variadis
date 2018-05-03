@@ -5,26 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="fr.wildcodeschool.variadis.ProfilActivity">
+    tools:context="fr.wildcodeschool.variadis.ProfilActivity"
+    >
 
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
-
-    <TextView
-        android:id="@+id/my_profil"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/philosopher"
-        android:text="@string/mon_profil"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/avatar"
@@ -37,7 +23,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_profil"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/camera" />
 
     <EditText
@@ -50,12 +36,13 @@
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
-        android:gravity="center"
         android:hint="@string/nom_pseudo"
         android:textSize="18sp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/avatar" />
+        app:layout_constraintTop_toBottomOf="@+id/avatar"
+        android:imeOptions="actionSend"/>
 
     <LinearLayout
         android:id="@+id/points"
@@ -71,10 +58,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
             android:fontFamily="@font/philosopher"
             android:text="@string/nb_points"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginRight="16dp"/>
 
         <TextView
             android:id="@+id/text_points"
@@ -89,7 +76,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/philosopher"
             android:text="@string/max_points"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
 
     </LinearLayout>
 
@@ -101,6 +88,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:background="@null"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_lock_power_off" />
@@ -114,6 +102,7 @@
         android:layout_marginTop="34dp"
         android:background="@null"
         android:text="@string/ok"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
@@ -124,7 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="110dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

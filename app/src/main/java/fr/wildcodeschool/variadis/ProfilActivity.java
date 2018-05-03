@@ -1,9 +1,13 @@
 package fr.wildcodeschool.variadis;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,7 +15,12 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -54,7 +63,7 @@ public class ProfilActivity extends AppCompatActivity {
     private String mGetImageUrl = "";
     private boolean mIsOk;
     private int mPoints = 0;
-
+    private FirebaseAuth mAuth;
     private String mCurrentPhotoPath;
     private ProgressBar mProgressBar;
     private SharedPreferences mCurrentDefi;
@@ -65,7 +74,7 @@ public class ProfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         mProgressBar = findViewById(R.id.progress_bar);
 
@@ -90,11 +99,13 @@ public class ProfilActivity extends AppCompatActivity {
         mEditPseudo = findViewById(R.id.edit_pseudo);
         mAvatar = findViewById(R.id.avatar);
 
+
+
         if (singletonClass.getProfil() != null) {
             mEditPseudo.setText(singletonClass.getProfil().getPseudo());
         }
 
-        if (auth.getCurrentUser() == null) {
+        if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
             startActivity(intent);
             finish();
@@ -193,7 +204,7 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-
+/*
         mAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -276,7 +287,7 @@ public class ProfilActivity extends AppCompatActivity {
                         .show();
             }
         });
-
+*/
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -409,5 +420,119 @@ public class ProfilActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.change_pseudo:
+                changePseudo();
+                return true;
+            case R.id.change_avatar:
+                changerAvatar();
+                return true;
+            case R.id.deconnexion:
+                deco();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void changePseudo() {
+        mEditPseudo.requestFocus();
+        InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(mEditPseudo, InputMethodManager.SHOW_IMPLICIT);
+        mEditPseudo.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_ENTER:
+                            if (TextUtils.isEmpty(mUid)) {
+                                createUser(mEditPseudo.getText().toString());
+                            } else {
+                                updateUser(mEditPseudo.getText().toString());
+                            }
+                            Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
+                            return true;
+                        default:
+                            break;
+                    }
+                }
+                return true;
+            }
+        });
+
+        //
+    }
+
+    private void changerAvatar() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.add_image)
+                .setMessage(R.string.select_resource)
+                .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            File photoFile = null;
+                            try {
+                                photoFile = createImageFile();
+                            } catch (IOException ex) {
+
+                            }
+
+                            if (photoFile != null) {
+                                mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                        "fr.wildcodeschool.variadis",
+                                        photoFile);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                                startActivityForResult(intent, APP_PHOTO);
+
+                            }
+                        }
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                })
+                .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                })
+                .show();
+
+    }
+
+    private void deco() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.deco)
+                .setMessage(R.string.confirm_deco)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+                        startActivity(intent);
+                        mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
+                        mCurrentDefi.edit().clear().apply();
+                        mAuth.signOut();
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 }
