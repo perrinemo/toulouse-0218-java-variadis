@@ -13,9 +13,8 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
 
-    <uses-feature android:name="android.hardware.location.gps" />
     <uses-feature
-        android:name="android.hardware.camera2"
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
@@ -74,9 +73,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".InfosActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"/>
+        <activity
+            android:name=".InfosActivity"
+            android:noHistory="true"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
