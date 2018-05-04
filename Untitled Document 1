@@ -1,0 +1,28 @@
+ editPseudo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText input = new EditText(ProfilActivity.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle(R.string.enter_pseudo)
+                        .setView(input)
+                        .setNeutralButton(R.string.confirm_pseudo, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (input.getText() != null) {
+                                    String pseudo = input.getText().toString();
+                                    if (TextUtils.isEmpty(mUid)) {
+                                        createUser(pseudo);
+                                    } else {
+                                        updateUser(pseudo);
+                                    }
+                                }
+                            }
+                        })
+                        .show();
+            }
+        });

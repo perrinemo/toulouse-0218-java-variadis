@@ -3,6 +3,8 @@ package fr.wildcodeschool.variadis;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class DefiHelper {
 
 
+
     public static Dialog openDialogDefi(final Context context, String vegetal, String url, final LatLng location, final GoogleMap map) {
         final LayoutInflater inflater = LayoutInflater.from(context);
         final View subView = inflater.inflate(R.layout.layout_popup, null);
@@ -33,6 +36,16 @@ public class DefiHelper {
         TextView vegetalName = subView.findViewById(R.id.vegetal_name);
         Button goTo = subView.findViewById(R.id.btn_goto_vegetal);
         Button back = subView.findViewById(R.id.btn_quit);
+        Typeface face = Typeface.createFromAsset(context.getAssets(), "classic.ttf");
+        message.setTypeface(face);
+        defiTitle.setTypeface(face);
+        vegetalName.setTypeface(face);
+        goTo.setTypeface(face);
+        back.setTypeface(face);
+
+
+
+
 
         defiTitle.setText(R.string.nouveau_d_fi);
         message.setText(R.string.find_tree);

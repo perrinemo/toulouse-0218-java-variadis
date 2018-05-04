@@ -57,11 +57,6 @@
         <activity
             android:name=".ProfilActivity"
             android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".VegetalHelperActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"/>
         <activity
             android:name=".InscriptionActivity"
             android:screenOrientation="portrait" />
