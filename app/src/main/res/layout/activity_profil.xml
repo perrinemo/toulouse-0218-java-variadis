@@ -111,7 +111,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge1_nb"
             tools:layout_editor_absoluteX="68dp"
             tools:layout_editor_absoluteY="413dp" />
@@ -121,7 +121,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge2_nb"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="420dp" />
@@ -131,7 +131,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge3_nb"
             tools:layout_editor_absoluteX="155dp"
             tools:layout_editor_absoluteY="413dp" />
@@ -141,7 +141,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge4_nb"
             tools:layout_editor_absoluteX="334dp"
             tools:layout_editor_absoluteY="350dp" />
@@ -151,7 +151,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge5_nb"
             tools:layout_editor_absoluteX="34dp"
             tools:layout_editor_absoluteY="106dp" />
