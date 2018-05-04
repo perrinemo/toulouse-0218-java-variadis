@@ -58,9 +58,10 @@
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
-        android:hint="@string/nom_pseudo"
-        android:textSize="18sp"
         android:gravity="center"
+        android:hint="@string/nom_pseudo"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
@@ -79,10 +80,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
             android:fontFamily="@font/philosopher"
             android:text="@string/nb_points"
-            android:textSize="18sp"
-            android:layout_marginRight="16dp"/>
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_points"
@@ -90,6 +92,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/philosopher"
             android:text="@string/no_pts"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
 
         <TextView
@@ -129,7 +132,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge1_nb"
             tools:layout_editor_absoluteX="68dp"
             tools:layout_editor_absoluteY="413dp" />
@@ -139,7 +142,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge2_nb"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="420dp" />
@@ -149,7 +152,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge3_nb"
             tools:layout_editor_absoluteX="155dp"
             tools:layout_editor_absoluteY="413dp" />
@@ -159,7 +162,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge4_nb"
             tools:layout_editor_absoluteX="334dp"
             tools:layout_editor_absoluteY="350dp" />
@@ -169,7 +172,7 @@
             android:layout_width="55dp"
             android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:alpha="0.7"
+            android:alpha="0.5"
             app:srcCompat="@drawable/badge5_nb"
             tools:layout_editor_absoluteX="34dp"
             tools:layout_editor_absoluteY="106dp" />
