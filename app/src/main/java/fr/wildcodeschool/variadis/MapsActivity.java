@@ -1,6 +1,7 @@
 package fr.wildcodeschool.variadis;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,7 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -41,7 +41,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 
 import static fr.wildcodeschool.variadis.SplashActivity.PREF;
@@ -49,36 +52,32 @@ import static fr.wildcodeschool.variadis.SplashActivity.PREF;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    public static final String DEFI_OK = "DEFI_OK";
+
     public static final String NAME = "NAME";
-    public static final String DATE = "DATE";
     public static final String ADRESS = "ADRESS";
     public static final String DEFI_PREF = "DEFI";
-    public static final int RADIUS_DISTANCE = 500;
     public static final int MIN_DEFI_DISTANCE = 20;
+    public static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    public static final DatabaseReference userRef = database.getReference("users");
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private static final LatLng TOULOUSE = new LatLng(43.604652, 1.444209);
     private static final float DEFAULT_ZOOM = 17;
-    public static long sBackPress;
-    public static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    public static DatabaseReference userRef = database.getReference("users");
     private String mUId;
     private boolean mLocationPermissionGranted;
     private GoogleMap mMap;
     private LatLng mMyPosition;
     private ArrayList<Marker> markers = new ArrayList<>();
+    private ArrayList<Marker> markersDefi = new ArrayList<>();
     private String mVegetalDefi;
     private boolean isPreviouslyLaunched;
-
-    //Attribut qui sera utile ultérieurement
-    private ArrayList<VegetalModel> mFoundVegetals = new ArrayList<>();
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastLocation;
-    private boolean mIsWaitingAPILoaded = false;
     private LatLng mLocationDefi;
     private int mProgressDefi;
     private int mRandom;
     private SharedPreferences mCurrentDefi;
+    private SharedPreferences pref;
+    private String mDefiUrl;
 
 
     @Override
@@ -92,28 +91,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
         mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
 
+
+        //Attribution d'un nouveau défi
         if (mProgressDefi == 0) {
-            userRef.child(mUId).child("defiDone").addValueEventListener(new ValueEventListener() {
+            userRef.child(mUId).child("defiDone").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     ArrayList<Integer> availableDefi = new ArrayList<>();
                     int i = 0;
+                    boolean isDefiDone;
                     for (DataSnapshot defiSnapshot : dataSnapshot.getChildren()) {
-                        boolean isDefiDone = defiSnapshot.getValue(Boolean.class);
+                        isDefiDone = defiSnapshot.child("isFound").getValue(Boolean.class);
                         if (!isDefiDone) {
                             availableDefi.add(i);
                         }
                         i++;
                     }
                     Random r2 = new Random();
+
                     if (!availableDefi.isEmpty()) {
                         mRandom = r2.nextInt(availableDefi.size());
                         mProgressDefi = availableDefi.get(mRandom);
                         mCurrentDefi.edit().putInt(DEFI_PREF, mProgressDefi).apply();
+
                     }
 
                 }
-
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -122,11 +125,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
         }
 
+        DatabaseReference reference = userRef.child(mUId).child("defiDone");
 
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int j = 0;
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    if (mProgressDefi == j) {
+                        mDefiUrl = dataSnapshot1.child("image").getValue(String.class);
+                    }
+                    j++;
+                }
 
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-
+            }
+        });
 
 
         // Vérifie que le GPS est actif, dans le cas contraire l'utilisateur est invité à l'activer
@@ -174,16 +192,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        ImageView ivDefi = findViewById(R.id.img_map);
+        final ImageView ivDefi = findViewById(R.id.img_map);
         TextView txtDefi = findViewById(R.id.txt_map);
         ivDefi.setImageResource(R.drawable.defi);
         txtDefi.setText(R.string.defis);
         ivDefi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
+                DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
+
             }
         });
+
+
     }
 
 
@@ -283,17 +304,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (i == mProgressDefi) {
                                 Marker markerDefi = mMap.addMarker(new MarkerOptions()
                                         .position(latLng)
-                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi)));
+                                        .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_defi2)));
                                 markerDefi.setVisible(true);
                                 mVegetalDefi = vegetalName;
                                 mLocationDefi = latLng;
-                                markers.add(markerDefi);
+                                markerDefi.setTag(address);
+                                markersDefi.add(markerDefi);
 
                             } else {
                                 Marker marker = mMap.addMarker(new MarkerOptions()
                                         .position(latLng)
                                         .title(vegetalName).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur)));
                                 marker.setVisible(false);
+                                marker.setTag(address);
                                 markers.add(marker);
                             }
 
@@ -302,11 +325,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 }
-
-                SharedPreferences pref = getSharedPreferences(PREF, MODE_PRIVATE);
+                pref = getSharedPreferences(PREF, MODE_PRIVATE);
                 isPreviouslyLaunched = pref.getBoolean(PREF, false);
                 if (!isPreviouslyLaunched) {
-                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mLocationDefi, mMap);
+                    DefiHelper.openDialogDefi(MapsActivity.this, mVegetalDefi, mDefiUrl, mLocationDefi, mMap);
                     pref.edit().putBoolean(PREF, true).apply();
                 }
             }
@@ -330,32 +352,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLastLocation = location;
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mMyPosition, DEFAULT_ZOOM));
 
-        for (int i = 0; i < markers.size(); i++) {
-            Marker markerDefi = markers.get(mProgressDefi);
-            Location loc1 = new Location("");
-            loc1.setLatitude(mMyPosition.latitude);
-            loc1.setLongitude(mMyPosition.longitude);
-            Location loc2 = new Location("");
-            Location loc3 = new Location("");
-            loc2.setLatitude(markers.get(i).getPosition().latitude);
-            loc2.setLongitude(markers.get(i).getPosition().longitude);
-            loc3.setLatitude(markerDefi.getPosition().latitude);
-            loc3.setLongitude(markerDefi.getPosition().longitude);
-            float distance = loc1.distanceTo(loc2);
-            float distanceDefi = loc1.distanceTo(loc3);
+        Location loc1 = new Location("");
+        loc1.setLatitude(mMyPosition.latitude);
+        loc1.setLongitude(mMyPosition.longitude);
 
-            if (distance < MIN_DEFI_DISTANCE) {
-                final Marker marker = markers.get(i);
-                userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+        if (!MapsActivity.this.isFinishing()) {
+
+            for (int i = 0; i < markersDefi.size(); i++) {
+                final Marker markerDefi = markersDefi.get(i);
+                Location loc3 = new Location("");
+                loc3.setLatitude(markerDefi.getPosition().latitude);
+                loc3.setLongitude(markerDefi.getPosition().longitude);
+                float distanceDefi = loc1.distanceTo(loc3);
+
+                //Lorsque le défi est relevé
+                if (distanceDefi < MIN_DEFI_DISTANCE) {
+                    userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
+                            if (!isFound) {
+                                String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
+                                String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                                String address = markerDefi.getTag().toString();
+                                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("isFound").setValue(true);
+                                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("Date").setValue(dateFormat);
+                                userRef.child(mUId).child("defiDone").child(markerDefi.getTitle()).child("adresse").setValue(address);
+                                mCurrentDefi.edit().clear().apply();
+                                pref.edit().clear().apply();
+                                markerDefi.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                                VegetalHelperActivity.openDialogDefiDone(MapsActivity.this, markerDefi.getTitle(), vegetalPic);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+                final Marker markerFound = markersDefi.get(i);
+                userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        boolean isFound = dataSnapshot.getValue(Boolean.class);
-                        if (!isFound) {
-                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
-                            startActivity(intent);
+                        boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
+                        if (isFound) {
+                            markerFound.setVisible(true);
+                            markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                         }
-                        marker.setVisible(true);
+
                     }
 
                     @Override
@@ -365,22 +412,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
             }
 
-            if (distanceDefi < MIN_DEFI_DISTANCE) {
+            for (int i = 0; i < markers.size(); i++) {
                 final Marker marker = markers.get(i);
+                Location loc2 = new Location("");
+                loc2.setLatitude(markers.get(i).getPosition().latitude);
+                loc2.setLongitude(markers.get(i).getPosition().longitude);
+                float distance = loc1.distanceTo(loc2);
 
-                userRef.child(mUId).child("defiDone").child(marker.getTitle()).orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                //Lorsqu'un végétal est trouvé (hors défi)
+                if (distance < MIN_DEFI_DISTANCE) {
+                    userRef.child(mUId).child("defiDone").child(marker.getTitle()).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
+                            if (!isFound) {
+                                String dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.FRANCE).format(new Date());
+                                String vegetalPic = dataSnapshot.child("image").getValue(String.class);
+                                String address = marker.getTag().toString();
+                                userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("isFound").setValue(true);
+                                userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("Date").setValue(dateFormat);
+                                userRef.child(mUId).child("defiDone").child(marker.getTitle()).child("adresse").setValue(address);
+                                VegetalHelperActivity.openDialogVegetal(MapsActivity.this, marker.getTitle(), vegetalPic);
+                            }
+                            marker.setVisible(true);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                final Marker markerFound = markers.get(i);
+                userRef.child(mUId).child("defiDone").child(markerFound.getTitle()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        boolean isFound = dataSnapshot.getValue(Boolean.class);
-                        if (!isFound) {
-                            Intent intent = new Intent(MapsActivity.this, VegetalHelperActivity.class);
-                            userRef.child(mUId).child("defiDone").child(marker.getTitle()).setValue(true);
-                            mCurrentDefi.edit().clear().apply();
-                            mProgressDefi = mCurrentDefi.getInt(DEFI_PREF, 0);
-                            startActivity(intent);
-                        } else {
-                            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
+                        boolean isFound = dataSnapshot.child("isFound").getValue(Boolean.class);
+                        if (isFound) {
+                            markerFound.setVisible(true);
+                            markerFound.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
                         }
+
                     }
 
                     @Override
@@ -388,24 +460,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                 });
-
             }
-            final Marker marker = markers.get(i);
-            userRef.child(mUId).child("defiDone").child(marker.getTitle()).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    boolean isFound = dataSnapshot.getValue(Boolean.class);
-                    if (isFound) {
-                        marker.setVisible(true);
-                        marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_marqueur));
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
         }
 
 
@@ -441,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         assert locationManager != null;
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0,
-                25,
+                10,
                 locationListener);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(TOULOUSE, DEFAULT_ZOOM));
 
@@ -479,15 +534,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        if (sBackPress + 2000 > System.currentTimeMillis()) {
-            System.exit(0);
-            super.onBackPressed();
-        } else
-            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
-        sBackPress = System.currentTimeMillis();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.quitter)
+                .setMessage(R.string.confirm_quit)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        MapsActivity.super.onBackPressed();
+                        System.exit(0);
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
-
-
 
 
 }

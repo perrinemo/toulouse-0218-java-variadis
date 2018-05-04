@@ -10,10 +10,11 @@
 
     <TextView
         android:id="@+id/my_herbarium"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_width="390dp"
+        android:layout_height="68dp"
+        android:background="@null"
         android:fontFamily="@font/philosopher"
+        android:paddingTop="16dp"
         android:singleLine="false"
         android:text="@string/my_herbarium"
         android:textAlignment="center"
@@ -24,33 +25,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="parent" />
 
-
-    <CheckBox
-        android:id="@+id/check_if_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:checked="true"
-        android:fontFamily="@font/philosopher"
-        android:gravity="center_vertical"
-        android:text="@string/empty_herbarium"
-        android:textAllCaps="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_herbarium" />
-
     <TextView
-        android:id="@+id/empty_herbarium"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="9dp"
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/philosopher"
+        android:singleLine="false"
         android:text="@string/empty"
         android:textAlignment="center"
         android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/check_if_empty" />
+        app:layout_constraintTop_toTopOf="@+id/herbview" />
 
 
     <include
@@ -61,6 +53,7 @@
         android:id="@+id/herbview"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         android:columnWidth="90dp"
         android:gravity="center"
         android:horizontalSpacing="10dp"
@@ -70,7 +63,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/empty_herbarium" />
+        app:layout_constraintTop_toBottomOf="@+id/my_herbarium" />
 
 </android.support.constraint.ConstraintLayout>
 

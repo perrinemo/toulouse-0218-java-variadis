@@ -1,26 +1,36 @@
 package fr.wildcodeschool.variadis;
 
-import android.Manifest;
+import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ProgressBar;
-
+import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -40,45 +50,53 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static fr.wildcodeschool.variadis.MapsActivity.sBackPress;
+import static fr.wildcodeschool.variadis.MapsActivity.DEFI_PREF;
 
 
 public class ProfilActivity extends AppCompatActivity {
 
-    public final static int CAMERA = 123;
+    public final static int GALLERY = 123;
     public final static int APP_PHOTO = 456;
 
     private ImageView mAvatar;
-    private EditText mEditPseudo;
-    private DatabaseReference mDatabaseReference;
+    private TextView mEditPseudo;
+    private DatabaseReference mDatabaseUsers;
     private String mUid;
     private Uri mFileUri = null;
     private String mGetImageUrl = "";
     private boolean mIsOk;
-
+    private int mPoints = 0;
+    private FirebaseAuth mAuth;
     private String mCurrentPhotoPath;
+    private ProgressBar mProgressBar;
+    private SharedPreferences mCurrentDefi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profil);
 
-        final FirebaseAuth auth = FirebaseAuth.getInstance();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mAuth = FirebaseAuth.getInstance();
         final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        mProgressBar = findViewById(R.id.progress_bar);
 
         ImageView ivHerbier = findViewById(R.id.img_herbier);
         ImageView ivMap = findViewById(R.id.img_map);
-        ImageButton deco = findViewById(R.id.btn_logout);
-        Button validPseudo = findViewById(R.id.btn_ok_pseudo);
         SingletonClass singletonClass = SingletonClass.getInstance();
 
-        TextView tvPoints = findViewById(R.id.text_points);
-        ImageView badge1 = findViewById(R.id.img_badge1);
-        ImageView badge2 = findViewById(R.id.img_badge2);
-        ImageView badge3 = findViewById(R.id.img_badge3);
-        ImageView badge4 = findViewById(R.id.img_badge4);
-        ImageView badge5 = findViewById(R.id.img_badge5);
+        ImageView ivProfile = findViewById(R.id.img_profile);
+        ivProfile.setColorFilter(R.color.colorPrimary);
+
+        final TextView tvPoints = findViewById(R.id.text_points);
+        final ImageView badge1 = findViewById(R.id.img_badge1_ok);
+        final ImageView badge2 = findViewById(R.id.img_badge2_ok);
+        final ImageView badge3 = findViewById(R.id.img_badge3_ok);
+        final ImageView badge4 = findViewById(R.id.img_badge4_ok);
+        final ImageView badge5 = findViewById(R.id.img_badge5_ok);
 
         mAvatar = findViewById(R.id.avatar);
         mUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -89,14 +107,14 @@ public class ProfilActivity extends AppCompatActivity {
             mEditPseudo.setText(singletonClass.getProfil().getPseudo());
         }
 
-        if (auth.getCurrentUser() == null) {
+        if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
             startActivity(intent);
             finish();
         }
 
-        mDatabaseReference = firebaseDatabase.getReference("users").child(mUid);
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+        mDatabaseUsers = firebaseDatabase.getReference("users").child(mUid);
+        mDatabaseUsers.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
@@ -104,9 +122,9 @@ public class ProfilActivity extends AppCompatActivity {
                     mEditPseudo.setText(profilModel.getPseudo());
                 }
                 if (dataSnapshot.child("avatar").getValue() != null) {
-                    progressBar.setVisibility(View.INVISIBLE);
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     String url = profilModel.getAvatar();
-                    Glide.with(ProfilActivity.this)
+                    Glide.with(getApplicationContext())
                             .load(url)
                             .apply(RequestOptions.circleCropTransform())
                             .into(mAvatar);
@@ -119,109 +137,104 @@ public class ProfilActivity extends AppCompatActivity {
             }
         });
 
-        mAvatar.setOnClickListener(new View.OnClickListener() {
+        mDatabaseUsers.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new  Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException ex) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot plante : dataSnapshot.child("defiDone").getChildren()) {
+                    String nomPlante = plante.getKey().toString();
+                    final DatabaseReference databaseVegetaux = firebaseDatabase.getReference("Vegetaux").child(nomPlante);
+                    final boolean isfound = plante.child("isFound").getValue(Boolean.class);
 
-                    }
+                    databaseVegetaux.child("latLng").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            int nbPlante;
+                            if (isfound) {
+                                String strPlante = String.valueOf(dataSnapshot.getChildrenCount());
+                                nbPlante = Integer.parseInt(strPlante);
 
-                    if (photoFile != null) {
-                        mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
-                                "fr.wildcodeschool.variadis",
-                                photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
-                        startActivityForResult(intent, APP_PHOTO);
+                                if (nbPlante == 1) {
+                                    mPoints += 5;
+                                } else if (nbPlante > 1 && nbPlante <= 5) {
+                                    mPoints += 4;
+                                } else if (nbPlante > 5 && nbPlante <= 10) {
+                                    mPoints += 3;
+                                } else if (nbPlante > 10 && nbPlante <= 20) {
+                                    mPoints += 2;
+                                } else {
+                                    mPoints += 1;
+                                }
+                            }
 
-                    }
+                            tvPoints.setText(String.valueOf(mPoints));
+
+                            if (mPoints > 0 && mPoints <= 10) {
+                                badge1.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 10 && mPoints <= 50) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 50 && mPoints <= 100) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                                badge3.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 100 && mPoints <= 200) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                                badge3.setVisibility(View.VISIBLE);
+                                badge4.setVisibility(View.VISIBLE);
+                            } else if (mPoints > 200) {
+                                badge1.setVisibility(View.VISIBLE);
+                                badge2.setVisibility(View.VISIBLE);
+                                badge3.setVisibility(View.VISIBLE);
+                                badge4.setVisibility(View.VISIBLE);
+                                badge5.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
 
                 }
-                progressBar.setVisibility(View.VISIBLE);
-
-
             }
-        });
 
-        validPseudo.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                String pseudo = mEditPseudo.getText().toString();
-                if (TextUtils.isEmpty(mUid)) {
-                    createUser(pseudo);
-                } else {
-                    updateUser(pseudo);
-                }
-                Toast.makeText(ProfilActivity.this, R.string.pseudo_enregistre, Toast.LENGTH_SHORT).show();
-            }
-        });
+            public void onCancelled(DatabaseError databaseError) {
 
-        // Test pour afficher les badges avec des points fictifs
-        tvPoints.setText("12");
-        int points = Integer.parseInt(tvPoints.getText().toString());
-
-        if (points > 0 && points <= 10) {
-            badge1.setVisibility(View.VISIBLE);
-        } else if (points <= 50) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-        } else if (points > 50 && points <= 100) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-            badge3.setVisibility(View.VISIBLE);
-        } else if (points > 100 && points <= 200) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-            badge3.setVisibility(View.VISIBLE);
-            badge4.setVisibility(View.VISIBLE);
-        } else if (points < 200) {
-            badge1.setVisibility(View.VISIBLE);
-            badge2.setVisibility(View.VISIBLE);
-            badge3.setVisibility(View.VISIBLE);
-            badge4.setVisibility(View.VISIBLE);
-            badge5.setVisibility(View.VISIBLE);
-        }
-
-        deco.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
-                startActivity(intent);
-                auth.signOut();
             }
         });
 
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ProfilActivity.this, HerbariumActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(ProfilActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
         ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProfilActivity.this.startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                startActivity(new Intent(ProfilActivity.this, MapsActivity.class));
+                finish();
             }
         });
+
     }
 
     // Méthodes relatives au pseudo
     private void createUser(String pseudo) {
         if (!TextUtils.isEmpty(mUid)) {
             ProfilModel profilModel = new ProfilModel(pseudo);
-            mDatabaseReference.child(mUid).setValue(profilModel);
+            mDatabaseUsers.child(mUid).setValue(profilModel);
             addUserChangeListener();
         }
     }
 
     private void addUserChangeListener() {
-        mDatabaseReference.child(mUid).addValueEventListener(new ValueEventListener() {
+        mDatabaseUsers.child(mUid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ProfilModel profilModel = dataSnapshot.getValue(ProfilModel.class);
@@ -246,14 +259,26 @@ public class ProfilActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (sBackPress + 2000 > System.currentTimeMillis()) {
-            System.exit(0);
-            super.onBackPressed();
-        } else
-
-            Toast.makeText(getBaseContext(), R.string.back_again, Toast.LENGTH_SHORT).show();
-        sBackPress = System.currentTimeMillis();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.quitter)
+                .setMessage(R.string.confirm_quit)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ProfilActivity.super.onBackPressed();
+                        System.exit(0);
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
+
 
     // Méthodes relatives à l'avatar
 
@@ -280,6 +305,19 @@ public class ProfilActivity extends AppCompatActivity {
                 try {
                     if (resultCode == RESULT_OK) {
                         mGetImageUrl = mFileUri.getPath();
+                        saveCaptureImage();
+                    } else {
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case GALLERY:
+                try {
+                    if (resultCode == RESULT_OK) {
+                        mFileUri = data.getData();
+                        mGetImageUrl = mFileUri.getPath();
                     }
                     saveCaptureImage();
                 } catch (Exception e) {
@@ -301,5 +339,117 @@ public class ProfilActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.change_pseudo:
+                changePseudo();
+                return true;
+            case R.id.change_avatar:
+                changerAvatar();
+                return true;
+            case R.id.deconnexion:
+                deco();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void changePseudo() {
+        final EditText input = new EditText(ProfilActivity.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.enter_pseudo)
+                .setView(input)
+                .setNeutralButton(R.string.confirm_pseudo, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (input.getText() != null) {
+                            String pseudo = input.getText().toString();
+                            if (TextUtils.isEmpty(mUid)) {
+                                createUser(pseudo);
+                            } else {
+                                updateUser(pseudo);
+                            }
+                        }
+                    }
+                })
+                .show();
+    }
+
+
+    private void changerAvatar() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.add_image)
+                .setMessage(R.string.select_resource)
+                .setPositiveButton(R.string.picture_app, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            File photoFile = null;
+                            try {
+                                photoFile = createImageFile();
+                            } catch (IOException ex) {
+
+                            }
+
+                            if (photoFile != null) {
+                                mFileUri = FileProvider.getUriForFile(ProfilActivity.this,
+                                        "fr.wildcodeschool.variadis",
+                                        photoFile);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, mFileUri);
+                                startActivityForResult(intent, APP_PHOTO);
+
+                            }
+                        }
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                })
+                .setNegativeButton(R.string.gallery, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI), GALLERY);
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                })
+                .show();
+
+    }
+
+    private void deco() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+        builder.setTitle(R.string.deco)
+                .setMessage(R.string.confirm_deco)
+                .setPositiveButton(R.string.oui, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(ProfilActivity.this, ConnexionActivity.class);
+                        startActivity(intent);
+                        mCurrentDefi = getSharedPreferences(DEFI_PREF, MODE_PRIVATE);
+                        mCurrentDefi.edit().clear().apply();
+                        mAuth.signOut();
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.non, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .show();
     }
 }

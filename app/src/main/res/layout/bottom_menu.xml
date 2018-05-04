@@ -45,6 +45,7 @@
             android:id="@+id/img_herbier"
             android:layout_width="47dp"
             android:layout_height="45dp"
+            android:layout_gravity="center"
             android:src="@drawable/ic_action_herbier"
             app:layout_constraintEnd_toStartOf="@+id/img_defi"
             app:layout_constraintStart_toEndOf="@+id/img_profile"

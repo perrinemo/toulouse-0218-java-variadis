@@ -7,6 +7,7 @@ package fr.wildcodeschool.variadis;
 public class ProfilModel {
     private String pseudo;
     private String avatar;
+    private int points;
 
     public ProfilModel() {}
 

@@ -7,13 +7,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static fr.wildcodeschool.variadis.HerbariumActivity.CLASS_FROM;
 import static fr.wildcodeschool.variadis.HerbariumActivity.EXTRA_PARCEL_VEGETAL;
@@ -31,14 +32,16 @@ public class VegetalActivity extends AppCompatActivity {
         VegetalModel foundVegetal = getIntent().getParcelableExtra(EXTRA_PARCEL_FOUNDVEGETAL);
         ImageView imgVegetal = findViewById(R.id.img_vegetal);
         TextView txtVegetal = findViewById(R.id.nom_vegetal);
-        TextView placeVegetal = findViewById(R.id.lieu);
-        TextView lastFind = findViewById(R.id.last_find);
+        final TextView placeVegetal = findViewById(R.id.lieu);
+        final TextView lastFind = findViewById(R.id.last_find);
 
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users");
         FirebaseAuth auth = FirebaseAuth.getInstance();
+        String uid = auth.getCurrentUser().getUid();
 
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.FRANCE);
-        Date date = Calendar.getInstance().getTime();
-        String dateFormat = format.format(date);
+        ImageView ivHerbier = findViewById(R.id.img_herbier);
+        ivHerbier.setColorFilter(R.color.colorPrimary);
+
 
         if (auth.getCurrentUser() == null) {
             Intent intent = new Intent(VegetalActivity.this, ConnexionActivity.class);
@@ -47,22 +50,56 @@ public class VegetalActivity extends AppCompatActivity {
         }
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("helper")) {
-            //imgVegetal.setImageBitmap(foundVegetal.getBitmapPicture());
+            userRef.child(uid).child("defiDone").child(foundVegetal.getName()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String date = dataSnapshot.child("Date").getValue(String.class);
+                    String address = dataSnapshot.child("adresse").getValue(String.class);
+                    lastFind.setText(date);
+                    placeVegetal.setText(address);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            Glide.with(getApplicationContext())
+                    .load(foundVegetal.getPictureUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgVegetal);
             txtVegetal.setText(foundVegetal.getName());
-            placeVegetal.setText(foundVegetal.getAddress());
-            lastFind.setText(foundVegetal.getDate());
+
         }
 
         if (getIntent().getStringExtra(CLASS_FROM).equals("herbarium")) {
-            imgVegetal.setImageResource(vegetal.getPicture());
+            userRef.child(uid).child("defiDone").child(vegetal.getName()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String date = dataSnapshot.child("Date").getValue(String.class);
+                    String address = dataSnapshot.child("adresse").getValue(String.class);
+                    lastFind.setText(date);
+                    placeVegetal.setText(address);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            Glide.with(getApplicationContext())
+                    .load(vegetal.getPictureUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgVegetal);
             txtVegetal.setText(vegetal.getName());
         }
 
-        ImageView ivHerbier = findViewById(R.id.img_herbier);
+
         ivHerbier.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(VegetalActivity.this, HerbariumActivity.class));
+                finish();
             }
         });
 
@@ -70,8 +107,8 @@ public class VegetalActivity extends AppCompatActivity {
         ivProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-               startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+                startActivity(new Intent(VegetalActivity.this, ProfilActivity.class));
+                finish();
 
             }
         });
@@ -81,9 +118,14 @@ public class VegetalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(VegetalActivity.this, MapsActivity.class));
+                finish();
             }
         });
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

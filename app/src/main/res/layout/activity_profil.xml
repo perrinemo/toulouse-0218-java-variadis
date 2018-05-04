@@ -7,23 +7,33 @@
     android:background="@color/white"
     tools:context="fr.wildcodeschool.variadis.ProfilActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextColor="@color/colorAccent"
+        android:background="@color/white"
+        app:title=" ">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/mon_profil"
+            android:textColor="#000"
+            android:fontFamily="@font/philosopher"
+            android:textSize="25dp"
+            android:gravity="center"
+            android:paddingLeft="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+    </android.support.v7.widget.Toolbar>
+
     <include
         android:id="@+id/bottom_nav"
         layout="@layout/bottom_menu" />
 
-    <TextView
-        android:id="@+id/my_profil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:fontFamily="@font/philosopher"
-        android:text="@string/mon_profil"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/avatar"
@@ -31,25 +41,28 @@
         android:layout_height="200dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:alpha="0.7"
+        android:layout_marginTop="80dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_profil"
-        app:srcCompat="@drawable/camera" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/camera3" />
 
-    <EditText
+    <TextView
         android:id="@+id/edit_pseudo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:background="@android:color/transparent"
         android:cursorVisible="false"
         android:fontFamily="@font/philosopher"
+        android:gravity="center"
         android:hint="@string/nom_pseudo"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
@@ -67,10 +80,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
             android:fontFamily="@font/philosopher"
             android:text="@string/nb_points"
-            android:textSize="18sp"
-            android:layout_marginRight="16dp"/>
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/text_points"
@@ -78,33 +92,17 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/philosopher"
             android:text="@string/no_pts"
+            android:textColor="@android:color/black"
             android:textSize="18sp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/philosopher"
+            android:text="@string/max_points"
+            android:textSize="18sp"/>
+
     </LinearLayout>
-
-
-    <ImageButton
-        android:id="@+id/btn_logout"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_power_off" />
-
-    <Button
-        android:id="@+id/btn_ok_pseudo"
-        style="@style/Widget.AppCompat.Button.Small"
-        android:layout_width="49dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="34dp"
-        android:background="@null"
-        android:text="@string/ok"
-        app:layout_constraintStart_toEndOf="@+id/edit_pseudo"
-        app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -113,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="160dp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -131,51 +129,113 @@
 
         <ImageView
             android:id="@+id/img_badge1"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/bourgeon"
+            android:alpha="0.5"
+            app:srcCompat="@drawable/badge1_nb"
             tools:layout_editor_absoluteX="68dp"
             tools:layout_editor_absoluteY="413dp" />
 
         <ImageView
             android:id="@+id/img_badge2"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/feuille"
+            android:alpha="0.5"
+            app:srcCompat="@drawable/badge2_nb"
             tools:layout_editor_absoluteX="246dp"
             tools:layout_editor_absoluteY="420dp" />
 
         <ImageView
             android:id="@+id/img_badge3"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/branche"
+            android:alpha="0.5"
+            app:srcCompat="@drawable/badge3_nb"
             tools:layout_editor_absoluteX="155dp"
             tools:layout_editor_absoluteY="413dp" />
 
         <ImageView
             android:id="@+id/img_badge4"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_margin="4dp"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/arbre_un"
+            android:alpha="0.5"
+            app:srcCompat="@drawable/badge4_nb"
             tools:layout_editor_absoluteX="334dp"
             tools:layout_editor_absoluteY="350dp" />
 
         <ImageView
             android:id="@+id/img_badge5"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="4dp"
+            android:alpha="0.5"
+            app:srcCompat="@drawable/badge5_nb"
+            tools:layout_editor_absoluteX="34dp"
+            tools:layout_editor_absoluteY="106dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/points">
+
+        <ImageView
+            android:id="@+id/img_badge1_ok"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_margin="4dp"
             android:visibility="invisible"
-            app:srcCompat="@drawable/arbre_deux"
+            app:srcCompat="@drawable/badge1"
+            tools:layout_editor_absoluteX="68dp"
+            tools:layout_editor_absoluteY="413dp" />
+
+        <ImageView
+            android:id="@+id/img_badge2_ok"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/badge2"
+            tools:layout_editor_absoluteX="246dp"
+            tools:layout_editor_absoluteY="420dp" />
+
+        <ImageView
+            android:id="@+id/img_badge3_ok"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/badge3"
+            tools:layout_editor_absoluteX="155dp"
+            tools:layout_editor_absoluteY="413dp" />
+
+        <ImageView
+            android:id="@+id/img_badge4_ok"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/badge4"
+            tools:layout_editor_absoluteX="334dp"
+            tools:layout_editor_absoluteY="350dp" />
+
+        <ImageView
+            android:id="@+id/img_badge5_ok"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_margin="4dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/badge5"
             tools:layout_editor_absoluteX="34dp"
             tools:layout_editor_absoluteY="106dp" />
 

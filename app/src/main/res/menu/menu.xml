@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:title="@string/modifier_mon_pseudo"
+        android:id="@+id/change_pseudo"
+        app:showAsAction="never"/>
+
+    <item
+        android:title="@string/modifier_ma_photo"
+        android:id="@+id/change_avatar"
+        app:showAsAction="never"/>
+
+    <item
+        android:title="@string/deconnexion"
+        android:id="@+id/deconnexion"
+        app:showAsAction="never"/>
+
+</menu>

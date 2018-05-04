@@ -1,10 +1,12 @@
 package fr.wildcodeschool.variadis;
+
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.android.volley.Request;
@@ -14,18 +16,21 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Map;
+
 public class InfosActivity extends AppCompatActivity {
 
     @Override
@@ -39,6 +44,7 @@ public class InfosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(InfosActivity.this, MapsActivity.class));
+                finish();
             }
         });
 
@@ -57,8 +63,8 @@ public class InfosActivity extends AppCompatActivity {
                             JSONArray records = response.getJSONArray("records");
                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                             DatabaseReference reference = database.getReference("Vegetaux");
-                            DatabaseReference userRef = database.getReference("users");
-                            String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            final DatabaseReference userRef = database.getReference("users");
+                            final String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             for (int i = 0; i < records.length(); i++) {
                                 JSONObject recordsInfos = (JSONObject) records.get(i);
                                 JSONObject fields = recordsInfos.getJSONObject("fields");
@@ -70,9 +76,10 @@ public class InfosActivity extends AppCompatActivity {
                                 String longitude = coordonates.get(1).toString();
                                 double lat = Double.parseDouble(latitude);
                                 double lng = Double.parseDouble(longitude);
-                                final LatLng latLng = new LatLng(lat,lng);
-                                String minTreeName = "";
+                                final LatLng latLng = new LatLng(lat, lng);
+
                                 int minTreeNumber = 0;
+                                String minTreeName = "";
                                 // parcours la liste des arbres séparés par des virgules
                                 for (String tree : allTrees) {
                                     // tree = "32 PLATANE"
@@ -90,7 +97,26 @@ public class InfosActivity extends AppCompatActivity {
                                 if (!treeMap.containsKey(minTreeName)) {
                                     treeMap.put(minTreeName, minTreeNumber);
                                     //reference.child(minTreeName).child("latLng").push().setValue(findVegetalModel);
-                                    userRef.child(id).child("defiDone").child(minTreeName).setValue(false);
+                                    userRef.child(id).child("defiDone").child(minTreeName).child("isFound").setValue(false);
+                                    String minTreeImage = minTreeName.toLowerCase() + ".jpg";
+
+                                    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                                    StorageReference imageRef = storageReference.child("vegetalpics/" + minTreeImage);
+                                    final String currentTreeName = minTreeName;
+                                    imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            String imageUrl = uri.toString();
+                                            userRef.child(id).child("defiDone").child(currentTreeName).child("image").setValue(imageUrl);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+
+
                                 } else {
                                     treeMap.put(minTreeName, treeMap.get(minTreeName) + minTreeNumber);
                                     final DatabaseReference refLat = reference.child(minTreeName);
