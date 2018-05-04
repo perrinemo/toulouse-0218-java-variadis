@@ -80,4 +80,6 @@
     <string name="lieu">Lieu</string>
     <string name="enter_pseudo">Entrez votre pseudo</string>
     <string name="confirm_pseudo">Confirmer</string>
+    <string name="modifier_mon_pseudo">Modifier mon pseudo</string>
+    <string name="modifier_ma_photo">Modifier ma photo</string>
 </resources>
